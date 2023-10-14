@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chickensoft.GodotNodeInterfaces", "Chickensoft.GodotNodeInterfaces\Chickensoft.GodotNodeInterfaces.csproj", "{19108916-6A34-415C-B387-CF12C86A2591}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chickensoft.GodotNodeInterfaces.Tests", "Chickensoft.GodotNodeInterfaces.Tests\Chickensoft.GodotNodeInterfaces.Tests.csproj", "{78A48555-343C-4803-AD80-3A52D4E88772}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chickensoft.GodotNodeInterfacesGenerator", "Chickensoft.GodotNodeInterfacesGenerator\Chickensoft.GodotNodeInterfacesGenerator.csproj", "{7EC4A9C8-2C75-47E5-B61D-F55550BFFF59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19108916-6A34-415C-B387-CF12C86A2591}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19108916-6A34-415C-B387-CF12C86A2591}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19108916-6A34-415C-B387-CF12C86A2591}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19108916-6A34-415C-B387-CF12C86A2591}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78A48555-343C-4803-AD80-3A52D4E88772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A48555-343C-4803-AD80-3A52D4E88772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78A48555-343C-4803-AD80-3A52D4E88772}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A48555-343C-4803-AD80-3A52D4E88772}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{7EC4A9C8-2C75-47E5-B61D-F55550BFFF59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EC4A9C8-2C75-47E5-B61D-F55550BFFF59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EC4A9C8-2C75-47E5-B61D-F55550BFFF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EC4A9C8-2C75-47E5-B61D-F55550BFFF59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

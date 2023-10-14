@@ -1,0 +1,12 @@
+Chickensoft.GodotNodeInterfaces/nupkg/
+
+Chickensoft.GodotNodeInterfaces.Tests/coverage/*
+!Chickensoft.GodotNodeInterfaces.Tests/coverage/.gdignore
+
+.godot/
+bin/
+obj/
+.generated/
+.vs/
+.DS_Store
+.output/
