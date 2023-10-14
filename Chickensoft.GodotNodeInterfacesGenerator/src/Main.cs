@@ -27,12 +27,21 @@ public static class GodotNodeInterfacesGenerator {
   };
 
   public static void Main(string[] args) {
-    Console.WriteLine("Hello, world!");
+    // First, inject an interface all adapters will inherit from.
+    File.WriteAllText(
+      Path.Join(ADAPTERS_PATH, "IAdapter.cs"),
+      """
+      namespace Chickensoft.GodotNodeInterfaces;
+
+      /// <summary>A Godot API adapter.</summary>
+      public interface IAdapter { }
+      """
+    );
 
     var godotAssembly = typeof(Node).Assembly;
 
     var typesThatExtendGodotNode = godotAssembly.GetTypes()
-      .Where(t => t.IsSubclassOf(typeof(Node)));
+      .Where(t => t.IsSubclassOf(typeof(Node)) || t == typeof(Node));
 
     foreach (var type in typesThatExtendGodotNode) {
       // Look at each type of Godot node.
@@ -81,8 +90,6 @@ public static class GodotNodeInterfacesGenerator {
             var genericArgs = methodInfo
               .GetGenericMethodDefinition()
               .GetGenericArguments();
-
-            Console.WriteLine("Generic args: " + genericArgs.Length);
 
             var hasClassConstraint = false;
             var hasNotNullConstraint = false;
@@ -188,7 +195,7 @@ public static class GodotNodeInterfacesGenerator {
 
       var baseType = type.BaseType!;
       // see if base type also extends Godot.Node
-      var extendsAnotherNode = baseType.IsSubclassOf(typeof(Node));
+      var extendsAnotherNode = baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node);
 
       var interfaceParent = extendsAnotherNode
         ? $" : I{baseType.Name}"
@@ -206,6 +213,9 @@ public static class GodotNodeInterfacesGenerator {
 
       var interfaceMemberCode = interfaceMembers.ToString();
       var adapterMemberCode = adapterMembers.ToString();
+      var iAdapterImpl = !extendsAnotherNode
+        ? ", IAdapter"
+        : "";
 
       var usings = string.Join("\n", _usings.Select(u => $"using {u};"));
 
@@ -239,7 +249,7 @@ public static class GodotNodeInterfacesGenerator {
 
       {{usings}}
       {{mainDocumentation}}
-      public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}} {
+      public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
         private readonly {{TypeName(type)}} _node;
 
         public {{adapterName}}({{TypeName(type)}} node){{adapterBaseCall}}{ _node = node; }

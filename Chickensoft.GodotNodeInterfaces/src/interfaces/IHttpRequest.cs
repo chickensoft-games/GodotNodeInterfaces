@@ -86,7 +86,7 @@ internal partial class HttpRequestNode : HttpRequest, IHttpRequest { }
 /// </code></para>
 /// <para><b>Gzipped response bodies</b>: HTTPRequest will automatically handle decompression of response bodies. A <c>Accept-Encoding</c> header will be automatically added to each of your requests, unless one is already specified. Any response with a <c>Content-Encoding: gzip</c> header will automatically be decompressed and delivered to you as uncompressed bytes.</para>
 /// </summary>
-public interface IHttpRequest {
+public interface IHttpRequest : INode {
     /// <summary>
     /// <para>If <c>true</c>, this header will be added to each request: <c>Accept-Encoding: gzip, deflate</c> telling servers that it's okay to compress response bodies.</para>
     /// <para>Any Response body declaring a <c>Content-Encoding</c> of either <c>gzip</c> or <c>deflate</c> will then be automatically decompressed, and the uncompressed bytes will be delivered via <see cref="HttpRequest.RequestCompleted" />.</para>

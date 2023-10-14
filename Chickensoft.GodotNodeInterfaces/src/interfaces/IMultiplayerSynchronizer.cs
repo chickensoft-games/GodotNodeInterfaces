@@ -14,7 +14,7 @@ internal partial class MultiplayerSynchronizerNode : MultiplayerSynchronizer, IM
 /// <para>Internally, <see cref="MultiplayerSynchronizer" /> uses <see cref="MultiplayerApi.ObjectConfigurationAdd(Godot.GodotObject,Godot.Variant)" /> to notify synchronization start passing the <see cref="Node" /> at <see cref="MultiplayerSynchronizer.RootPath" /> as the <c>object</c> and itself as the <c>configuration</c>, and uses <see cref="MultiplayerApi.ObjectConfigurationRemove(Godot.GodotObject,Godot.Variant)" /> to notify synchronization end in a similar way.</para>
 /// <para><b>Note:</b> Synchronization is not supported for <see cref="GodotObject" /> type properties, like <see cref="Resource" />. Properties that are unique to each peer, like the instance IDs of <see cref="GodotObject" />s (see <see cref="GodotObject.GetInstanceId" />) or <see cref="Rid" />s, will also not work in synchronization.</para>
 /// </summary>
-public interface IMultiplayerSynchronizer {
+public interface IMultiplayerSynchronizer : INode {
     /// <summary>
     /// <para>Adds a peer visibility filter for this synchronizer.</para>
     /// <para><paramref name="filter" /> should take a peer ID <see cref="T:System.Int32" /> and return a <see cref="T:System.Boolean" />.</para>

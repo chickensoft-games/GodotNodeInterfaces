@@ -11,7 +11,7 @@ internal partial class AudioStreamPlayerNode : AudioStreamPlayer, IAudioStreamPl
 /// <para>Plays an audio stream non-positionally.</para>
 /// <para>To play audio positionally, use <see cref="AudioStreamPlayer2D" /> or <see cref="AudioStreamPlayer3D" /> instead of <see cref="AudioStreamPlayer" />.</para>
 /// </summary>
-public interface IAudioStreamPlayer {
+public interface IAudioStreamPlayer : INode {
     /// <summary>
     /// <para>If <c>true</c>, audio plays when added to scene tree.</para>
     /// </summary>

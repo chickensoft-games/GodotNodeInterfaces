@@ -25,7 +25,7 @@ internal partial class SkeletonIK3DNode : SkeletonIK3D, ISkeletonIK3D { }
 /// </code></para>
 /// <para><i>Deprecated.</i> This class is deprecated, and might be removed in a future release.</para>
 /// </summary>
-public interface ISkeletonIK3D {
+public interface ISkeletonIK3D : INode {
     /// <summary>
     /// <para>Returns the parent <see cref="Skeleton3D" /> Node that was present when SkeletonIK entered the <see cref="SceneTree" />. Returns null if the parent node was not a <see cref="Skeleton3D" /> Node when SkeletonIK3D entered the <see cref="SceneTree" />.</para>
     /// </summary>

@@ -7,10 +7,10 @@ using Godot.Collections;
 /// <para>Base class for <see cref="AnimationPlayer" /> and <see cref="AnimationTree" /> to manage animation lists. It also has general properties and methods for playback and blending.</para>
 /// <para>After instantiating the playback information data within the extended class, the blending is processed by the <see cref="AnimationMixer" />.</para>
 /// </summary>
-public class AnimationMixerAdapter : IAnimationMixer {
+public class AnimationMixerAdapter : NodeAdapter, IAnimationMixer {
   private readonly AnimationMixer _node;
 
-  public AnimationMixerAdapter(AnimationMixer node) { _node = node; }
+  public AnimationMixerAdapter(AnimationMixer node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>A virtual function for processing after key getting during playback.</para>

@@ -9,10 +9,10 @@ using Godot.Collections;
 /// <para><b>Note:</b> Unless otherwise specified, all methods that have angle parameters must have angles specified as <i>radians</i>. To convert degrees to radians, use <c>@GlobalScope.deg_to_rad</c>.</para>
 /// <para><b>Note:</b> Be aware that "Spatial" nodes are now called "Node3D" starting with Godot 4. Any Godot 3.x references to "Spatial" nodes refer to "Node3D" in Godot 4.</para>
 /// </summary>
-public class Node3DAdapter : INode3D {
+public class Node3DAdapter : NodeAdapter, INode3D {
   private readonly Node3D _node;
 
-  public Node3DAdapter(Node3D node) { _node = node; }
+  public Node3DAdapter(Node3D node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>Attach an editor gizmo to this <see cref="Node3D" />.</para>

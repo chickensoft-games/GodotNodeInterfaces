@@ -20,10 +20,10 @@ using System;
 /// </code></para>
 /// <para><i>Deprecated.</i> This class is deprecated, and might be removed in a future release.</para>
 /// </summary>
-public class SkeletonIK3DAdapter : ISkeletonIK3D {
+public class SkeletonIK3DAdapter : NodeAdapter, ISkeletonIK3D {
   private readonly SkeletonIK3D _node;
 
-  public SkeletonIK3DAdapter(SkeletonIK3D node) { _node = node; }
+  public SkeletonIK3DAdapter(SkeletonIK3D node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>Returns the parent <see cref="Skeleton3D" /> Node that was present when SkeletonIK entered the <see cref="SceneTree" />. Returns null if the parent node was not a <see cref="Skeleton3D" /> Node when SkeletonIK3D entered the <see cref="SceneTree" />.</para>

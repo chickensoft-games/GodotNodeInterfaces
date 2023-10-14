@@ -12,7 +12,7 @@ internal partial class TimerNode : Timer, ITimer { }
 /// <para><b>Note:</b> Timers are affected by <see cref="Engine.TimeScale" />, a higher scale means quicker timeouts, and vice versa.</para>
 /// <para><b>Note:</b> To create a one-shot timer without instantiating a node, use <see cref="SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean,System.Boolean)" />.</para>
 /// </summary>
-public interface ITimer {
+public interface ITimer : INode {
     /// <summary>
     /// <para>If <c>true</c>, the timer will automatically start when entering the scene tree.</para>
     /// <para><b>Note:</b> This property is automatically set to <c>false</c> after the timer enters the scene tree and starts.</para>

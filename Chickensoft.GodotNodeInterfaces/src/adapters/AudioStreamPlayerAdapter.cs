@@ -6,10 +6,10 @@ using System;
 /// <para>Plays an audio stream non-positionally.</para>
 /// <para>To play audio positionally, use <see cref="AudioStreamPlayer2D" /> or <see cref="AudioStreamPlayer3D" /> instead of <see cref="AudioStreamPlayer" />.</para>
 /// </summary>
-public class AudioStreamPlayerAdapter : IAudioStreamPlayer {
+public class AudioStreamPlayerAdapter : NodeAdapter, IAudioStreamPlayer {
   private readonly AudioStreamPlayer _node;
 
-  public AudioStreamPlayerAdapter(AudioStreamPlayer node) { _node = node; }
+  public AudioStreamPlayerAdapter(AudioStreamPlayer node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>If <c>true</c>, audio plays when added to scene tree.</para>

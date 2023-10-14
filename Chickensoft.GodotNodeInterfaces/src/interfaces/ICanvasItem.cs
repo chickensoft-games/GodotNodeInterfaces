@@ -10,7 +10,7 @@ using System;
 /// <para>Canvas items are drawn in tree order on their canvas layer. By default, children are on top of their parents, so a root <see cref="CanvasItem" /> will be drawn behind everything. This behavior can be changed on a per-item basis.</para>
 /// <para>A <see cref="CanvasItem" /> can be hidden, which will also hide its children. By adjusting various other properties of a <see cref="CanvasItem" />, you can also modulate its color (via <see cref="CanvasItem.Modulate" /> or <see cref="CanvasItem.SelfModulate" />), change its Z-index, blend mode, and more.</para>
 /// </summary>
-public interface ICanvasItem {
+public interface ICanvasItem : INode {
     /// <summary>
     /// <para>Called when <see cref="CanvasItem" /> has been requested to redraw (after <see cref="CanvasItem.QueueRedraw" /> is called, either manually or by the engine).</para>
     /// <para>Corresponds to the <see cref="CanvasItem.NotificationDraw" /> notification in <see cref="GodotObject._Notification(System.Int32)" />.</para>

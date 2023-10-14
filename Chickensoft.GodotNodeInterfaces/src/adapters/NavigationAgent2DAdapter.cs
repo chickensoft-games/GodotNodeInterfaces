@@ -7,10 +7,10 @@ using System;
 /// <para>Dynamic obstacles are avoided using RVO collision avoidance. Avoidance is computed before physics, so the pathfinding information can be used safely in the physics step.</para>
 /// <para><b>Note:</b> After setting the <see cref="NavigationAgent2D.TargetPosition" /> property, the <see cref="NavigationAgent2D.GetNextPathPosition" /> method must be used once every physics frame to update the internal path logic of the navigation agent. The vector position it returns should be used as the next movement position for the agent's parent node.</para>
 /// </summary>
-public class NavigationAgent2DAdapter : INavigationAgent2D {
+public class NavigationAgent2DAdapter : NodeAdapter, INavigationAgent2D {
   private readonly NavigationAgent2D _node;
 
-  public NavigationAgent2DAdapter(NavigationAgent2D node) { _node = node; }
+  public NavigationAgent2DAdapter(NavigationAgent2D node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>If <c>true</c> the agent is registered for an RVO avoidance callback on the <see cref="NavigationServer2D" />. When <see cref="NavigationAgent2D.Velocity" /> is used and the processing is completed a <c>safe_velocity</c> Vector2 is received with a signal connection to <see cref="NavigationAgent2D.VelocityComputed" />. Avoidance processing with many registered agents has a significant performance cost and should only be enabled on agents that currently require it.</para>

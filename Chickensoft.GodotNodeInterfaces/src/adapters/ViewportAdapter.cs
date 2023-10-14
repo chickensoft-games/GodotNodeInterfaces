@@ -10,10 +10,10 @@ using Godot.Collections;
 /// <para>Also, viewports can be assigned to different screens in case the devices have multiple screens.</para>
 /// <para>Finally, viewports can also behave as render targets, in which case they will not be visible unless the associated texture is used to draw.</para>
 /// </summary>
-public class ViewportAdapter : IViewport {
+public class ViewportAdapter : NodeAdapter, IViewport {
   private readonly Viewport _node;
 
-  public ViewportAdapter(Viewport node) { _node = node; }
+  public ViewportAdapter(Viewport node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>If <c>true</c>, the viewport will process 2D audio streams.</para>

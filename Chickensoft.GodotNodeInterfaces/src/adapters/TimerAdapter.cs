@@ -7,10 +7,10 @@ using System;
 /// <para><b>Note:</b> Timers are affected by <see cref="Engine.TimeScale" />, a higher scale means quicker timeouts, and vice versa.</para>
 /// <para><b>Note:</b> To create a one-shot timer without instantiating a node, use <see cref="SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean,System.Boolean)" />.</para>
 /// </summary>
-public class TimerAdapter : ITimer {
+public class TimerAdapter : NodeAdapter, ITimer {
   private readonly Timer _node;
 
-  public TimerAdapter(Timer node) { _node = node; }
+  public TimerAdapter(Timer node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>If <c>true</c>, the timer will automatically start when entering the scene tree.</para>

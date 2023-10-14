@@ -7,10 +7,10 @@ using Godot.Collections;
 /// <para>This node is used to preload sub-resources inside a scene, so when the scene is loaded, all the resources are ready to use and can be retrieved from the preloader. You can add the resources using the ResourcePreloader tab when the node is selected.</para>
 /// <para>GDScript has a simplified <c>@GDScript.preload</c> built-in method which can be used in most situations, leaving the use of <see cref="ResourcePreloader" /> for more advanced scenarios.</para>
 /// </summary>
-public class ResourcePreloaderAdapter : IResourcePreloader {
+public class ResourcePreloaderAdapter : NodeAdapter, IResourcePreloader {
   private readonly ResourcePreloader _node;
 
-  public ResourcePreloaderAdapter(ResourcePreloader node) { _node = node; }
+  public ResourcePreloaderAdapter(ResourcePreloader node) : base(node) { _node = node; }
 
     /// <summary>
     /// <para>Adds a resource to the preloader with the given <paramref name="name" />. If a resource with the given <paramref name="name" /> already exists, the new resource will be renamed to "<paramref name="name" /> N" where N is an incrementing number starting from 2.</para>

@@ -9,7 +9,7 @@ using Godot.Collections;
 /// <para>Turning on the option <b>Load As Placeholder</b> for an instantiated scene in the editor causes it to be replaced by an <see cref="InstancePlaceholder" /> when running the game, this will not replace the node in the editor. This makes it possible to delay actually loading the scene until calling <see cref="InstancePlaceholder.CreateInstance(System.Boolean,Godot.PackedScene)" />. This is useful to avoid loading large scenes all at once by loading parts of it selectively.</para>
 /// <para>The <see cref="InstancePlaceholder" /> does not have a transform. This causes any child nodes to be positioned relatively to the <see cref="Viewport" /> from point (0,0), rather than their parent as displayed in the editor. Replacing the placeholder with a scene with a transform will transform children relatively to their parent again.</para>
 /// </summary>
-public interface IInstancePlaceholder {
+public interface IInstancePlaceholder : INode {
     /// <summary>
     /// <para>Call this method to actually load in the node. The created node will be placed as a sibling <i>above</i> the <see cref="InstancePlaceholder" /> in the scene tree. The <see cref="Node" />'s reference is also returned for convenience.</para>
     /// <para><b>Note:</b> <see cref="InstancePlaceholder.CreateInstance(System.Boolean,Godot.PackedScene)" /> is not thread-safe. Use <see cref="GodotObject.CallDeferred(Godot.StringName,Godot.Variant[])" /> if calling from a thread.</para>
