@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class CenterContainerNode : CenterContainer, ICenterContainer { }
 
 /// <summary>
 /// <para><see cref="CenterContainer" /> is a container that keeps all of its child controls in its center at their minimum size.</para>

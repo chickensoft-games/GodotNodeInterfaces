@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class CheckBoxNode : CheckBox, ICheckBox { }
 
 /// <summary>
 /// <para><see cref="CheckBox" /> allows the user to choose one of only two possible options. It's similar to <see cref="CheckButton" /> in functionality, but it has a different appearance. To follow established UX patterns, it's recommended to use <see cref="CheckBox" /> when toggling it has <b>no</b> immediate effect on something. For example, it could be used when toggling it will only do something once a confirmation button is pressed.</para>

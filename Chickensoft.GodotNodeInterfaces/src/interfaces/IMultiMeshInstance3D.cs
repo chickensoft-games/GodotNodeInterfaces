@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class MultiMeshInstance3DNode : MultiMeshInstance3D, IMultiMeshInstance3D { }
 
 /// <summary>
 /// <para><see cref="MultiMeshInstance3D" /> is a specialized node to instance <see cref="GeometryInstance3D" />s based on a <see cref="MultiMesh" /> resource.</para>

@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class NavigationObstacle2DNode : NavigationObstacle2D, INavigationObstacle2D { }
 
 /// <summary>
 /// <para>2D Obstacle used in navigation to constrain avoidance controlled agents outside or inside an area. The obstacle needs a navigation map and outline vertices defined to work correctly.</para>
@@ -12,44 +15,44 @@ using System;
 /// </summary>
 public interface INavigationObstacle2D : INode2D {
     /// <summary>
-    /// <para>Returns the <see cref="Rid" /> of this obstacle on the <see cref="NavigationServer2D" />.</para>
+    /// <para>If <c>true</c> the obstacle affects avoidance using agents.</para>
     /// </summary>
-    Rid GetRid();
+    bool AvoidanceEnabled { get; set; }
     /// <summary>
-    /// <para>Sets the <see cref="Rid" /> of the navigation map this NavigationObstacle node should use and also updates the <c>obstacle</c> on the NavigationServer.</para>
+    /// <para>A bitfield determining the avoidance layers for this obstacle. Agents with a matching bit on the their avoidance mask will avoid this obstacle.</para>
     /// </summary>
-    void SetNavigationMap(Rid navigationMap);
-    /// <summary>
-    /// <para>Returns the <see cref="Rid" /> of the navigation map for this NavigationObstacle node. This function returns always the map set on the NavigationObstacle node and not the map of the abstract obstacle on the NavigationServer. If the obstacle map is changed directly with the NavigationServer API the NavigationObstacle node will not be aware of the map change. Use <see cref="M:Godot.NavigationObstacle2D.SetNavigationMap(Godot.Rid)" /> to change the navigation map for the NavigationObstacle and also update the obstacle on the NavigationServer.</para>
-    /// </summary>
-    Rid GetNavigationMap();
-    /// <summary>
-    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="NavigationObstacle2D.AvoidanceLayers" /> bitmask, given a <paramref name="layerNumber" /> between 1 and 32.</para>
-    /// </summary>
-    void SetAvoidanceLayerValue(int layerNumber, bool value);
+    uint AvoidanceLayers { get; set; }
     /// <summary>
     /// <para>Returns whether or not the specified layer of the <see cref="NavigationObstacle2D.AvoidanceLayers" /> bitmask is enabled, given a <paramref name="layerNumber" /> between 1 and 32.</para>
     /// </summary>
     bool GetAvoidanceLayerValue(int layerNumber);
     /// <summary>
-    /// <para>If <c>true</c> the obstacle affects avoidance using agents.</para>
+    /// <para>Returns the <see cref="Rid" /> of the navigation map for this NavigationObstacle node. This function returns always the map set on the NavigationObstacle node and not the map of the abstract obstacle on the NavigationServer. If the obstacle map is changed directly with the NavigationServer API the NavigationObstacle node will not be aware of the map change. Use <see cref="NavigationObstacle2D.SetNavigationMap(Godot.Rid)" /> to change the navigation map for the NavigationObstacle and also update the obstacle on the NavigationServer.</para>
     /// </summary>
-    bool AvoidanceEnabled { get; set; }
+    Rid GetNavigationMap();
     /// <summary>
-    /// <para>Sets the wanted velocity for the obstacle so other agent's can better predict the obstacle if it is moved with a velocity regularly (every frame) instead of warped to a new position. Does only affect avoidance for the obstacles <see cref="NavigationObstacle2D.Radius" />. Does nothing for the obstacles static vertices.</para>
+    /// <para>Returns the <see cref="Rid" /> of this obstacle on the <see cref="NavigationServer2D" />.</para>
     /// </summary>
-    Vector2 Velocity { get; set; }
+    Rid GetRid();
     /// <summary>
     /// <para>Sets the avoidance radius for the obstacle.</para>
     /// </summary>
     float Radius { get; set; }
     /// <summary>
+    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="NavigationObstacle2D.AvoidanceLayers" /> bitmask, given a <paramref name="layerNumber" /> between 1 and 32.</para>
+    /// </summary>
+    void SetAvoidanceLayerValue(int layerNumber, bool value);
+    /// <summary>
+    /// <para>Sets the <see cref="Rid" /> of the navigation map this NavigationObstacle node should use and also updates the <c>obstacle</c> on the NavigationServer.</para>
+    /// </summary>
+    void SetNavigationMap(Rid navigationMap);
+    /// <summary>
+    /// <para>Sets the wanted velocity for the obstacle so other agent's can better predict the obstacle if it is moved with a velocity regularly (every frame) instead of warped to a new position. Does only affect avoidance for the obstacles <see cref="NavigationObstacle2D.Radius" />. Does nothing for the obstacles static vertices.</para>
+    /// </summary>
+    Vector2 Velocity { get; set; }
+    /// <summary>
     /// <para>The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will be pushed in by the obstacle, else they will be pushed out. Outlines can not be crossed or overlap. Should the vertices using obstacle be warped to a new position agent's can not predict this movement and may get trapped inside the obstacle.</para>
     /// </summary>
     Vector2[] Vertices { get; set; }
-    /// <summary>
-    /// <para>A bitfield determining the avoidance layers for this obstacle. Agents with a matching bit on the their avoidance mask will avoid this obstacle.</para>
-    /// </summary>
-    uint AvoidanceLayers { get; set; }
 
 }

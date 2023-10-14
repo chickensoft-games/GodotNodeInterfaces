@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class GpuParticlesAttractorVectorField3DNode : GpuParticlesAttractorVectorField3D, IGpuParticlesAttractorVectorField3D { }
 
 /// <summary>
 /// <para>A box-shaped attractor with varying directions and strengths defined in it that influences particles from <see cref="GpuParticles3D" /> nodes.</para>

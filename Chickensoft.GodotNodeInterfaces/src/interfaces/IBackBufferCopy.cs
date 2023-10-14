@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class BackBufferCopyNode : BackBufferCopy, IBackBufferCopy { }
 
 /// <summary>
 /// <para>Node for back-buffering the currently-displayed screen. The region defined in the <see cref="BackBufferCopy" /> node is buffered with the content of the screen it covers, or the entire screen according to the <see cref="BackBufferCopy.CopyMode" />. It can be accessed in shader scripts using the screen texture (i.e. a uniform sampler with <c>hint_screen_texture</c>).</para>

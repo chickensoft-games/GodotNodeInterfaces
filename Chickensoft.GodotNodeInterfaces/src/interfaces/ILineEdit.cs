@@ -4,6 +4,9 @@ using Godot;
 using System;
 using Godot.Collections;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class LineEditNode : LineEdit, ILineEdit { }
 
 /// <summary>
 /// <para><see cref="LineEdit" /> provides an input field for editing a single line of text. It features many built-in shortcuts that are always available (Ctrl here maps to Cmd on macOS):</para>
@@ -31,51 +34,42 @@ using Godot.Collections;
 /// </summary>
 public interface ILineEdit : IControl {
     /// <summary>
+    /// <para>Text alignment as defined in the <see cref="HorizontalAlignment" /> enum.</para>
+    /// </summary>
+    HorizontalAlignment Alignment { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, makes the caret blink.</para>
+    /// </summary>
+    bool CaretBlink { get; set; }
+    /// <summary>
+    /// <para>The interval at which the caret blinks (in seconds).</para>
+    /// </summary>
+    float CaretBlinkInterval { get; set; }
+    /// <summary>
+    /// <para>The caret's column position inside the <see cref="LineEdit" />. When set, the text may scroll to accommodate it.</para>
+    /// </summary>
+    int CaretColumn { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, the <see cref="LineEdit" /> will always show the caret, even if focus is lost.</para>
+    /// </summary>
+    bool CaretForceDisplayed { get; set; }
+    /// <summary>
+    /// <para>Allow moving caret, selecting and removing the individual composite character components.</para>
+    /// <para><b>Note:</b> Backspace is always removing individual composite character components.</para>
+    /// </summary>
+    bool CaretMidGrapheme { get; set; }
+    /// <summary>
     /// <para>Erases the <see cref="LineEdit" />'s <see cref="LineEdit.Text" />.</para>
     /// </summary>
     void Clear();
     /// <summary>
-    /// <para>Selects characters inside <see cref="LineEdit" /> between <paramref name="from" /> and <paramref name="to" />. By default, <paramref name="from" /> is at the beginning and <paramref name="to" /> at the end.</para>
-    /// <para><code>
-    /// Text = "Welcome";
-    /// Select(); // Will select "Welcome".
-    /// Select(4); // Will select "ome".
-    /// Select(2, 5); // Will select "lco".
-    /// </code></para>
+    /// <para>If <c>true</c>, the <see cref="LineEdit" /> will show a clear button if <see cref="LineEdit.Text" /> is not empty, which can be used to clear the text quickly.</para>
     /// </summary>
-    void Select(int @from, int to);
+    bool ClearButtonEnabled { get; set; }
     /// <summary>
-    /// <para>Selects the whole <see cref="T:System.String" />.</para>
+    /// <para>If <c>true</c>, the context menu will appear when right-clicked.</para>
     /// </summary>
-    void SelectAll();
-    /// <summary>
-    /// <para>Clears the current selection.</para>
-    /// </summary>
-    void Deselect();
-    /// <summary>
-    /// <para>Returns <c>true</c> if the user has selected text.</para>
-    /// </summary>
-    bool HasSelection();
-    /// <summary>
-    /// <para>Returns the text inside the selection.</para>
-    /// </summary>
-    string GetSelectedText();
-    /// <summary>
-    /// <para>Returns the selection begin column.</para>
-    /// </summary>
-    int GetSelectionFromColumn();
-    /// <summary>
-    /// <para>Returns the selection end column.</para>
-    /// </summary>
-    int GetSelectionToColumn();
-    /// <summary>
-    /// <para>Returns the scroll offset due to <see cref="LineEdit.CaretColumn" />, as a number of characters.</para>
-    /// </summary>
-    float GetScrollOffset();
-    /// <summary>
-    /// <para>Inserts <paramref name="text" /> at the caret. If the resulting value is longer than <see cref="LineEdit.MaxLength" />, nothing happens.</para>
-    /// </summary>
-    void InsertTextAtCaret(string text);
+    bool ContextMenuEnabled { get; set; }
     /// <summary>
     /// <para>Deletes one character at the caret's current position (equivalent to pressing Delete).</para>
     /// </summary>
@@ -85,9 +79,33 @@ public interface ILineEdit : IControl {
     /// </summary>
     void DeleteText(int fromColumn, int toColumn);
     /// <summary>
-    /// <para>Executes a given action as defined in the <see cref="LineEdit.MenuItems" /> enum.</para>
+    /// <para>Clears the current selection.</para>
     /// </summary>
-    void MenuOption(int option);
+    void Deselect();
+    /// <summary>
+    /// <para>If <c>true</c>, the selected text will be deselected when focus is lost.</para>
+    /// </summary>
+    bool DeselectOnFocusLossEnabled { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, allow drag and drop of selected text.</para>
+    /// </summary>
+    bool DragAndDropSelectionEnabled { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, control characters are displayed.</para>
+    /// </summary>
+    bool DrawControlChars { get; set; }
+    /// <summary>
+    /// <para>If <c>false</c>, existing text cannot be modified and new text cannot be added.</para>
+    /// </summary>
+    bool Editable { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, the <see cref="LineEdit" /> width will increase to stay longer than the <see cref="LineEdit.Text" />. It will <b>not</b> compress if the <see cref="LineEdit.Text" /> is shortened.</para>
+    /// </summary>
+    bool ExpandToTextLength { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, the <see cref="LineEdit" /> doesn't display decoration.</para>
+    /// </summary>
+    bool Flat { get; set; }
     /// <summary>
     /// <para>Returns the <see cref="PopupMenu" /> of this <see cref="LineEdit" />. By default, this menu is displayed when right-clicking on the <see cref="LineEdit" />.</para>
     /// <para>You can add custom menu items or remove standard ones. Make sure your IDs don't conflict with the standard ones (see <see cref="LineEdit.MenuItems" />). For example:</para>
@@ -115,22 +133,37 @@ public interface ILineEdit : IControl {
     /// </summary>
     PopupMenu GetMenu();
     /// <summary>
+    /// <para>Returns the scroll offset due to <see cref="LineEdit.CaretColumn" />, as a number of characters.</para>
+    /// </summary>
+    float GetScrollOffset();
+    /// <summary>
+    /// <para>Returns the text inside the selection.</para>
+    /// </summary>
+    string GetSelectedText();
+    /// <summary>
+    /// <para>Returns the selection begin column.</para>
+    /// </summary>
+    int GetSelectionFromColumn();
+    /// <summary>
+    /// <para>Returns the selection end column.</para>
+    /// </summary>
+    int GetSelectionToColumn();
+    /// <summary>
+    /// <para>Returns <c>true</c> if the user has selected text.</para>
+    /// </summary>
+    bool HasSelection();
+    /// <summary>
+    /// <para>Inserts <paramref name="text" /> at the caret. If the resulting value is longer than <see cref="LineEdit.MaxLength" />, nothing happens.</para>
+    /// </summary>
+    void InsertTextAtCaret(string text);
+    /// <summary>
     /// <para>Returns whether the menu is visible. Use this instead of <c>get_menu().visible</c> to improve performance (so the creation of the menu is avoided).</para>
     /// </summary>
     bool IsMenuVisible();
     /// <summary>
-    /// <para>String value of the <see cref="LineEdit" />.</para>
-    /// <para><b>Note:</b> Changing text using this property won't emit the <see cref="LineEdit.TextChanged" /> signal.</para>
+    /// <para>Language code used for line-breaking and text shaping algorithms. If left empty, current locale is used instead.</para>
     /// </summary>
-    string Text { get; set; }
-    /// <summary>
-    /// <para>Text shown when the <see cref="LineEdit" /> is empty. It is <b>not</b> the <see cref="LineEdit" />'s default value (see <see cref="LineEdit.Text" />).</para>
-    /// </summary>
-    string PlaceholderText { get; set; }
-    /// <summary>
-    /// <para>Text alignment as defined in the <see cref="HorizontalAlignment" /> enum.</para>
-    /// </summary>
-    HorizontalAlignment Alignment { get; set; }
+    string Language { get; set; }
     /// <summary>
     /// <para>Maximum number of characters that can be entered inside the <see cref="LineEdit" />. If <c>0</c>, there is no limit.</para>
     /// <para>When a limit is defined, characters that would exceed <see cref="LineEdit.MaxLength" /> are truncated. This happens both for existing <see cref="LineEdit.Text" /> contents when setting the max length, or for new text inserted in the <see cref="LineEdit" />, including pasting. If any input text is truncated, the <see cref="LineEdit.TextChangeRejected" /> signal is emitted with the truncated substring as parameter.</para>
@@ -147,87 +180,22 @@ public interface ILineEdit : IControl {
     /// </summary>
     int MaxLength { get; set; }
     /// <summary>
-    /// <para>If <c>false</c>, existing text cannot be modified and new text cannot be added.</para>
+    /// <para>Executes a given action as defined in the <see cref="LineEdit.MenuItems" /> enum.</para>
     /// </summary>
-    bool Editable { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the <see cref="LineEdit" /> width will increase to stay longer than the <see cref="LineEdit.Text" />. It will <b>not</b> compress if the <see cref="LineEdit.Text" /> is shortened.</para>
-    /// </summary>
-    bool ExpandToTextLength { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the context menu will appear when right-clicked.</para>
-    /// </summary>
-    bool ContextMenuEnabled { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the native virtual keyboard is shown when focused on platforms that support it.</para>
-    /// </summary>
-    bool VirtualKeyboardEnabled { get; set; }
-    /// <summary>
-    /// <para>Specifies the type of virtual keyboard to show.</para>
-    /// </summary>
-    LineEdit.VirtualKeyboardTypeEnum VirtualKeyboardType { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the <see cref="LineEdit" /> will show a clear button if <see cref="LineEdit.Text" /> is not empty, which can be used to clear the text quickly.</para>
-    /// </summary>
-    bool ClearButtonEnabled { get; set; }
-    /// <summary>
-    /// <para>If <c>false</c>, using shortcuts will be disabled.</para>
-    /// </summary>
-    bool ShortcutKeysEnabled { get; set; }
+    void MenuOption(int option);
     /// <summary>
     /// <para>If <c>false</c>, using middle mouse button to paste clipboard will be disabled.</para>
     /// <para><b>Note:</b> This method is only implemented on Linux.</para>
     /// </summary>
     bool MiddleMousePasteEnabled { get; set; }
     /// <summary>
-    /// <para>If <c>false</c>, it's impossible to select the text using mouse nor keyboard.</para>
+    /// <para>Text shown when the <see cref="LineEdit" /> is empty. It is <b>not</b> the <see cref="LineEdit" />'s default value (see <see cref="LineEdit.Text" />).</para>
     /// </summary>
-    bool SelectingEnabled { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the selected text will be deselected when focus is lost.</para>
-    /// </summary>
-    bool DeselectOnFocusLossEnabled { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, allow drag and drop of selected text.</para>
-    /// </summary>
-    bool DragAndDropSelectionEnabled { get; set; }
+    string PlaceholderText { get; set; }
     /// <summary>
     /// <para>Sets the icon that will appear in the right end of the <see cref="LineEdit" /> if there's no <see cref="LineEdit.Text" />, or always, if <see cref="LineEdit.ClearButtonEnabled" /> is set to <c>false</c>.</para>
     /// </summary>
     Texture2D RightIcon { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the <see cref="LineEdit" /> doesn't display decoration.</para>
-    /// </summary>
-    bool Flat { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, control characters are displayed.</para>
-    /// </summary>
-    bool DrawControlChars { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the <see cref="LineEdit" /> will select the whole text when it gains focus.</para>
-    /// </summary>
-    bool SelectAllOnFocus { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, makes the caret blink.</para>
-    /// </summary>
-    bool CaretBlink { get; set; }
-    /// <summary>
-    /// <para>The interval at which the caret blinks (in seconds).</para>
-    /// </summary>
-    float CaretBlinkInterval { get; set; }
-    /// <summary>
-    /// <para>The caret's column position inside the <see cref="LineEdit" />. When set, the text may scroll to accommodate it.</para>
-    /// </summary>
-    int CaretColumn { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the <see cref="LineEdit" /> will always show the caret, even if focus is lost.</para>
-    /// </summary>
-    bool CaretForceDisplayed { get; set; }
-    /// <summary>
-    /// <para>Allow moving caret, selecting and removing the individual composite character components.</para>
-    /// <para><b>Note:</b> Backspace is always removing individual composite character components.</para>
-    /// </summary>
-    bool CaretMidGrapheme { get; set; }
     /// <summary>
     /// <para>If <c>true</c>, every character is replaced with the secret character (see <see cref="LineEdit.SecretCharacter" />).</para>
     /// </summary>
@@ -237,13 +205,31 @@ public interface ILineEdit : IControl {
     /// </summary>
     string SecretCharacter { get; set; }
     /// <summary>
-    /// <para>Base text writing direction.</para>
+    /// <para>Selects characters inside <see cref="LineEdit" /> between <paramref name="from" /> and <paramref name="to" />. By default, <paramref name="from" /> is at the beginning and <paramref name="to" /> at the end.</para>
+    /// <para><code>
+    /// Text = "Welcome";
+    /// Select(); // Will select "Welcome".
+    /// Select(4); // Will select "ome".
+    /// Select(2, 5); // Will select "lco".
+    /// </code></para>
     /// </summary>
-    Control.TextDirection TextDirection { get; set; }
+    void Select(int @from, int to);
     /// <summary>
-    /// <para>Language code used for line-breaking and text shaping algorithms. If left empty, current locale is used instead.</para>
+    /// <para>Selects the whole <see cref="T:System.String" />.</para>
     /// </summary>
-    string Language { get; set; }
+    void SelectAll();
+    /// <summary>
+    /// <para>If <c>true</c>, the <see cref="LineEdit" /> will select the whole text when it gains focus.</para>
+    /// </summary>
+    bool SelectAllOnFocus { get; set; }
+    /// <summary>
+    /// <para>If <c>false</c>, it's impossible to select the text using mouse nor keyboard.</para>
+    /// </summary>
+    bool SelectingEnabled { get; set; }
+    /// <summary>
+    /// <para>If <c>false</c>, using shortcuts will be disabled.</para>
+    /// </summary>
+    bool ShortcutKeysEnabled { get; set; }
     /// <summary>
     /// <para>Set BiDi algorithm override for the structured text.</para>
     /// </summary>
@@ -252,5 +238,22 @@ public interface ILineEdit : IControl {
     /// <para>Set additional options for BiDi override.</para>
     /// </summary>
     Godot.Collections.Array StructuredTextBidiOverrideOptions { get; set; }
+    /// <summary>
+    /// <para>String value of the <see cref="LineEdit" />.</para>
+    /// <para><b>Note:</b> Changing text using this property won't emit the <see cref="LineEdit.TextChanged" /> signal.</para>
+    /// </summary>
+    string Text { get; set; }
+    /// <summary>
+    /// <para>Base text writing direction.</para>
+    /// </summary>
+    Control.TextDirection TextDirection { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, the native virtual keyboard is shown when focused on platforms that support it.</para>
+    /// </summary>
+    bool VirtualKeyboardEnabled { get; set; }
+    /// <summary>
+    /// <para>Specifies the type of virtual keyboard to show.</para>
+    /// </summary>
+    LineEdit.VirtualKeyboardTypeEnum VirtualKeyboardType { get; set; }
 
 }

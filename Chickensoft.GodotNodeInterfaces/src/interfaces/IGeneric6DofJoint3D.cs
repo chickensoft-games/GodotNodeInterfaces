@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class Generic6DofJoint3DNode : Generic6DofJoint3D, IGeneric6DofJoint3D { }
 
 /// <summary>
 /// <para>The <see cref="Generic6DofJoint3D" /> (6 Degrees Of Freedom) joint allows for implementing custom types of joints by locking the rotation and translation of certain axes.</para>
@@ -10,28 +13,28 @@ using System;
 /// </summary>
 public interface IGeneric6DofJoint3D : IJoint3D {
 
-    void SetParamX(Generic6DofJoint3D.Param @param, float value);
+    bool GetFlagX(Generic6DofJoint3D.Flag flag);
+
+    bool GetFlagY(Generic6DofJoint3D.Flag flag);
+
+    bool GetFlagZ(Generic6DofJoint3D.Flag flag);
 
     float GetParamX(Generic6DofJoint3D.Param @param);
 
-    void SetParamY(Generic6DofJoint3D.Param @param, float value);
-
     float GetParamY(Generic6DofJoint3D.Param @param);
-
-    void SetParamZ(Generic6DofJoint3D.Param @param, float value);
 
     float GetParamZ(Generic6DofJoint3D.Param @param);
 
     void SetFlagX(Generic6DofJoint3D.Flag flag, bool value);
 
-    bool GetFlagX(Generic6DofJoint3D.Flag flag);
-
     void SetFlagY(Generic6DofJoint3D.Flag flag, bool value);
-
-    bool GetFlagY(Generic6DofJoint3D.Flag flag);
 
     void SetFlagZ(Generic6DofJoint3D.Flag flag, bool value);
 
-    bool GetFlagZ(Generic6DofJoint3D.Flag flag);
+    void SetParamX(Generic6DofJoint3D.Param @param, float value);
+
+    void SetParamY(Generic6DofJoint3D.Param @param, float value);
+
+    void SetParamZ(Generic6DofJoint3D.Param @param, float value);
 
 }

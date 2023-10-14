@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class VisibleOnScreenNotifier2DNode : VisibleOnScreenNotifier2D, IVisibleOnScreenNotifier2D { }
 
 /// <summary>
 /// <para>The VisibleOnScreenNotifier2D detects when it is visible on the screen. It also notifies when its bounding rectangle enters or exits the screen or a viewport.</para>

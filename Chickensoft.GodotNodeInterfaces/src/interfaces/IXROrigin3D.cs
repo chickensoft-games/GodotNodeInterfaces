@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class XROrigin3DNode : XROrigin3D, IXROrigin3D { }
 
 /// <summary>
 /// <para>This is a special node within the AR/VR system that maps the physical location of the center of our tracking space to the virtual location within our game world.</para>
@@ -12,13 +15,13 @@ using System;
 /// </summary>
 public interface IXROrigin3D : INode3D {
     /// <summary>
+    /// <para>Is this XROrigin3D node the current origin used by the <see cref="XRServer" />?</para>
+    /// </summary>
+    bool Current { get; set; }
+    /// <summary>
     /// <para>Allows you to adjust the scale to your game's units. Most AR/VR platforms assume a scale of 1 game world unit = 1 real world meter.</para>
     /// <para><b>Note:</b> This method is a passthrough to the <see cref="XRServer" /> itself.</para>
     /// </summary>
     float WorldScale { get; set; }
-    /// <summary>
-    /// <para>Is this XROrigin3D node the current origin used by the <see cref="XRServer" />?</para>
-    /// </summary>
-    bool Current { get; set; }
 
 }

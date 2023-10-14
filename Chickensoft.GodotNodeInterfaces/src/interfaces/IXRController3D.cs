@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class XRController3DNode : XRController3D, IXRController3D { }
 
 /// <summary>
 /// <para>This is a helper spatial node that is linked to the tracking of controllers. It also offers several handy passthroughs to the state of buttons and such on the controllers.</para>
@@ -12,24 +15,24 @@ using System;
 /// </summary>
 public interface IXRController3D : IXRNode3D {
     /// <summary>
-    /// <para>Returns <c>true</c> if the button with the given <paramref name="name" /> is pressed.</para>
+    /// <para>Returns a numeric value for the input with the given <paramref name="name" />. This is used for triggers and grip sensors.</para>
     /// </summary>
-    bool IsButtonPressed(StringName name);
+    float GetFloat(StringName name);
     /// <summary>
     /// <para>Returns a <see cref="Variant" /> for the input with the given <paramref name="name" />. This works for any input type, the variant will be typed according to the actions configuration.</para>
     /// </summary>
     Variant GetInput(StringName name);
     /// <summary>
-    /// <para>Returns a numeric value for the input with the given <paramref name="name" />. This is used for triggers and grip sensors.</para>
+    /// <para>Returns the hand holding this controller, if known. See <see cref="XRPositionalTracker.TrackerHand" />.</para>
     /// </summary>
-    float GetFloat(StringName name);
+    XRPositionalTracker.TrackerHand GetTrackerHand();
     /// <summary>
     /// <para>Returns a <see cref="Vector2" /> for the input with the given <paramref name="name" />. This is used for thumbsticks and thumbpads found on many controllers.</para>
     /// </summary>
     Vector2 GetVector2(StringName name);
     /// <summary>
-    /// <para>Returns the hand holding this controller, if known. See <see cref="XRPositionalTracker.TrackerHand" />.</para>
+    /// <para>Returns <c>true</c> if the button with the given <paramref name="name" /> is pressed.</para>
     /// </summary>
-    XRPositionalTracker.TrackerHand GetTrackerHand();
+    bool IsButtonPressed(StringName name);
 
 }

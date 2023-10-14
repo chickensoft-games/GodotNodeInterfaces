@@ -9,6 +9,10 @@ using System;
 /// </summary>
 public interface IJoint3D : INode3D {
     /// <summary>
+    /// <para>If <c>true</c>, the two bodies of the nodes are not able to collide with each other.</para>
+    /// </summary>
+    bool ExcludeNodesFromCollision { get; set; }
+    /// <summary>
     /// <para>Returns the joint's <see cref="Rid" />.</para>
     /// </summary>
     Rid GetRid();
@@ -24,9 +28,5 @@ public interface IJoint3D : INode3D {
     /// <para>The priority used to define which solver is executed first for multiple joints. The lower the value, the higher the priority.</para>
     /// </summary>
     int SolverPriority { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, the two bodies of the nodes are not able to collide with each other.</para>
-    /// </summary>
-    bool ExcludeNodesFromCollision { get; set; }
 
 }

@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class Path2DNode : Path2D, IPath2D { }
 
 /// <summary>
 /// <para>Can have <see cref="PathFollow2D" /> child nodes moving along the <see cref="Curve2D" />. See <see cref="PathFollow2D" /> for more information on usage.</para>

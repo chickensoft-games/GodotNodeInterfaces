@@ -19,13 +19,27 @@
         "clear": false
       },
       "dependsOn": [
-        "clean_interfaces"
+        "clean_interfaces",
+        "clean_adapters"
       ]
     },
     {
       "label": "clean_interfaces",
       "type": "shell",
       "command": "rm ${workspaceFolder}/Chickensoft.GodotNodeInterfaces/src/interfaces/*.cs || exit 0",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "clean_adapters",
+      "type": "shell",
+      "command": "rm ${workspaceFolder}/Chickensoft.GodotNodeInterfaces/src/adapters/*.cs || exit 0",
       "presentation": {
         "echo": true,
         "reveal": "silent",

@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class StaticBody2DNode : StaticBody2D, IStaticBody2D { }
 
 /// <summary>
 /// <para>A static 2D physics body. It can't be moved by external forces or contacts, but can be moved manually by other means such as code, <see cref="AnimationMixer" />s (with <see cref="AnimationMixer.CallbackModeProcess" /> set to <see cref="AnimationMixer.AnimationCallbackModeProcess.Physics" />), and <see cref="RemoteTransform2D" />.</para>
@@ -11,17 +14,17 @@ using System;
 /// </summary>
 public interface IStaticBody2D : IPhysicsBody2D {
     /// <summary>
-    /// <para>The physics material override for the body.</para>
-    /// <para>If a material is assigned to this property, it will be used instead of any other physics material, such as an inherited one.</para>
+    /// <para>The body's constant angular velocity. This does not rotate the body, but affects touching bodies, as if it were rotating.</para>
     /// </summary>
-    PhysicsMaterial PhysicsMaterialOverride { get; set; }
+    float ConstantAngularVelocity { get; set; }
     /// <summary>
     /// <para>The body's constant linear velocity. This does not move the body, but affects touching bodies, as if it were moving.</para>
     /// </summary>
     Vector2 ConstantLinearVelocity { get; set; }
     /// <summary>
-    /// <para>The body's constant angular velocity. This does not rotate the body, but affects touching bodies, as if it were rotating.</para>
+    /// <para>The physics material override for the body.</para>
+    /// <para>If a material is assigned to this property, it will be used instead of any other physics material, such as an inherited one.</para>
     /// </summary>
-    float ConstantAngularVelocity { get; set; }
+    PhysicsMaterial PhysicsMaterialOverride { get; set; }
 
 }

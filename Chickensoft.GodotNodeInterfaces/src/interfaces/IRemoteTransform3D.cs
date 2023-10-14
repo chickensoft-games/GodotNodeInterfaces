@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class RemoteTransform3DNode : RemoteTransform3D, IRemoteTransform3D { }
 
 /// <summary>
 /// <para>RemoteTransform3D pushes its own <see cref="Transform3D" /> to another <see cref="Node3D" /> derived Node (called the remote node) in the scene.</para>
@@ -18,10 +21,6 @@ public interface IRemoteTransform3D : INode3D {
     /// </summary>
     NodePath RemotePath { get; set; }
     /// <summary>
-    /// <para>If <c>true</c>, global coordinates are used. If <c>false</c>, local coordinates are used.</para>
-    /// </summary>
-    bool UseGlobalCoordinates { get; set; }
-    /// <summary>
     /// <para>If <c>true</c>, the remote node's position is updated.</para>
     /// </summary>
     bool UpdatePosition { get; set; }
@@ -33,5 +32,9 @@ public interface IRemoteTransform3D : INode3D {
     /// <para>If <c>true</c>, the remote node's scale is updated.</para>
     /// </summary>
     bool UpdateScale { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, global coordinates are used. If <c>false</c>, local coordinates are used.</para>
+    /// </summary>
+    bool UseGlobalCoordinates { get; set; }
 
 }

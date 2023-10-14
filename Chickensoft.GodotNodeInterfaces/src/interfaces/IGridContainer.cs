@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class GridContainerNode : GridContainer, IGridContainer { }
 
 /// <summary>
 /// <para><see cref="GridContainer" /> arranges its child controls in a grid layout. The number of columns is specified by the <see cref="GridContainer.Columns" /> property, whereas the number of rows depends on how many are needed for the child controls. The number of rows and columns is preserved for every size of the container.</para>

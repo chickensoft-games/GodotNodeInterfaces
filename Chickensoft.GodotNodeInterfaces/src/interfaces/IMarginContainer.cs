@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class MarginContainerNode : MarginContainer, IMarginContainer { }
 
 /// <summary>
 /// <para><see cref="MarginContainer" /> adds an adjustable margin on each side of its child controls. The margins are added around all children, not around each individual one. To control the <see cref="MarginContainer" />'s margins, use the <c>margin_*</c> theme properties listed below.</para>

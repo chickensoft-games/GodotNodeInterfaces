@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class WorldEnvironmentNode : WorldEnvironment, IWorldEnvironment { }
 
 /// <summary>
 /// <para>The <see cref="WorldEnvironment" /> node is used to configure the default <see cref="Environment" /> for the scene.</para>
@@ -10,12 +13,12 @@ using Godot;
 /// </summary>
 public interface IWorldEnvironment {
     /// <summary>
-    /// <para>The <see cref="Environment" /> resource used by this <see cref="WorldEnvironment" />, defining the default properties.</para>
-    /// </summary>
-    Godot.Environment Environment { get; set; }
-    /// <summary>
     /// <para>The default <see cref="CameraAttributes" /> resource to use if none set on the <see cref="Camera3D" />.</para>
     /// </summary>
     CameraAttributes CameraAttributes { get; set; }
+    /// <summary>
+    /// <para>The <see cref="Environment" /> resource used by this <see cref="WorldEnvironment" />, defining the default properties.</para>
+    /// </summary>
+    Godot.Environment Environment { get; set; }
 
 }

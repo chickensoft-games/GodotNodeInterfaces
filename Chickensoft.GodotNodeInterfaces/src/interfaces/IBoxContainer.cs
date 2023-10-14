@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class BoxContainerNode : BoxContainer, IBoxContainer { }
 
 /// <summary>
 /// <para>A container that arranges its child controls horizontally or vertically, rearranging them automatically when their minimum size changes.</para>

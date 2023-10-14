@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class XRAnchor3DNode : XRAnchor3D, IXRAnchor3D { }
 
 /// <summary>
 /// <para>The <see cref="XRAnchor3D" /> point is a spatial node that maps a real world location identified by the AR platform to a position within the game world. For example, as long as plane detection in ARKit is on, ARKit will identify and update the position of planes (tables, floors, etc) and create anchors for them.</para>
@@ -10,12 +13,12 @@ using Godot;
 /// </summary>
 public interface IXRAnchor3D : IXRNode3D {
     /// <summary>
-    /// <para>Returns the estimated size of the plane that was detected. Say when the anchor relates to a table in the real world, this is the estimated size of the surface of that table.</para>
-    /// </summary>
-    Vector3 GetSize();
-    /// <summary>
     /// <para>Returns a plane aligned with our anchor; handy for intersection testing.</para>
     /// </summary>
     Plane GetPlane();
+    /// <summary>
+    /// <para>Returns the estimated size of the plane that was detected. Say when the anchor relates to a table in the real world, this is the estimated size of the surface of that table.</para>
+    /// </summary>
+    Vector3 GetSize();
 
 }

@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class ContainerNode : Container, IContainer { }
 
 /// <summary>
 /// <para>Base class for all GUI containers. A <see cref="Container" /> automatically arranges its child controls in a certain way. This class can be inherited to make custom container types.</para>
@@ -19,12 +22,12 @@ public interface IContainer : IControl {
     /// </summary>
     int[] _GetAllowedSizeFlagsVertical();
     /// <summary>
-    /// <para>Queue resort of the contained children. This is called automatically anyway, but can be called upon request.</para>
-    /// </summary>
-    void QueueSort();
-    /// <summary>
     /// <para>Fit a child control in a given rect. This is mainly a helper for creating custom container classes.</para>
     /// </summary>
     void FitChildInRect(Control child, Rect2 rect);
+    /// <summary>
+    /// <para>Queue resort of the contained children. This is called automatically anyway, but can be called upon request.</para>
+    /// </summary>
+    void QueueSort();
 
 }

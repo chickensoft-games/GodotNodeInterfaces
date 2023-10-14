@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class CsgBox3DNode : CsgBox3D, ICsgBox3D { }
 
 /// <summary>
 /// <para>This node allows you to create a box for use with the CSG system.</para>
@@ -9,12 +12,12 @@ using Godot;
 /// </summary>
 public interface ICsgBox3D : ICsgPrimitive3D {
     /// <summary>
-    /// <para>The box's width, height and depth.</para>
-    /// </summary>
-    Vector3 Size { get; set; }
-    /// <summary>
     /// <para>The material used to render the box.</para>
     /// </summary>
     Material Material { get; set; }
+    /// <summary>
+    /// <para>The box's width, height and depth.</para>
+    /// </summary>
+    Vector3 Size { get; set; }
 
 }

@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class GpuParticlesAttractorSphere3DNode : GpuParticlesAttractorSphere3D, IGpuParticlesAttractorSphere3D { }
 
 /// <summary>
 /// <para>A spheroid-shaped attractor that influences particles from <see cref="GpuParticles3D" /> nodes. Can be used to attract particles towards its origin, or to push them away from its origin.</para>

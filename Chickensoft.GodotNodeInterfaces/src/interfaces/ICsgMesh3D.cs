@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class CsgMesh3DNode : CsgMesh3D, ICsgMesh3D { }
 
 /// <summary>
 /// <para>This CSG node allows you to use any mesh resource as a CSG shape, provided it is closed, does not self-intersect, does not contain internal faces and has no edges that connect to more than two faces. See also <see cref="CsgPolygon3D" /> for drawing 2D extruded polygons to be used as CSG nodes.</para>
@@ -9,14 +12,14 @@ using Godot;
 /// </summary>
 public interface ICsgMesh3D : ICsgPrimitive3D {
     /// <summary>
+    /// <para>The <see cref="Material" /> used in drawing the CSG shape.</para>
+    /// </summary>
+    Material Material { get; set; }
+    /// <summary>
     /// <para>The <see cref="Mesh" /> resource to use as a CSG shape.</para>
     /// <para><b>Note:</b> When using an <see cref="ArrayMesh" />, all vertex attributes except <see cref="Mesh.ArrayType.Vertex" />, <see cref="Mesh.ArrayType.Normal" /> and <see cref="Mesh.ArrayType.TexUV" /> are left unused. Only <see cref="Mesh.ArrayType.Vertex" /> and <see cref="Mesh.ArrayType.TexUV" /> will be passed to the GPU.</para>
     /// <para><see cref="Mesh.ArrayType.Normal" /> is only used to determine which faces require the use of flat shading. By default, CSGMesh will ignore the mesh's vertex normals, recalculate them for each vertex and use a smooth shader. If a flat shader is required for a face, ensure that all vertex normals of the face are approximately equal.</para>
     /// </summary>
     Mesh Mesh { get; set; }
-    /// <summary>
-    /// <para>The <see cref="Material" /> used in drawing the CSG shape.</para>
-    /// </summary>
-    Material Material { get; set; }
 
 }

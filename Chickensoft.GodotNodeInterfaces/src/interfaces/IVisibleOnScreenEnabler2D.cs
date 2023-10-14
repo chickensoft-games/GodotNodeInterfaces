@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class VisibleOnScreenEnabler2DNode : VisibleOnScreenEnabler2D, IVisibleOnScreenEnabler2D { }
 
 /// <summary>
 /// <para>VisibleOnScreenEnabler2D detects when it is visible on screen (just like <see cref="VisibleOnScreenNotifier2D" />) and automatically enables or disables the target node. The target node is disabled when <see cref="VisibleOnScreenEnabler2D" /> is not visible on screen (including when <see cref="CanvasItem.Visible" /> is <c>false</c>), and enabled when the enabler is visible. The disabling is achieved by changing <see cref="Node.ProcessMode" />.</para>

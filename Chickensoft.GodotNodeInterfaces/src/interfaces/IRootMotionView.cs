@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class RootMotionViewNode : RootMotionView, IRootMotionView { }
 
 /// <summary>
 /// <para><i>Root motion</i> refers to an animation technique where a mesh's skeleton is used to give impulse to a character. When working with 3D animations, a popular technique is for animators to use the root skeleton bone to give motion to the rest of the skeleton. This allows animating characters in a way where steps actually match the floor below. It also allows precise interaction with objects during cinematics. See also <see cref="AnimationMixer" />.</para>
@@ -14,13 +17,13 @@ public interface IRootMotionView : IVisualInstance3D {
     /// </summary>
     NodePath AnimationPath { get; set; }
     /// <summary>
-    /// <para>The grid's color.</para>
-    /// </summary>
-    Color Color { get; set; }
-    /// <summary>
     /// <para>The grid's cell size in 3D units.</para>
     /// </summary>
     float CellSize { get; set; }
+    /// <summary>
+    /// <para>The grid's color.</para>
+    /// </summary>
+    Color Color { get; set; }
     /// <summary>
     /// <para>The grid's radius in 3D units. The grid's opacity will fade gradually as the distance from the origin increases until this <see cref="RootMotionView.Radius" /> is reached.</para>
     /// </summary>

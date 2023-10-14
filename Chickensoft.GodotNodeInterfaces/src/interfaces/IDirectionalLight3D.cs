@@ -3,27 +3,14 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class DirectionalLight3DNode : DirectionalLight3D, IDirectionalLight3D { }
 
 /// <summary>
 /// <para>A directional light is a type of <see cref="Light3D" /> node that models an infinite number of parallel rays covering the entire scene. It is used for lights with strong intensity that are located far away from the scene to model sunlight or moonlight. The worldspace location of the DirectionalLight3D transform (origin) is ignored. Only the basis is used to determine light direction.</para>
 /// </summary>
 public interface IDirectionalLight3D : ILight3D {
-    /// <summary>
-    /// <para>The light's shadow rendering algorithm. See <see cref="DirectionalLight3D.ShadowMode" />.</para>
-    /// </summary>
-    DirectionalLight3D.ShadowMode DirectionalShadowMode { get; set; }
-    /// <summary>
-    /// <para>The distance from camera to shadow split 1. Relative to <see cref="DirectionalLight3D.DirectionalShadowMaxDistance" />. Only used when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Parallel2Splits" /> or <see cref="DirectionalLight3D.ShadowMode.Parallel4Splits" />.</para>
-    /// </summary>
-    float DirectionalShadowSplit1 { get; set; }
-    /// <summary>
-    /// <para>The distance from shadow split 1 to split 2. Relative to <see cref="DirectionalLight3D.DirectionalShadowMaxDistance" />. Only used when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Parallel4Splits" />.</para>
-    /// </summary>
-    float DirectionalShadowSplit2 { get; set; }
-    /// <summary>
-    /// <para>The distance from shadow split 2 to split 3. Relative to <see cref="DirectionalLight3D.DirectionalShadowMaxDistance" />. Only used when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Parallel4Splits" />.</para>
-    /// </summary>
-    float DirectionalShadowSplit3 { get; set; }
     /// <summary>
     /// <para>If <c>true</c>, shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Orthogonal" />.</para>
     /// </summary>
@@ -37,9 +24,25 @@ public interface IDirectionalLight3D : ILight3D {
     /// </summary>
     float DirectionalShadowMaxDistance { get; set; }
     /// <summary>
+    /// <para>The light's shadow rendering algorithm. See <see cref="DirectionalLight3D.ShadowMode" />.</para>
+    /// </summary>
+    DirectionalLight3D.ShadowMode DirectionalShadowMode { get; set; }
+    /// <summary>
     /// <para>Sets the size of the directional shadow pancake. The pancake offsets the start of the shadow's camera frustum to provide a higher effective depth resolution for the shadow. However, a high pancake size can cause artifacts in the shadows of large objects that are close to the edge of the frustum. Reducing the pancake size can help. Setting the size to <c>0</c> turns off the pancaking effect.</para>
     /// </summary>
     float DirectionalShadowPancakeSize { get; set; }
+    /// <summary>
+    /// <para>The distance from camera to shadow split 1. Relative to <see cref="DirectionalLight3D.DirectionalShadowMaxDistance" />. Only used when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Parallel2Splits" /> or <see cref="DirectionalLight3D.ShadowMode.Parallel4Splits" />.</para>
+    /// </summary>
+    float DirectionalShadowSplit1 { get; set; }
+    /// <summary>
+    /// <para>The distance from shadow split 1 to split 2. Relative to <see cref="DirectionalLight3D.DirectionalShadowMaxDistance" />. Only used when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Parallel4Splits" />.</para>
+    /// </summary>
+    float DirectionalShadowSplit2 { get; set; }
+    /// <summary>
+    /// <para>The distance from shadow split 2 to split 3. Relative to <see cref="DirectionalLight3D.DirectionalShadowMaxDistance" />. Only used when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Parallel4Splits" />.</para>
+    /// </summary>
+    float DirectionalShadowSplit3 { get; set; }
     /// <summary>
     /// <para>Set whether this <see cref="DirectionalLight3D" /> is visible in the sky, in the scene, or both in the sky and in the scene. See <see cref="DirectionalLight3D.SkyModeEnum" /> for options.</para>
     /// </summary>

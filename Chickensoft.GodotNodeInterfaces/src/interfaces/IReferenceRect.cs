@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class ReferenceRectNode : ReferenceRect, IReferenceRect { }
 
 /// <summary>
 /// <para>A rectangle box that displays only a colored border around its rectangle. It is used to visualize the extents of a <see cref="Control" />.</para>

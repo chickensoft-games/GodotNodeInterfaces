@@ -11,7 +11,7 @@ using System;
 public interface ICollisionObject2D : INode2D {
     /// <summary>
     /// <para>Accepts unhandled <see cref="InputEvent" />s. <paramref name="shapeIdx" /> is the child index of the clicked <see cref="Shape2D" />. Connect to <see cref="CollisionObject2D.InputEvent" /> to easily pick up these events.</para>
-    /// <para><b>Note:</b> <see cref="M:Godot.CollisionObject2D._InputEvent(Godot.Viewport,Godot.InputEvent,System.Int32)" /> requires <see cref="CollisionObject2D.InputPickable" /> to be <c>true</c> and at least one <see cref="CollisionObject2D.CollisionLayer" /> bit to be set.</para>
+    /// <para><b>Note:</b> <see cref="CollisionObject2D._InputEvent(Godot.Viewport,Godot.InputEvent,System.Int32)" /> requires <see cref="CollisionObject2D.InputPickable" /> to be <c>true</c> and at least one <see cref="CollisionObject2D.CollisionLayer" /> bit to be set.</para>
     /// </summary>
     void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx);
     /// <summary>
@@ -31,106 +31,6 @@ public interface ICollisionObject2D : INode2D {
     /// </summary>
     void _MouseShapeExit(int shapeIdx);
     /// <summary>
-    /// <para>Returns the object's <see cref="Rid" />.</para>
-    /// </summary>
-    Rid GetRid();
-    /// <summary>
-    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="CollisionObject2D.CollisionLayer" />, given a <paramref name="layerNumber" /> between 1 and 32.</para>
-    /// </summary>
-    void SetCollisionLayerValue(int layerNumber, bool value);
-    /// <summary>
-    /// <para>Returns whether or not the specified layer of the <see cref="CollisionObject2D.CollisionLayer" /> is enabled, given a <paramref name="layerNumber" /> between 1 and 32.</para>
-    /// </summary>
-    bool GetCollisionLayerValue(int layerNumber);
-    /// <summary>
-    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="CollisionObject2D.CollisionMask" />, given a <paramref name="layerNumber" /> between 1 and 32.</para>
-    /// </summary>
-    void SetCollisionMaskValue(int layerNumber, bool value);
-    /// <summary>
-    /// <para>Returns whether or not the specified layer of the <see cref="CollisionObject2D.CollisionMask" /> is enabled, given a <paramref name="layerNumber" /> between 1 and 32.</para>
-    /// </summary>
-    bool GetCollisionMaskValue(int layerNumber);
-    /// <summary>
-    /// <para>Creates a new shape owner for the given object. Returns <c>owner_id</c> of the new owner for future reference.</para>
-    /// </summary>
-    uint CreateShapeOwner(GodotObject owner);
-    /// <summary>
-    /// <para>Removes the given shape owner.</para>
-    /// </summary>
-    void RemoveShapeOwner(uint ownerId);
-    /// <summary>
-    /// <para>Returns an <see cref="Collections.Array" /> of <c>owner_id</c> identifiers. You can use these ids in other methods that take <c>owner_id</c> as an argument.</para>
-    /// </summary>
-    int[] GetShapeOwners();
-    /// <summary>
-    /// <para>Sets the <see cref="Transform2D" /> of the given shape owner.</para>
-    /// </summary>
-    void ShapeOwnerSetTransform(uint ownerId, Transform2D transform);
-    /// <summary>
-    /// <para>Returns the shape owner's <see cref="Transform2D" />.</para>
-    /// </summary>
-    Transform2D ShapeOwnerGetTransform(uint ownerId);
-    /// <summary>
-    /// <para>Returns the parent object of the given shape owner.</para>
-    /// </summary>
-    GodotObject ShapeOwnerGetOwner(uint ownerId);
-    /// <summary>
-    /// <para>If <c>true</c>, disables the given shape owner.</para>
-    /// </summary>
-    void ShapeOwnerSetDisabled(uint ownerId, bool disabled);
-    /// <summary>
-    /// <para>If <c>true</c>, the shape owner and its shapes are disabled.</para>
-    /// </summary>
-    bool IsShapeOwnerDisabled(uint ownerId);
-    /// <summary>
-    /// <para>If <paramref name="enable" /> is <c>true</c>, collisions for the shape owner originating from this <see cref="CollisionObject2D" /> will not be reported to collided with <see cref="CollisionObject2D" />s.</para>
-    /// </summary>
-    void ShapeOwnerSetOneWayCollision(uint ownerId, bool enable);
-    /// <summary>
-    /// <para>Returns <c>true</c> if collisions for the shape owner originating from this <see cref="CollisionObject2D" /> will not be reported to collided with <see cref="CollisionObject2D" />s.</para>
-    /// </summary>
-    bool IsShapeOwnerOneWayCollisionEnabled(uint ownerId);
-    /// <summary>
-    /// <para>Sets the <c>one_way_collision_margin</c> of the shape owner identified by given <paramref name="ownerId" /> to <paramref name="margin" /> pixels.</para>
-    /// </summary>
-    void ShapeOwnerSetOneWayCollisionMargin(uint ownerId, float margin);
-    /// <summary>
-    /// <para>Returns the <c>one_way_collision_margin</c> of the shape owner identified by given <paramref name="ownerId" />.</para>
-    /// </summary>
-    float GetShapeOwnerOneWayCollisionMargin(uint ownerId);
-    /// <summary>
-    /// <para>Adds a <see cref="Shape2D" /> to the shape owner.</para>
-    /// </summary>
-    void ShapeOwnerAddShape(uint ownerId, Shape2D shape);
-    /// <summary>
-    /// <para>Returns the number of shapes the given shape owner contains.</para>
-    /// </summary>
-    int ShapeOwnerGetShapeCount(uint ownerId);
-    /// <summary>
-    /// <para>Returns the <see cref="Shape2D" /> with the given ID from the given shape owner.</para>
-    /// </summary>
-    Shape2D ShapeOwnerGetShape(uint ownerId, int shapeId);
-    /// <summary>
-    /// <para>Returns the child index of the <see cref="Shape2D" /> with the given ID from the given shape owner.</para>
-    /// </summary>
-    int ShapeOwnerGetShapeIndex(uint ownerId, int shapeId);
-    /// <summary>
-    /// <para>Removes a shape from the given shape owner.</para>
-    /// </summary>
-    void ShapeOwnerRemoveShape(uint ownerId, int shapeId);
-    /// <summary>
-    /// <para>Removes all shapes from the shape owner.</para>
-    /// </summary>
-    void ShapeOwnerClearShapes(uint ownerId);
-    /// <summary>
-    /// <para>Returns the <c>owner_id</c> of the given shape.</para>
-    /// </summary>
-    uint ShapeFindOwner(int shapeIndex);
-    /// <summary>
-    /// <para>Defines the behavior in physics when <see cref="Node.ProcessMode" /> is set to <see cref="Node.ProcessModeEnum.Disabled" />. See <see cref="CollisionObject2D.DisableModeEnum" /> for more details about the different modes.</para>
-    /// </summary>
-    CollisionObject2D.DisableModeEnum DisableMode { get; set; }
-    /// <summary>
     /// <para>The physics layers this CollisionObject2D is in. Collision objects can exist in one or more of 32 different layers. See also <see cref="CollisionObject2D.CollisionMask" />.</para>
     /// <para><b>Note:</b> Object A can detect a contact with object B only if object B is in any of the layers that object A scans. See <a href="$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks">Collision layers and masks</a> in the documentation for more information.</para>
     /// </summary>
@@ -145,8 +45,108 @@ public interface ICollisionObject2D : INode2D {
     /// </summary>
     float CollisionPriority { get; set; }
     /// <summary>
+    /// <para>Creates a new shape owner for the given object. Returns <c>owner_id</c> of the new owner for future reference.</para>
+    /// </summary>
+    uint CreateShapeOwner(GodotObject owner);
+    /// <summary>
+    /// <para>Defines the behavior in physics when <see cref="Node.ProcessMode" /> is set to <see cref="Node.ProcessModeEnum.Disabled" />. See <see cref="CollisionObject2D.DisableModeEnum" /> for more details about the different modes.</para>
+    /// </summary>
+    CollisionObject2D.DisableModeEnum DisableMode { get; set; }
+    /// <summary>
+    /// <para>Returns whether or not the specified layer of the <see cref="CollisionObject2D.CollisionLayer" /> is enabled, given a <paramref name="layerNumber" /> between 1 and 32.</para>
+    /// </summary>
+    bool GetCollisionLayerValue(int layerNumber);
+    /// <summary>
+    /// <para>Returns whether or not the specified layer of the <see cref="CollisionObject2D.CollisionMask" /> is enabled, given a <paramref name="layerNumber" /> between 1 and 32.</para>
+    /// </summary>
+    bool GetCollisionMaskValue(int layerNumber);
+    /// <summary>
+    /// <para>Returns the object's <see cref="Rid" />.</para>
+    /// </summary>
+    Rid GetRid();
+    /// <summary>
+    /// <para>Returns the <c>one_way_collision_margin</c> of the shape owner identified by given <paramref name="ownerId" />.</para>
+    /// </summary>
+    float GetShapeOwnerOneWayCollisionMargin(uint ownerId);
+    /// <summary>
+    /// <para>Returns an <see cref="Collections.Array" /> of <c>owner_id</c> identifiers. You can use these ids in other methods that take <c>owner_id</c> as an argument.</para>
+    /// </summary>
+    int[] GetShapeOwners();
+    /// <summary>
     /// <para>If <c>true</c>, this object is pickable. A pickable object can detect the mouse pointer entering/leaving, and if the mouse is inside it, report input events. Requires at least one <see cref="CollisionObject2D.CollisionLayer" /> bit to be set.</para>
     /// </summary>
     bool InputPickable { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, the shape owner and its shapes are disabled.</para>
+    /// </summary>
+    bool IsShapeOwnerDisabled(uint ownerId);
+    /// <summary>
+    /// <para>Returns <c>true</c> if collisions for the shape owner originating from this <see cref="CollisionObject2D" /> will not be reported to collided with <see cref="CollisionObject2D" />s.</para>
+    /// </summary>
+    bool IsShapeOwnerOneWayCollisionEnabled(uint ownerId);
+    /// <summary>
+    /// <para>Removes the given shape owner.</para>
+    /// </summary>
+    void RemoveShapeOwner(uint ownerId);
+    /// <summary>
+    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="CollisionObject2D.CollisionLayer" />, given a <paramref name="layerNumber" /> between 1 and 32.</para>
+    /// </summary>
+    void SetCollisionLayerValue(int layerNumber, bool value);
+    /// <summary>
+    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="CollisionObject2D.CollisionMask" />, given a <paramref name="layerNumber" /> between 1 and 32.</para>
+    /// </summary>
+    void SetCollisionMaskValue(int layerNumber, bool value);
+    /// <summary>
+    /// <para>Returns the <c>owner_id</c> of the given shape.</para>
+    /// </summary>
+    uint ShapeFindOwner(int shapeIndex);
+    /// <summary>
+    /// <para>Adds a <see cref="Shape2D" /> to the shape owner.</para>
+    /// </summary>
+    void ShapeOwnerAddShape(uint ownerId, Shape2D shape);
+    /// <summary>
+    /// <para>Removes all shapes from the shape owner.</para>
+    /// </summary>
+    void ShapeOwnerClearShapes(uint ownerId);
+    /// <summary>
+    /// <para>Returns the parent object of the given shape owner.</para>
+    /// </summary>
+    GodotObject ShapeOwnerGetOwner(uint ownerId);
+    /// <summary>
+    /// <para>Returns the <see cref="Shape2D" /> with the given ID from the given shape owner.</para>
+    /// </summary>
+    Shape2D ShapeOwnerGetShape(uint ownerId, int shapeId);
+    /// <summary>
+    /// <para>Returns the number of shapes the given shape owner contains.</para>
+    /// </summary>
+    int ShapeOwnerGetShapeCount(uint ownerId);
+    /// <summary>
+    /// <para>Returns the child index of the <see cref="Shape2D" /> with the given ID from the given shape owner.</para>
+    /// </summary>
+    int ShapeOwnerGetShapeIndex(uint ownerId, int shapeId);
+    /// <summary>
+    /// <para>Returns the shape owner's <see cref="Transform2D" />.</para>
+    /// </summary>
+    Transform2D ShapeOwnerGetTransform(uint ownerId);
+    /// <summary>
+    /// <para>Removes a shape from the given shape owner.</para>
+    /// </summary>
+    void ShapeOwnerRemoveShape(uint ownerId, int shapeId);
+    /// <summary>
+    /// <para>If <c>true</c>, disables the given shape owner.</para>
+    /// </summary>
+    void ShapeOwnerSetDisabled(uint ownerId, bool disabled);
+    /// <summary>
+    /// <para>If <paramref name="enable" /> is <c>true</c>, collisions for the shape owner originating from this <see cref="CollisionObject2D" /> will not be reported to collided with <see cref="CollisionObject2D" />s.</para>
+    /// </summary>
+    void ShapeOwnerSetOneWayCollision(uint ownerId, bool enable);
+    /// <summary>
+    /// <para>Sets the <c>one_way_collision_margin</c> of the shape owner identified by given <paramref name="ownerId" /> to <paramref name="margin" /> pixels.</para>
+    /// </summary>
+    void ShapeOwnerSetOneWayCollisionMargin(uint ownerId, float margin);
+    /// <summary>
+    /// <para>Sets the <see cref="Transform2D" /> of the given shape owner.</para>
+    /// </summary>
+    void ShapeOwnerSetTransform(uint ownerId, Transform2D transform);
 
 }

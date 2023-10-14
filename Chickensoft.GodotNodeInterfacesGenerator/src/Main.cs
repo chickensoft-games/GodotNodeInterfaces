@@ -13,10 +13,11 @@ using Towel;
 
 public static class GodotNodeInterfacesGenerator {
   // public const string GODOT_SHARP_XML_PATH = ".output/net6.0/GodotSharp.xml";
-  public const string OUTPUT_PATH = "../Chickensoft.GodotNodeInterfaces/src/interfaces";
+  public const string INTERFACES_PATH = "../Chickensoft.GodotNodeInterfaces/src/interfaces";
+  public const string ADAPTERS_PATH = "../Chickensoft.GodotNodeInterfaces/src/adapters";
 
   public static readonly string CrefTagRegex = new(
-    @"(<see cref="")([A-Z]:Godot\.)([a-zA-Z0-9.]*"" />)"
+    @"(<see cref="")([A-Z]:Godot\.)([^""]*"" />)"
   );
 
   private static readonly HashSet<string> _usings = new() { "Godot" };
@@ -40,16 +41,23 @@ public static class GodotNodeInterfacesGenerator {
       _usings.Add("Godot");
 
       var mainDocumentation = XmlDocToDocComment(type.GetDocumentation(), 0);
+
       var interfaceName = $"I{type.Name}";
-      var filename = $"{interfaceName}.cs";
+      var interfaceFilename = $"{interfaceName}.cs";
 
-      var membersSb = new StringBuilder();
+      var adapterName = $"{type.Name}Adapter";
+      var adapterFilename = $"{adapterName}.cs";
 
-      foreach (var member in type.GetMembers(
+      var members = type.GetMembers(
         BindingFlags.DeclaredOnly |
         BindingFlags.Public |
         BindingFlags.Instance
-      )) {
+      ).OrderBy(m => m.Name);
+
+      var interfaceMembers = new StringBuilder();
+      var adapterMembers = new StringBuilder();
+
+      foreach (var member in members) {
         if (member is MethodInfo methodInfo) {
           // For methods
           if (!methodInfo.IsPublic) { continue; }
@@ -127,8 +135,12 @@ public static class GodotNodeInterfacesGenerator {
             parameters.Select(p => $"{TypeName(p.ParameterType)} {GetId(p)}")
           );
 
-          var methodSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}{returnType} {methodName}({parameterList}){typeParameterConstraints};";
-          membersSb.AppendLine(methodSignature);
+          var signature = $"{returnType} {methodName}({parameterList}){typeParameterConstraints}";
+          var interfaceSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}{signature};";
+          var adapterSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}public {signature}";
+          interfaceMembers.AppendLine(interfaceSignature);
+          var adapterCode = adapterSignature + " => _node." + methodName + "(" + string.Join(", ", parameters.Select(GetId)) + ");";
+          adapterMembers.AppendLine(adapterCode);
         }
         else if (member is PropertyInfo propertyInfo) {
           // Ignore set_ and get_ properties
@@ -150,12 +162,27 @@ public static class GodotNodeInterfacesGenerator {
           var propertyType = TypeName(propertyInfo.PropertyType);
 
           // For properties
-          var propertyDocumentation = XmlDocToDocComment(propertyInfo.GetDocumentation() ?? "", 2);
+          var propertyDocumentation = XmlDocToDocComment(
+            propertyInfo.GetDocumentation() ?? "", 2
+          );
           var propertyName = GetId(propertyInfo);
 
-          var propertySignature = $"{propertyDocumentation}\n{"  ".Repeat(2)}{propertyType} {propertyName} {{ {writeable} }}";
+          var propertyPrefix = $"{propertyDocumentation}\n{"  ".Repeat(2)}{propertyType} {propertyName}";
+          var propertySignature = $"{propertyPrefix} {{ {writeable} }}";
 
-          membersSb.AppendLine(propertySignature);
+          var adapterCode = $"{propertyDocumentation}\n{"  ".Repeat(2)}public {propertyType} {propertyName}";
+          if (isSettable && isGettable) {
+            adapterCode += $" {{ get => _node.{propertyName}; set => _node.{propertyName} = value; }}";
+          }
+          else if (isGettable) {
+            adapterCode += $" {{ get => _node.{propertyName}; }}";
+          }
+          else if (isSettable) {
+            adapterCode += $" {{ set => _node.{propertyName} = value; }}";
+          }
+
+          interfaceMembers.AppendLine(propertySignature);
+          adapterMembers.AppendLine(adapterCode);
         }
       }
 
@@ -167,14 +194,16 @@ public static class GodotNodeInterfacesGenerator {
         ? $" : I{baseType.Name}"
         : "";
 
-      var memberDocumentation = membersSb.ToString();
+      var interfaceMemberCode = interfaceMembers.ToString();
+      var adapterMemberCode = adapterMembers.ToString();
+
       var usings = string.Join("\n", _usings.Select(u => $"using {u};"));
 
-      var hasPublicParameterLessConstructor = type
-        .GetConstructors(BindingFlags.Public)
+      var hasPublicParameterlessConstructor = type
+        .GetConstructors(BindingFlags.Public | BindingFlags.Instance)
         .Any(c => c.GetParameters().Length == 0);
       var canBeInstantiated =
-        !type.IsAbstract && hasPublicParameterLessConstructor;
+        !type.IsAbstract && hasPublicParameterlessConstructor;
 
       var partialClassForVerification = $$"""
 
@@ -184,19 +213,37 @@ public static class GodotNodeInterfacesGenerator {
 
       """;
 
-      var contents = $$"""
+      var interfaceContents = $$"""
       namespace Chickensoft.GodotNodeInterfaces;
 
       {{usings}}
       {{(canBeInstantiated ? partialClassForVerification : "\n")}}
       {{mainDocumentation}}
       public interface {{interfaceName}}{{interfaceParent}} {
-      {{memberDocumentation}}
+      {{interfaceMemberCode}}
       }
       """;
 
-      var filePath = Path.Join(OUTPUT_PATH, filename);
-      File.WriteAllText(filePath, contents);
+      var adapterContents = $$"""
+       namespace Chickensoft.GodotNodeInterfaces;
+
+      {{usings}}
+      {{mainDocumentation}}
+      public class {{adapterName}} : {{TypeName(type)}}, {{interfaceName}} {
+        private readonly {{TypeName(type)}} _node;
+
+        public {{adapterName}}({{TypeName(type)}} node) => _node = node;
+      {{adapterMemberCode}}
+      }
+      """;
+
+      var interfaceFilePath = Path.Join(INTERFACES_PATH, interfaceFilename);
+      File.WriteAllText(interfaceFilePath, interfaceContents);
+
+      if (canBeInstantiated) {
+        var adapterFilePath = Path.Join(ADAPTERS_PATH, adapterFilename);
+        File.WriteAllText(adapterFilePath, adapterContents);
+      }
     }
   }
 

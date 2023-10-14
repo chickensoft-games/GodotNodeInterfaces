@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class Skeleton2DNode : Skeleton2D, ISkeleton2D { }
 
 /// <summary>
 /// <para><see cref="Skeleton2D" /> parents a hierarchy of <see cref="Bone2D" /> nodes. It holds a reference to each <see cref="Bone2D" />'s rest pose and acts as a single point of access to its bones.</para>
@@ -10,29 +13,29 @@ using System;
 /// </summary>
 public interface ISkeleton2D : INode2D {
     /// <summary>
-    /// <para>Returns the number of <see cref="Bone2D" /> nodes in the node hierarchy parented by Skeleton2D.</para>
+    /// <para>Executes all the modifications on the <see cref="SkeletonModificationStack2D" />, if the Skeleton2D has one assigned.</para>
     /// </summary>
-    int GetBoneCount();
+    void ExecuteModifications(float delta, int executionMode);
     /// <summary>
     /// <para>Returns a <see cref="Bone2D" /> from the node hierarchy parented by Skeleton2D. The object to return is identified by the parameter <paramref name="idx" />. Bones are indexed by descending the node hierarchy from top to bottom, adding the children of each branch before moving to the next sibling.</para>
     /// </summary>
     Bone2D GetBone(int idx);
     /// <summary>
-    /// <para>Returns the <see cref="Rid" /> of a Skeleton2D instance.</para>
+    /// <para>Returns the number of <see cref="Bone2D" /> nodes in the node hierarchy parented by Skeleton2D.</para>
     /// </summary>
-    Rid GetSkeleton();
+    int GetBoneCount();
     /// <summary>
-    /// <para>Sets the <see cref="SkeletonModificationStack2D" /> attached to this skeleton.</para>
+    /// <para>Returns the local pose override transform for <paramref name="boneIdx" />.</para>
     /// </summary>
-    void SetModificationStack(SkeletonModificationStack2D modificationStack);
+    Transform2D GetBoneLocalPoseOverride(int boneIdx);
     /// <summary>
     /// <para>Returns the <see cref="SkeletonModificationStack2D" /> attached to this skeleton, if one exists.</para>
     /// </summary>
     SkeletonModificationStack2D GetModificationStack();
     /// <summary>
-    /// <para>Executes all the modifications on the <see cref="SkeletonModificationStack2D" />, if the Skeleton2D has one assigned.</para>
+    /// <para>Returns the <see cref="Rid" /> of a Skeleton2D instance.</para>
     /// </summary>
-    void ExecuteModifications(float delta, int executionMode);
+    Rid GetSkeleton();
     /// <summary>
     /// <para>Sets the local pose transform, <paramref name="overridePose" />, for the bone at <paramref name="boneIdx" />.</para>
     /// <para><paramref name="strength" /> is the interpolation strength that will be used when applying the pose, and <paramref name="persistent" /> determines if the applied pose will remain.</para>
@@ -40,8 +43,8 @@ public interface ISkeleton2D : INode2D {
     /// </summary>
     void SetBoneLocalPoseOverride(int boneIdx, Transform2D overridePose, float strength, bool persistent);
     /// <summary>
-    /// <para>Returns the local pose override transform for <paramref name="boneIdx" />.</para>
+    /// <para>Sets the <see cref="SkeletonModificationStack2D" /> attached to this skeleton.</para>
     /// </summary>
-    Transform2D GetBoneLocalPoseOverride(int boneIdx);
+    void SetModificationStack(SkeletonModificationStack2D modificationStack);
 
 }

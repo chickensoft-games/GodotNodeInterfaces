@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class HttpRequestNode : HttpRequest, IHttpRequest { }
 
 /// <summary>
 /// <para>A node with the ability to send HTTP requests. Uses <see cref="HttpClient" /> internally.</para>
@@ -85,65 +88,6 @@ using System;
 /// </summary>
 public interface IHttpRequest {
     /// <summary>
-    /// <para>Creates request on the underlying <see cref="HttpClient" />. If there is no configuration errors, it tries to connect using <see cref="M:Godot.HttpClient.ConnectToHost(System.String,System.Int32,Godot.TlsOptions)" /> and passes parameters onto <see cref="M:Godot.HttpClient.Request(Godot.HttpClient.Method,System.String,System.String[],System.String)" />.</para>
-    /// <para>Returns <see cref="Error.Ok" /> if request is successfully created. (Does not imply that the server has responded), <see cref="Error.Unconfigured" /> if not in the tree, <see cref="Error.Busy" /> if still processing previous request, <see cref="Error.InvalidParameter" /> if given string is not a valid URL format, or <see cref="Error.CantConnect" /> if not using thread and the <see cref="HttpClient" /> cannot connect to host.</para>
-    /// <para><b>Note:</b> When <paramref name="method" /> is <see cref="HttpClient.Method.Get" />, the payload sent via <paramref name="requestData" /> might be ignored by the server or even cause the server to reject the request (check <a href="https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1">RFC 7231 section 4.3.1</a> for more details). As a workaround, you can send data as a query string in the URL (see <c>String.uri_encode</c> for an example).</para>
-    /// <para><b>Note:</b> It's recommended to use transport encryption (TLS) and to avoid sending sensitive information (such as login credentials) in HTTP GET URL parameters. Consider using HTTP POST requests or HTTP headers for such information instead.</para>
-    /// </summary>
-    /// <param name="customHeaders">If the parameter is null, then the default value is <c>Array.Empty&lt;string&gt;()</c>.</param>
-    Error Request(string url, string[] customHeaders, HttpClient.Method @method, string requestData);
-    /// <summary>
-    /// <para>Creates request on the underlying <see cref="HttpClient" /> using a raw array of bytes for the request body. If there is no configuration errors, it tries to connect using <see cref="M:Godot.HttpClient.ConnectToHost(System.String,System.Int32,Godot.TlsOptions)" /> and passes parameters onto <see cref="M:Godot.HttpClient.Request(Godot.HttpClient.Method,System.String,System.String[],System.String)" />.</para>
-    /// <para>Returns <see cref="Error.Ok" /> if request is successfully created. (Does not imply that the server has responded), <see cref="Error.Unconfigured" /> if not in the tree, <see cref="Error.Busy" /> if still processing previous request, <see cref="Error.InvalidParameter" /> if given string is not a valid URL format, or <see cref="Error.CantConnect" /> if not using thread and the <see cref="HttpClient" /> cannot connect to host.</para>
-    /// </summary>
-    /// <param name="customHeaders">If the parameter is null, then the default value is <c>Array.Empty&lt;string&gt;()</c>.</param>
-    /// <param name="requestDataRaw">If the parameter is null, then the default value is <c>Array.Empty&lt;byte&gt;()</c>.</param>
-    Error RequestRaw(string url, string[] customHeaders, HttpClient.Method @method, byte[] requestDataRaw);
-    /// <summary>
-    /// <para>Cancels the current request.</para>
-    /// </summary>
-    void CancelRequest();
-    /// <summary>
-    /// <para>Sets the <see cref="TlsOptions" /> to be used when connecting to an HTTPS server. See <see cref="M:Godot.TlsOptions.Client(Godot.X509Certificate,System.String)" />.</para>
-    /// </summary>
-    void SetTlsOptions(TlsOptions clientOptions);
-    /// <summary>
-    /// <para>Returns the current status of the underlying <see cref="HttpClient" />. See <see cref="HttpClient.Status" />.</para>
-    /// </summary>
-    HttpClient.Status GetHttpClientStatus();
-    /// <summary>
-    /// <para>Returns the number of bytes this HTTPRequest downloaded.</para>
-    /// </summary>
-    int GetDownloadedBytes();
-    /// <summary>
-    /// <para>Returns the response body length.</para>
-    /// <para><b>Note:</b> Some Web servers may not send a body length. In this case, the value returned will be <c>-1</c>. If using chunked transfer encoding, the body length will also be <c>-1</c>.</para>
-    /// </summary>
-    int GetBodySize();
-    /// <summary>
-    /// <para>Sets the proxy server for HTTP requests.</para>
-    /// <para>The proxy server is unset if <paramref name="host" /> is empty or <paramref name="port" /> is -1.</para>
-    /// </summary>
-    void SetHttpProxy(string host, int port);
-    /// <summary>
-    /// <para>Sets the proxy server for HTTPS requests.</para>
-    /// <para>The proxy server is unset if <paramref name="host" /> is empty or <paramref name="port" /> is -1.</para>
-    /// </summary>
-    void SetHttpsProxy(string host, int port);
-    /// <summary>
-    /// <para>The file to download into. Will output any received file into it.</para>
-    /// </summary>
-    string DownloadFile { get; set; }
-    /// <summary>
-    /// <para>The size of the buffer used and maximum bytes to read per iteration. See <see cref="HttpClient.ReadChunkSize" />.</para>
-    /// <para>Set this to a lower value (e.g. 4096 for 4 KiB) when downloading small files to decrease memory usage at the cost of download speeds.</para>
-    /// </summary>
-    int DownloadChunkSize { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, multithreading is used to improve performance.</para>
-    /// </summary>
-    bool UseThreads { get; set; }
-    /// <summary>
     /// <para>If <c>true</c>, this header will be added to each request: <c>Accept-Encoding: gzip, deflate</c> telling servers that it's okay to compress response bodies.</para>
     /// <para>Any Response body declaring a <c>Content-Encoding</c> of either <c>gzip</c> or <c>deflate</c> will then be automatically decompressed, and the uncompressed bytes will be delivered via <see cref="HttpRequest.RequestCompleted" />.</para>
     /// <para>If the user has specified their own <c>Accept-Encoding</c> header, then no header will be added regardless of <see cref="HttpRequest.AcceptGZip" />.</para>
@@ -155,12 +99,71 @@ public interface IHttpRequest {
     /// </summary>
     int BodySizeLimit { get; set; }
     /// <summary>
+    /// <para>Cancels the current request.</para>
+    /// </summary>
+    void CancelRequest();
+    /// <summary>
+    /// <para>The size of the buffer used and maximum bytes to read per iteration. See <see cref="HttpClient.ReadChunkSize" />.</para>
+    /// <para>Set this to a lower value (e.g. 4096 for 4 KiB) when downloading small files to decrease memory usage at the cost of download speeds.</para>
+    /// </summary>
+    int DownloadChunkSize { get; set; }
+    /// <summary>
+    /// <para>The file to download into. Will output any received file into it.</para>
+    /// </summary>
+    string DownloadFile { get; set; }
+    /// <summary>
+    /// <para>Returns the response body length.</para>
+    /// <para><b>Note:</b> Some Web servers may not send a body length. In this case, the value returned will be <c>-1</c>. If using chunked transfer encoding, the body length will also be <c>-1</c>.</para>
+    /// </summary>
+    int GetBodySize();
+    /// <summary>
+    /// <para>Returns the number of bytes this HTTPRequest downloaded.</para>
+    /// </summary>
+    int GetDownloadedBytes();
+    /// <summary>
+    /// <para>Returns the current status of the underlying <see cref="HttpClient" />. See <see cref="HttpClient.Status" />.</para>
+    /// </summary>
+    HttpClient.Status GetHttpClientStatus();
+    /// <summary>
     /// <para>Maximum number of allowed redirects.</para>
     /// </summary>
     int MaxRedirects { get; set; }
     /// <summary>
+    /// <para>Creates request on the underlying <see cref="HttpClient" />. If there is no configuration errors, it tries to connect using <see cref="HttpClient.ConnectToHost(System.String,System.Int32,Godot.TlsOptions)" /> and passes parameters onto <see cref="HttpClient.Request(Godot.HttpClient.Method,System.String,System.String[],System.String)" />.</para>
+    /// <para>Returns <see cref="Error.Ok" /> if request is successfully created. (Does not imply that the server has responded), <see cref="Error.Unconfigured" /> if not in the tree, <see cref="Error.Busy" /> if still processing previous request, <see cref="Error.InvalidParameter" /> if given string is not a valid URL format, or <see cref="Error.CantConnect" /> if not using thread and the <see cref="HttpClient" /> cannot connect to host.</para>
+    /// <para><b>Note:</b> When <paramref name="method" /> is <see cref="HttpClient.Method.Get" />, the payload sent via <paramref name="requestData" /> might be ignored by the server or even cause the server to reject the request (check <a href="https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1">RFC 7231 section 4.3.1</a> for more details). As a workaround, you can send data as a query string in the URL (see <c>String.uri_encode</c> for an example).</para>
+    /// <para><b>Note:</b> It's recommended to use transport encryption (TLS) and to avoid sending sensitive information (such as login credentials) in HTTP GET URL parameters. Consider using HTTP POST requests or HTTP headers for such information instead.</para>
+    /// </summary>
+    /// <param name="customHeaders">If the parameter is null, then the default value is <c>Array.Empty&lt;string&gt;()</c>.</param>
+    Error Request(string url, string[] customHeaders, HttpClient.Method @method, string requestData);
+    /// <summary>
+    /// <para>Creates request on the underlying <see cref="HttpClient" /> using a raw array of bytes for the request body. If there is no configuration errors, it tries to connect using <see cref="HttpClient.ConnectToHost(System.String,System.Int32,Godot.TlsOptions)" /> and passes parameters onto <see cref="HttpClient.Request(Godot.HttpClient.Method,System.String,System.String[],System.String)" />.</para>
+    /// <para>Returns <see cref="Error.Ok" /> if request is successfully created. (Does not imply that the server has responded), <see cref="Error.Unconfigured" /> if not in the tree, <see cref="Error.Busy" /> if still processing previous request, <see cref="Error.InvalidParameter" /> if given string is not a valid URL format, or <see cref="Error.CantConnect" /> if not using thread and the <see cref="HttpClient" /> cannot connect to host.</para>
+    /// </summary>
+    /// <param name="customHeaders">If the parameter is null, then the default value is <c>Array.Empty&lt;string&gt;()</c>.</param>
+    /// <param name="requestDataRaw">If the parameter is null, then the default value is <c>Array.Empty&lt;byte&gt;()</c>.</param>
+    Error RequestRaw(string url, string[] customHeaders, HttpClient.Method @method, byte[] requestDataRaw);
+    /// <summary>
+    /// <para>Sets the proxy server for HTTP requests.</para>
+    /// <para>The proxy server is unset if <paramref name="host" /> is empty or <paramref name="port" /> is -1.</para>
+    /// </summary>
+    void SetHttpProxy(string host, int port);
+    /// <summary>
+    /// <para>Sets the proxy server for HTTPS requests.</para>
+    /// <para>The proxy server is unset if <paramref name="host" /> is empty or <paramref name="port" /> is -1.</para>
+    /// </summary>
+    void SetHttpsProxy(string host, int port);
+    /// <summary>
+    /// <para>Sets the <see cref="TlsOptions" /> to be used when connecting to an HTTPS server. See <see cref="TlsOptions.Client(Godot.X509Certificate,System.String)" />.</para>
+    /// </summary>
+    void SetTlsOptions(TlsOptions clientOptions);
+    /// <summary>
     /// <para>The duration to wait in seconds before a request times out. If <see cref="HttpRequest.Timeout" /> is set to <c>0.0</c> then the request will never time out. For simple requests, such as communication with a REST API, it is recommended that <see cref="HttpRequest.Timeout" /> is set to a value suitable for the server response time (e.g. between <c>1.0</c> and <c>10.0</c>). This will help prevent unwanted timeouts caused by variation in server response times while still allowing the application to detect when a request has timed out. For larger requests such as file downloads it is suggested the <see cref="HttpRequest.Timeout" /> be set to <c>0.0</c>, disabling the timeout functionality. This will help to prevent large transfers from failing due to exceeding the timeout value.</para>
     /// </summary>
     double Timeout { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, multithreading is used to improve performance.</para>
+    /// </summary>
+    bool UseThreads { get; set; }
 
 }

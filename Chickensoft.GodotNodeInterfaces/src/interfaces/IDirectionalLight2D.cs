@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class DirectionalLight2DNode : DirectionalLight2D, IDirectionalLight2D { }
 
 /// <summary>
 /// <para>A directional light is a type of <see cref="Light2D" /> node that models an infinite number of parallel rays covering the entire scene. It is used for lights with strong intensity that are located far away from the scene (for example: to model sunlight or moonlight).</para>

@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class MeshInstance2DNode : MeshInstance2D, IMeshInstance2D { }
 
 /// <summary>
 /// <para>Node used for displaying a <see cref="Mesh" /> in 2D. A <see cref="MeshInstance2D" /> can be automatically created from an existing <see cref="Sprite2D" /> via a tool in the editor toolbar. Select the <see cref="Sprite2D" /> node, then choose <b>Sprite2D &gt; Convert to MeshInstance2D</b> at the top of the 2D editor viewport.</para>

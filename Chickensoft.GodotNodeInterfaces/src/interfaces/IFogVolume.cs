@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class FogVolumeNode : FogVolume, IFogVolume { }
 
 /// <summary>
 /// <para><see cref="FogVolume" />s are used to add localized fog into the global volumetric fog effect. <see cref="FogVolume" />s can also remove volumetric fog from specific areas if using a <see cref="FogMaterial" /> with a negative <see cref="FogMaterial.Density" />.</para>
@@ -10,18 +13,18 @@ using Godot;
 /// </summary>
 public interface IFogVolume : IVisualInstance3D {
     /// <summary>
-    /// <para>The size of the <see cref="FogVolume" /> when <see cref="FogVolume.Shape" /> is <see cref="RenderingServer.FogVolumeShape.Ellipsoid" />, <see cref="RenderingServer.FogVolumeShape.Cone" />, <see cref="RenderingServer.FogVolumeShape.Cylinder" /> or <see cref="RenderingServer.FogVolumeShape.Box" />.</para>
-    /// <para><b>Note:</b> Thin fog volumes may appear to flicker when the camera moves or rotates. This can be alleviated by increasing <c>ProjectSettings.rendering/environment/volumetric_fog/volume_depth</c> (at a performance cost) or by decreasing <see cref="Environment.VolumetricFogLength" /> (at no performance cost, but at the cost of lower fog range). Alternatively, the <see cref="FogVolume" /> can be made thicker and use a lower density in the <see cref="FogVolume.Material" />.</para>
-    /// <para><b>Note:</b> If <see cref="FogVolume.Shape" /> is <see cref="RenderingServer.FogVolumeShape.Cone" /> or <see cref="RenderingServer.FogVolumeShape.Cylinder" />, the cone/cylinder will be adjusted to fit within the size. Non-uniform scaling of cone/cylinder shapes via the <see cref="FogVolume.Size" /> property is not supported, but you can scale the <see cref="FogVolume" /> node instead.</para>
+    /// <para>The <see cref="Material" /> used by the <see cref="FogVolume" />. Can be either a built-in <see cref="FogMaterial" /> or a custom <see cref="ShaderMaterial" />.</para>
     /// </summary>
-    Vector3 Size { get; set; }
+    Material Material { get; set; }
     /// <summary>
     /// <para>The shape of the <see cref="FogVolume" />. This can be set to either <see cref="RenderingServer.FogVolumeShape.Ellipsoid" />, <see cref="RenderingServer.FogVolumeShape.Cone" />, <see cref="RenderingServer.FogVolumeShape.Cylinder" />, <see cref="RenderingServer.FogVolumeShape.Box" /> or <see cref="RenderingServer.FogVolumeShape.World" />.</para>
     /// </summary>
     RenderingServer.FogVolumeShape Shape { get; set; }
     /// <summary>
-    /// <para>The <see cref="Material" /> used by the <see cref="FogVolume" />. Can be either a built-in <see cref="FogMaterial" /> or a custom <see cref="ShaderMaterial" />.</para>
+    /// <para>The size of the <see cref="FogVolume" /> when <see cref="FogVolume.Shape" /> is <see cref="RenderingServer.FogVolumeShape.Ellipsoid" />, <see cref="RenderingServer.FogVolumeShape.Cone" />, <see cref="RenderingServer.FogVolumeShape.Cylinder" /> or <see cref="RenderingServer.FogVolumeShape.Box" />.</para>
+    /// <para><b>Note:</b> Thin fog volumes may appear to flicker when the camera moves or rotates. This can be alleviated by increasing <c>ProjectSettings.rendering/environment/volumetric_fog/volume_depth</c> (at a performance cost) or by decreasing <see cref="Environment.VolumetricFogLength" /> (at no performance cost, but at the cost of lower fog range). Alternatively, the <see cref="FogVolume" /> can be made thicker and use a lower density in the <see cref="FogVolume.Material" />.</para>
+    /// <para><b>Note:</b> If <see cref="FogVolume.Shape" /> is <see cref="RenderingServer.FogVolumeShape.Cone" /> or <see cref="RenderingServer.FogVolumeShape.Cylinder" />, the cone/cylinder will be adjusted to fit within the size. Non-uniform scaling of cone/cylinder shapes via the <see cref="FogVolume.Size" /> property is not supported, but you can scale the <see cref="FogVolume" /> node instead.</para>
     /// </summary>
-    Material Material { get; set; }
+    Vector3 Size { get; set; }
 
 }

@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class OccluderInstance3DNode : OccluderInstance3D, IOccluderInstance3D { }
 
 /// <summary>
 /// <para>Occlusion culling can improve rendering performance in closed/semi-open areas by hiding geometry that is occluded by other objects.</para>
@@ -13,20 +16,6 @@ using System;
 /// <para><b>Note:</b> Due to memory constraints, occlusion culling is not supported by default in Web export templates. It can be enabled by compiling custom Web export templates with <c>module_raycast_enabled=yes</c>.</para>
 /// </summary>
 public interface IOccluderInstance3D : INode3D {
-    /// <summary>
-    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="OccluderInstance3D.BakeMask" />, given a <paramref name="layerNumber" /> between 1 and 32.</para>
-    /// </summary>
-    void SetBakeMaskValue(int layerNumber, bool value);
-    /// <summary>
-    /// <para>Returns whether or not the specified layer of the <see cref="OccluderInstance3D.BakeMask" /> is enabled, given a <paramref name="layerNumber" /> between 1 and 32.</para>
-    /// </summary>
-    bool GetBakeMaskValue(int layerNumber);
-    /// <summary>
-    /// <para>The occluder resource for this <see cref="OccluderInstance3D" />. You can generate an occluder resource by selecting an <see cref="OccluderInstance3D" /> node then using the <b>Bake Occluders</b> button at the top of the editor.</para>
-    /// <para>You can also draw your own 2D occluder polygon by adding a new <see cref="PolygonOccluder3D" /> resource to the <see cref="OccluderInstance3D.Occluder" /> property in the Inspector.</para>
-    /// <para>Alternatively, you can select a primitive occluder to use: <see cref="QuadOccluder3D" />, <see cref="BoxOccluder3D" /> or <see cref="SphereOccluder3D" />.</para>
-    /// </summary>
-    Occluder3D Occluder { get; set; }
     /// <summary>
     /// <para>The visual layers to account for when baking for occluders. Only <see cref="MeshInstance3D" />s whose <see cref="VisualInstance3D.Layers" /> match with this <see cref="OccluderInstance3D.BakeMask" /> will be included in the generated occluder mesh. By default, all objects with <i>opaque</i> materials are taken into account for the occluder baking.</para>
     /// <para>To improve performance and avoid artifacts, it is recommended to exclude dynamic objects, small objects and fixtures from the baking process by moving them to a separate visual layer and excluding this layer in <see cref="OccluderInstance3D.BakeMask" />.</para>
@@ -39,5 +28,19 @@ public interface IOccluderInstance3D : INode3D {
     /// <para><b>Note:</b> This uses the <a href="https://meshoptimizer.org/">meshoptimizer</a> library under the hood, similar to LOD generation.</para>
     /// </summary>
     float BakeSimplificationDistance { get; set; }
+    /// <summary>
+    /// <para>Returns whether or not the specified layer of the <see cref="OccluderInstance3D.BakeMask" /> is enabled, given a <paramref name="layerNumber" /> between 1 and 32.</para>
+    /// </summary>
+    bool GetBakeMaskValue(int layerNumber);
+    /// <summary>
+    /// <para>The occluder resource for this <see cref="OccluderInstance3D" />. You can generate an occluder resource by selecting an <see cref="OccluderInstance3D" /> node then using the <b>Bake Occluders</b> button at the top of the editor.</para>
+    /// <para>You can also draw your own 2D occluder polygon by adding a new <see cref="PolygonOccluder3D" /> resource to the <see cref="OccluderInstance3D.Occluder" /> property in the Inspector.</para>
+    /// <para>Alternatively, you can select a primitive occluder to use: <see cref="QuadOccluder3D" />, <see cref="BoxOccluder3D" /> or <see cref="SphereOccluder3D" />.</para>
+    /// </summary>
+    Occluder3D Occluder { get; set; }
+    /// <summary>
+    /// <para>Based on <paramref name="value" />, enables or disables the specified layer in the <see cref="OccluderInstance3D.BakeMask" />, given a <paramref name="layerNumber" /> between 1 and 32.</para>
+    /// </summary>
+    void SetBakeMaskValue(int layerNumber, bool value);
 
 }

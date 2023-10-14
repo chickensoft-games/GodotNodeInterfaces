@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class VisibleOnScreenEnabler3DNode : VisibleOnScreenEnabler3D, IVisibleOnScreenEnabler3D { }
 
 /// <summary>
 /// <para>The VisibleOnScreenEnabler3D will disable <see cref="RigidBody3D" /> and <see cref="AnimationPlayer" /> nodes when they are not visible. It will only affect other nodes within the same scene as the VisibleOnScreenEnabler3D itself.</para>

@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class GpuParticlesCollisionSphere3DNode : GpuParticlesCollisionSphere3D, IGpuParticlesCollisionSphere3D { }
 
 /// <summary>
 /// <para>A sphere-shaped 3D particle collision shape affecting <see cref="GpuParticles3D" /> nodes.</para>

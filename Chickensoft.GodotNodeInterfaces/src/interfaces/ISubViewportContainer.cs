@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class SubViewportContainerNode : SubViewportContainer, ISubViewportContainer { }
 
 /// <summary>
 /// <para>A container that displays the contents of underlying <see cref="SubViewport" /> child nodes. It uses the combined size of the <see cref="SubViewport" />s as minimum size, unless <see cref="SubViewportContainer.Stretch" /> is enabled.</para>

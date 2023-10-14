@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class DecalNode : Decal, IDecal { }
 
 /// <summary>
 /// <para><see cref="Decal" />s are used to project a texture onto a <see cref="Mesh" /> in the scene. Use Decals to add detail to a scene without affecting the underlying <see cref="Mesh" />. They are often used to add weathering to building, add dirt or mud to the ground, or add variety to props. Decals can be moved at any time, making them suitable for things like blob shadows or laser sight dots.</para>
@@ -14,6 +17,43 @@ using System;
 /// </summary>
 public interface IDecal : IVisualInstance3D {
     /// <summary>
+    /// <para>Blends the albedo <see cref="Color" /> of the decal with albedo <see cref="Color" /> of the underlying mesh. This can be set to <c>0.0</c> to create a decal that only affects normal or ORM. In this case, an albedo texture is still required as its alpha channel will determine where the normal and ORM will be overridden. See also <see cref="Decal.Modulate" />.</para>
+    /// </summary>
+    float AlbedoMix { get; set; }
+    /// <summary>
+    /// <para>Specifies which <see cref="VisualInstance3D.Layers" /> this decal will project on. By default, Decals affect all layers. This is used so you can specify which types of objects receive the Decal and which do not. This is especially useful so you can ensure that dynamic objects don't accidentally receive a Decal intended for the terrain under them.</para>
+    /// </summary>
+    uint CullMask { get; set; }
+    /// <summary>
+    /// <para>The distance from the camera at which the Decal begins to fade away (in 3D units).</para>
+    /// </summary>
+    float DistanceFadeBegin { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, decals will smoothly fade away when far from the active <see cref="Camera3D" /> starting at <see cref="Decal.DistanceFadeBegin" />. The Decal will fade out over <see cref="Decal.DistanceFadeBegin" /> + <see cref="Decal.DistanceFadeLength" />, after which it will be culled and not sent to the shader at all. Use this to reduce the number of active Decals in a scene and thus improve performance.</para>
+    /// </summary>
+    bool DistanceFadeEnabled { get; set; }
+    /// <summary>
+    /// <para>The distance over which the Decal fades (in 3D units). The Decal becomes slowly more transparent over this distance and is completely invisible at the end. Higher values result in a smoother fade-out transition, which is more suited when the camera moves fast.</para>
+    /// </summary>
+    float DistanceFadeLength { get; set; }
+    /// <summary>
+    /// <para>Energy multiplier for the emission texture. This will make the decal emit light at a higher or lower intensity, independently of the albedo color. See also <see cref="Decal.Modulate" />.</para>
+    /// </summary>
+    float EmissionEnergy { get; set; }
+    /// <summary>
+    /// <para>Sets the curve over which the decal will fade as the surface gets further from the center of the <see cref="Aabb" />. Only positive values are valid (negative values will be clamped to <c>0.0</c>). See also <see cref="Decal.UpperFade" />.</para>
+    /// </summary>
+    float LowerFade { get; set; }
+    /// <summary>
+    /// <para>Changes the <see cref="Color" /> of the Decal by multiplying the albedo and emission colors with this value. The alpha component is only taken into account when multiplying the albedo color, not the emission color. See also <see cref="Decal.EmissionEnergy" /> and <see cref="Decal.AlbedoMix" /> to change the emission and albedo intensity independently of each other.</para>
+    /// </summary>
+    Color Modulate { get; set; }
+    /// <summary>
+    /// <para>Fades the Decal if the angle between the Decal's <see cref="Aabb" /> and the target surface becomes too large. A value of <c>0</c> projects the Decal regardless of angle, a value of <c>1</c> limits the Decal to surfaces that are nearly perpendicular.</para>
+    /// <para><b>Note:</b> Setting <see cref="Decal.NormalFade" /> to a value greater than <c>0.0</c> has a small performance cost due to the added normal angle computations.</para>
+    /// </summary>
+    float NormalFade { get; set; }
+    /// <summary>
     /// <para>Sets the size of the <see cref="Aabb" /> used by the decal. All dimensions must be set to a value greater than zero (they will be clamped to <c>0.001</c> if this is not the case). The AABB goes from <c>-size/2</c> to <c>size/2</c>.</para>
     /// <para><b>Note:</b> To improve culling efficiency of "hard surface" decals, set their <see cref="Decal.UpperFade" /> and <see cref="Decal.LowerFade" /> to <c>0.0</c> and set the Y component of the <see cref="Decal.Size" /> as low as possible. This will reduce the decals' AABB size without affecting their appearance.</para>
     /// </summary>
@@ -23,6 +63,11 @@ public interface IDecal : IVisualInstance3D {
     /// <para><b>Note:</b> Unlike <see cref="BaseMaterial3D" /> whose filter mode can be adjusted on a per-material basis, the filter mode for <see cref="Decal" /> textures is set globally with <c>ProjectSettings.rendering/textures/decals/filter</c>.</para>
     /// </summary>
     Texture2D TextureAlbedo { get; set; }
+    /// <summary>
+    /// <para><see cref="Texture2D" /> with the emission <see cref="Color" /> of the Decal. Either this or the <see cref="Decal.TextureAlbedo" /> must be set for the Decal to be visible. Use the alpha channel like a mask to smoothly blend the edges of the decal with the underlying object.</para>
+    /// <para><b>Note:</b> Unlike <see cref="BaseMaterial3D" /> whose filter mode can be adjusted on a per-material basis, the filter mode for <see cref="Decal" /> textures is set globally with <c>ProjectSettings.rendering/textures/decals/filter</c>.</para>
+    /// </summary>
+    Texture2D TextureEmission { get; set; }
     /// <summary>
     /// <para><see cref="Texture2D" /> with the per-pixel normal map for the decal. Use this to add extra detail to decals.</para>
     /// <para><b>Note:</b> Unlike <see cref="BaseMaterial3D" /> whose filter mode can be adjusted on a per-material basis, the filter mode for <see cref="Decal" /> textures is set globally with <c>ProjectSettings.rendering/textures/decals/filter</c>.</para>
@@ -36,50 +81,8 @@ public interface IDecal : IVisualInstance3D {
     /// </summary>
     Texture2D TextureOrm { get; set; }
     /// <summary>
-    /// <para><see cref="Texture2D" /> with the emission <see cref="Color" /> of the Decal. Either this or the <see cref="Decal.TextureAlbedo" /> must be set for the Decal to be visible. Use the alpha channel like a mask to smoothly blend the edges of the decal with the underlying object.</para>
-    /// <para><b>Note:</b> Unlike <see cref="BaseMaterial3D" /> whose filter mode can be adjusted on a per-material basis, the filter mode for <see cref="Decal" /> textures is set globally with <c>ProjectSettings.rendering/textures/decals/filter</c>.</para>
-    /// </summary>
-    Texture2D TextureEmission { get; set; }
-    /// <summary>
-    /// <para>Energy multiplier for the emission texture. This will make the decal emit light at a higher or lower intensity, independently of the albedo color. See also <see cref="Decal.Modulate" />.</para>
-    /// </summary>
-    float EmissionEnergy { get; set; }
-    /// <summary>
-    /// <para>Changes the <see cref="Color" /> of the Decal by multiplying the albedo and emission colors with this value. The alpha component is only taken into account when multiplying the albedo color, not the emission color. See also <see cref="Decal.EmissionEnergy" /> and <see cref="Decal.AlbedoMix" /> to change the emission and albedo intensity independently of each other.</para>
-    /// </summary>
-    Color Modulate { get; set; }
-    /// <summary>
-    /// <para>Blends the albedo <see cref="Color" /> of the decal with albedo <see cref="Color" /> of the underlying mesh. This can be set to <c>0.0</c> to create a decal that only affects normal or ORM. In this case, an albedo texture is still required as its alpha channel will determine where the normal and ORM will be overridden. See also <see cref="Decal.Modulate" />.</para>
-    /// </summary>
-    float AlbedoMix { get; set; }
-    /// <summary>
-    /// <para>Fades the Decal if the angle between the Decal's <see cref="Aabb" /> and the target surface becomes too large. A value of <c>0</c> projects the Decal regardless of angle, a value of <c>1</c> limits the Decal to surfaces that are nearly perpendicular.</para>
-    /// <para><b>Note:</b> Setting <see cref="Decal.NormalFade" /> to a value greater than <c>0.0</c> has a small performance cost due to the added normal angle computations.</para>
-    /// </summary>
-    float NormalFade { get; set; }
-    /// <summary>
     /// <para>Sets the curve over which the decal will fade as the surface gets further from the center of the <see cref="Aabb" />. Only positive values are valid (negative values will be clamped to <c>0.0</c>). See also <see cref="Decal.LowerFade" />.</para>
     /// </summary>
     float UpperFade { get; set; }
-    /// <summary>
-    /// <para>Sets the curve over which the decal will fade as the surface gets further from the center of the <see cref="Aabb" />. Only positive values are valid (negative values will be clamped to <c>0.0</c>). See also <see cref="Decal.UpperFade" />.</para>
-    /// </summary>
-    float LowerFade { get; set; }
-    /// <summary>
-    /// <para>If <c>true</c>, decals will smoothly fade away when far from the active <see cref="Camera3D" /> starting at <see cref="Decal.DistanceFadeBegin" />. The Decal will fade out over <see cref="Decal.DistanceFadeBegin" /> + <see cref="Decal.DistanceFadeLength" />, after which it will be culled and not sent to the shader at all. Use this to reduce the number of active Decals in a scene and thus improve performance.</para>
-    /// </summary>
-    bool DistanceFadeEnabled { get; set; }
-    /// <summary>
-    /// <para>The distance from the camera at which the Decal begins to fade away (in 3D units).</para>
-    /// </summary>
-    float DistanceFadeBegin { get; set; }
-    /// <summary>
-    /// <para>The distance over which the Decal fades (in 3D units). The Decal becomes slowly more transparent over this distance and is completely invisible at the end. Higher values result in a smoother fade-out transition, which is more suited when the camera moves fast.</para>
-    /// </summary>
-    float DistanceFadeLength { get; set; }
-    /// <summary>
-    /// <para>Specifies which <see cref="VisualInstance3D.Layers" /> this decal will project on. By default, Decals affect all layers. This is used so you can specify which types of objects receive the Decal and which do not. This is especially useful so you can ensure that dynamic objects don't accidentally receive a Decal intended for the terrain under them.</para>
-    /// </summary>
-    uint CullMask { get; set; }
 
 }

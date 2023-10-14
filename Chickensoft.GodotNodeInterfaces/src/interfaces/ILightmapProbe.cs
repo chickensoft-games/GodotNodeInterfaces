@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class LightmapProbeNode : LightmapProbe, ILightmapProbe { }
 
 /// <summary>
 /// <para><see cref="LightmapProbe" /> represents the position of a single manually placed probe for dynamic object lighting with <see cref="LightmapGI" />.</para>

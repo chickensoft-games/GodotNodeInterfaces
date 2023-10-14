@@ -2,6 +2,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class ShaderGlobalsOverrideNode : ShaderGlobalsOverride, IShaderGlobalsOverride { }
 
 /// <summary>
 /// <para>Similar to how a <see cref="WorldEnvironment" /> node can be used to override the environment while a specific scene is loaded, <see cref="ShaderGlobalsOverride" /> can be used to override global shader parameters temporarily. Once the node is removed, the project-wide values for the global shader parameters are restored. See the <see cref="RenderingServer" /> <c>global_shader_parameter_*</c> methods for more information.</para>

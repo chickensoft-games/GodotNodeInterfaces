@@ -3,6 +3,9 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
+// Apply interface to a Godot node implementation to make sure the
+// generated interface is correct.
+internal partial class TextureProgressBarNode : TextureProgressBar, ITextureProgressBar { }
 
 /// <summary>
 /// <para>TextureProgressBar works like <see cref="ProgressBar" />, but uses up to 3 textures instead of Godot's <see cref="Theme" /> resource. It can be used to create horizontal, vertical and radial progress bars.</para>
@@ -17,25 +20,34 @@ public interface ITextureProgressBar : IRange {
     /// </summary>
     bool NinePatchStretch { get; set; }
     /// <summary>
-    /// <para>The width of the 9-patch's left column.</para>
+    /// <para>Offsets <see cref="TextureProgressBar.TextureProgress" /> if <see cref="TextureProgressBar.FillMode" /> is <see cref="TextureProgressBar.FillModeEnum.Clockwise" /> or <see cref="TextureProgressBar.FillModeEnum.CounterClockwise" />.</para>
     /// </summary>
-    int StretchMarginLeft { get; set; }
+    Vector2 RadialCenterOffset { get; set; }
     /// <summary>
-    /// <para>The height of the 9-patch's top row.</para>
+    /// <para>Upper limit for the fill of <see cref="TextureProgressBar.TextureProgress" /> if <see cref="TextureProgressBar.FillMode" /> is <see cref="TextureProgressBar.FillModeEnum.Clockwise" /> or <see cref="TextureProgressBar.FillModeEnum.CounterClockwise" />. When the node's <c>value</c> is equal to its <c>max_value</c>, the texture fills up to this angle.</para>
+    /// <para>See <see cref="Range.Value" />, <see cref="Range.MaxValue" />.</para>
     /// </summary>
-    int StretchMarginTop { get; set; }
+    float RadialFillDegrees { get; set; }
     /// <summary>
-    /// <para>The width of the 9-patch's right column.</para>
+    /// <para>Starting angle for the fill of <see cref="TextureProgressBar.TextureProgress" /> if <see cref="TextureProgressBar.FillMode" /> is <see cref="TextureProgressBar.FillModeEnum.Clockwise" /> or <see cref="TextureProgressBar.FillModeEnum.CounterClockwise" />. When the node's <c>value</c> is equal to its <c>min_value</c>, the texture doesn't show up at all. When the <c>value</c> increases, the texture fills and tends towards <see cref="TextureProgressBar.RadialFillDegrees" />.</para>
     /// </summary>
-    int StretchMarginRight { get; set; }
+    float RadialInitialAngle { get; set; }
     /// <summary>
     /// <para>The height of the 9-patch's bottom row. A margin of 16 means the 9-slice's bottom corners and side will have a height of 16 pixels. You can set all 4 margin values individually to create panels with non-uniform borders.</para>
     /// </summary>
     int StretchMarginBottom { get; set; }
     /// <summary>
-    /// <para><see cref="Texture2D" /> that draws under the progress bar. The bar's background.</para>
+    /// <para>The width of the 9-patch's left column.</para>
     /// </summary>
-    Texture2D TextureUnder { get; set; }
+    int StretchMarginLeft { get; set; }
+    /// <summary>
+    /// <para>The width of the 9-patch's right column.</para>
+    /// </summary>
+    int StretchMarginRight { get; set; }
+    /// <summary>
+    /// <para>The height of the 9-patch's top row.</para>
+    /// </summary>
+    int StretchMarginTop { get; set; }
     /// <summary>
     /// <para><see cref="Texture2D" /> that draws over the progress bar. Use it to add highlights or an upper-frame that hides part of <see cref="TextureProgressBar.TextureProgress" />.</para>
     /// </summary>
@@ -50,9 +62,9 @@ public interface ITextureProgressBar : IRange {
     /// </summary>
     Vector2 TextureProgressOffset { get; set; }
     /// <summary>
-    /// <para>Multiplies the color of the bar's <see cref="TextureProgressBar.TextureUnder" /> texture.</para>
+    /// <para><see cref="Texture2D" /> that draws under the progress bar. The bar's background.</para>
     /// </summary>
-    Color TintUnder { get; set; }
+    Texture2D TextureUnder { get; set; }
     /// <summary>
     /// <para>Multiplies the color of the bar's <see cref="TextureProgressBar.TextureOver" /> texture. The effect is similar to <see cref="CanvasItem.Modulate" />, except it only affects this specific texture instead of the entire node.</para>
     /// </summary>
@@ -62,17 +74,8 @@ public interface ITextureProgressBar : IRange {
     /// </summary>
     Color TintProgress { get; set; }
     /// <summary>
-    /// <para>Starting angle for the fill of <see cref="TextureProgressBar.TextureProgress" /> if <see cref="TextureProgressBar.FillMode" /> is <see cref="TextureProgressBar.FillModeEnum.Clockwise" /> or <see cref="TextureProgressBar.FillModeEnum.CounterClockwise" />. When the node's <c>value</c> is equal to its <c>min_value</c>, the texture doesn't show up at all. When the <c>value</c> increases, the texture fills and tends towards <see cref="TextureProgressBar.RadialFillDegrees" />.</para>
+    /// <para>Multiplies the color of the bar's <see cref="TextureProgressBar.TextureUnder" /> texture.</para>
     /// </summary>
-    float RadialInitialAngle { get; set; }
-    /// <summary>
-    /// <para>Upper limit for the fill of <see cref="TextureProgressBar.TextureProgress" /> if <see cref="TextureProgressBar.FillMode" /> is <see cref="TextureProgressBar.FillModeEnum.Clockwise" /> or <see cref="TextureProgressBar.FillModeEnum.CounterClockwise" />. When the node's <c>value</c> is equal to its <c>max_value</c>, the texture fills up to this angle.</para>
-    /// <para>See <see cref="Range.Value" />, <see cref="Range.MaxValue" />.</para>
-    /// </summary>
-    float RadialFillDegrees { get; set; }
-    /// <summary>
-    /// <para>Offsets <see cref="TextureProgressBar.TextureProgress" /> if <see cref="TextureProgressBar.FillMode" /> is <see cref="TextureProgressBar.FillModeEnum.Clockwise" /> or <see cref="TextureProgressBar.FillModeEnum.CounterClockwise" />.</para>
-    /// </summary>
-    Vector2 RadialCenterOffset { get; set; }
+    Color TintUnder { get; set; }
 
 }
