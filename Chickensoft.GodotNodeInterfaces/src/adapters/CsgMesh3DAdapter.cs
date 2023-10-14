@@ -1,4 +1,4 @@
- namespace Chickensoft.GodotNodeInterfaces;
+namespace Chickensoft.GodotNodeInterfaces;
 
 using Godot;
 /// <summary>

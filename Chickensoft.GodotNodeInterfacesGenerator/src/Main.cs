@@ -225,7 +225,7 @@ public static class GodotNodeInterfacesGenerator {
       """;
 
       var adapterContents = $$"""
-       namespace Chickensoft.GodotNodeInterfaces;
+      namespace Chickensoft.GodotNodeInterfaces;
 
       {{usings}}
       {{mainDocumentation}}
