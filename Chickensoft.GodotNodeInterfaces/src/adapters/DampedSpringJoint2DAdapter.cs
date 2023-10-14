@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A physics joint that connects two 2D physics bodies with a spring-like force. This resembles a spring that always wants to stretch to a given length.</para>
 /// </summary>
-public class DampedSpringJoint2DAdapter : DampedSpringJoint2D, IDampedSpringJoint2D {
+public class DampedSpringJoint2DAdapter : Joint2DAdapter, IDampedSpringJoint2D {
   private readonly DampedSpringJoint2D _node;
 
-  public DampedSpringJoint2DAdapter(DampedSpringJoint2D node) => _node = node;
+  public DampedSpringJoint2DAdapter(DampedSpringJoint2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The spring joint's damping ratio. A value between <c>0</c> and <c>1</c>. When the two bodies move into different directions the system tries to align them to the spring axis again. A high <see cref="DampedSpringJoint2D.Damping" /> value forces the attached bodies to align faster.</para>
     /// </summary>

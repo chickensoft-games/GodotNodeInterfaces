@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A container used to provide a child control with scrollbars when needed. Scrollbars will automatically be drawn at the right (for vertical) or bottom (for horizontal) and will enable dragging to move the viewable Control (and its children) within the ScrollContainer. Scrollbars will also automatically resize the grabber based on the <see cref="Control.CustomMinimumSize" /> of the Control relative to the ScrollContainer.</para>
 /// </summary>
-public class ScrollContainerAdapter : ScrollContainer, IScrollContainer {
+public class ScrollContainerAdapter : ContainerAdapter, IScrollContainer {
   private readonly ScrollContainer _node;
 
-  public ScrollContainerAdapter(ScrollContainer node) => _node = node;
+  public ScrollContainerAdapter(ScrollContainer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Ensures the given <paramref name="control" /> is visible (must be a direct or indirect child of the ScrollContainer). Used by <see cref="ScrollContainer.FollowFocus" />.</para>
     /// <para><b>Note:</b> This will not work on a node that was just added during the same frame. If you want to scroll to a newly added child, you must wait until the next frame using <see cref="SceneTree.ProcessFrame" />:</para>

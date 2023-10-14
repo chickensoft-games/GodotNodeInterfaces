@@ -5,10 +5,11 @@ using Godot;
 /// <para>This CSG node allows you to use any mesh resource as a CSG shape, provided it is closed, does not self-intersect, does not contain internal faces and has no edges that connect to more than two faces. See also <see cref="CsgPolygon3D" /> for drawing 2D extruded polygons to be used as CSG nodes.</para>
 /// <para><b>Note:</b> CSG nodes are intended to be used for level prototyping. Creating CSG nodes has a significant CPU cost compared to creating a <see cref="MeshInstance3D" /> with a <see cref="PrimitiveMesh" />. Moving a CSG node within another CSG node also has a significant CPU cost, so it should be avoided during gameplay.</para>
 /// </summary>
-public class CsgMesh3DAdapter : CsgMesh3D, ICsgMesh3D {
+public class CsgMesh3DAdapter : CsgPrimitive3DAdapter, ICsgMesh3D {
   private readonly CsgMesh3D _node;
 
-  public CsgMesh3DAdapter(CsgMesh3D node) => _node = node;
+  public CsgMesh3DAdapter(CsgMesh3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The <see cref="Material" /> used in drawing the CSG shape.</para>
     /// </summary>

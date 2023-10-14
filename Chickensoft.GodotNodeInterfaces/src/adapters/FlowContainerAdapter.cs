@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A container that arranges its child controls horizontally or vertically and wraps them around at the borders. This is similar to how text in a book wraps around when no more words can fit on a line.</para>
 /// </summary>
-public class FlowContainerAdapter : FlowContainer, IFlowContainer {
+public class FlowContainerAdapter : ContainerAdapter, IFlowContainer {
   private readonly FlowContainer _node;
 
-  public FlowContainerAdapter(FlowContainer node) => _node = node;
+  public FlowContainerAdapter(FlowContainer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The alignment of the container's children (must be one of <see cref="FlowContainer.AlignmentMode.Begin" />, <see cref="FlowContainer.AlignmentMode.Center" />, or <see cref="FlowContainer.AlignmentMode.End" />).</para>
     /// </summary>

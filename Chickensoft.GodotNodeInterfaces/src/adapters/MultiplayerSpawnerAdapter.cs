@@ -7,10 +7,11 @@ using System;
 /// <para>Also supports custom node spawns through <see cref="MultiplayerSpawner.Spawn(Godot.Variant)" />, calling <see cref="MultiplayerSpawner.SpawnFunction" /> on all peers.</para>
 /// <para>Internally, <see cref="MultiplayerSpawner" /> uses <see cref="MultiplayerApi.ObjectConfigurationAdd(Godot.GodotObject,Godot.Variant)" /> to notify spawns passing the spawned node as the <c>object</c> and itself as the <c>configuration</c>, and <see cref="MultiplayerApi.ObjectConfigurationRemove(Godot.GodotObject,Godot.Variant)" /> to notify despawns in a similar way.</para>
 /// </summary>
-public class MultiplayerSpawnerAdapter : MultiplayerSpawner, IMultiplayerSpawner {
+public class MultiplayerSpawnerAdapter : IMultiplayerSpawner {
   private readonly MultiplayerSpawner _node;
 
-  public MultiplayerSpawnerAdapter(MultiplayerSpawner node) => _node = node;
+  public MultiplayerSpawnerAdapter(MultiplayerSpawner node) { _node = node; }
+
 
     public string[] _SpawnableScenes { get => _node._SpawnableScenes; set => _node._SpawnableScenes = value; }
     /// <summary>

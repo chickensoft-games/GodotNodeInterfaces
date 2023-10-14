@@ -6,10 +6,11 @@ using System;
 /// <para>A node that creates a window. The window can either be a native system window or embedded inside another <see cref="Window" /> (see <see cref="Viewport.GuiEmbedSubwindows" />).</para>
 /// <para>At runtime, <see cref="Window" />s will not close automatically when requested. You need to handle it manually using the <see cref="Window.CloseRequested" /> signal (this applies both to pressing the close button and clicking outside of a popup).</para>
 /// </summary>
-public class WindowAdapter : Window, IWindow {
+public class WindowAdapter : ViewportAdapter, IWindow {
   private readonly Window _node;
 
-  public WindowAdapter(Window node) => _node = node;
+  public WindowAdapter(Window node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Virtual method to be implemented by the user. Overrides the value returned by <see cref="Window.GetContentsMinimumSize" />.</para>
     /// </summary>

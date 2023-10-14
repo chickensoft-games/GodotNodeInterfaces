@@ -6,10 +6,11 @@ using System;
 /// <para>RemoteTransform2D pushes its own <see cref="Transform2D" /> to another <see cref="Node2D" /> derived node (called the remote node) in the scene.</para>
 /// <para>It can be set to update another node's position, rotation and/or scale. It can use either global or local coordinates.</para>
 /// </summary>
-public class RemoteTransform2DAdapter : RemoteTransform2D, IRemoteTransform2D {
+public class RemoteTransform2DAdapter : Node2DAdapter, IRemoteTransform2D {
   private readonly RemoteTransform2D _node;
 
-  public RemoteTransform2DAdapter(RemoteTransform2D node) => _node = node;
+  public RemoteTransform2DAdapter(RemoteTransform2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para><see cref="RemoteTransform2D" /> caches the remote node. It may not notice if the remote node disappears; <see cref="RemoteTransform2D.ForceUpdateCache" /> forces it to update the cache again.</para>
     /// </summary>

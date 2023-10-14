@@ -6,10 +6,11 @@ using Godot;
 /// <para>Particle attractors work in real-time and can be moved, rotated and scaled during gameplay. Unlike collision shapes, non-uniform scaling of attractors is also supported.</para>
 /// <para><b>Note:</b> Particle attractors only affect <see cref="GpuParticles3D" />, not <see cref="CpuParticles3D" />.</para>
 /// </summary>
-public class GpuParticlesAttractorBox3DAdapter : GpuParticlesAttractorBox3D, IGpuParticlesAttractorBox3D {
+public class GpuParticlesAttractorBox3DAdapter : GpuParticlesAttractor3DAdapter, IGpuParticlesAttractorBox3D {
   private readonly GpuParticlesAttractorBox3D _node;
 
-  public GpuParticlesAttractorBox3DAdapter(GpuParticlesAttractorBox3D node) => _node = node;
+  public GpuParticlesAttractorBox3DAdapter(GpuParticlesAttractorBox3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The attractor box's size in 3D units.</para>
     /// </summary>

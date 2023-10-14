@@ -13,9 +13,10 @@ using Godot;
 /// AddThemeConstantOverride("margin_right", marginValue);
 /// </code></para>
 /// </summary>
-public class MarginContainerAdapter : MarginContainer, IMarginContainer {
+public class MarginContainerAdapter : ContainerAdapter, IMarginContainer {
   private readonly MarginContainer _node;
 
-  public MarginContainerAdapter(MarginContainer node) => _node = node;
+  public MarginContainerAdapter(MarginContainer node) : base(node) { _node = node; }
+
 
 }

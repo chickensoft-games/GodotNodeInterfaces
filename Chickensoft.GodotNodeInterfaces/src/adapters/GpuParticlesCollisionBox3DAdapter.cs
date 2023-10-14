@@ -7,10 +7,11 @@ using Godot;
 /// <para><b>Note:</b> <see cref="ParticleProcessMaterial.CollisionMode" /> must be <see cref="ParticleProcessMaterial.CollisionModeEnum.Rigid" /> or <see cref="ParticleProcessMaterial.CollisionModeEnum.HideOnContact" /> on the <see cref="GpuParticles3D" />'s process material for collision to work.</para>
 /// <para><b>Note:</b> Particle collision only affects <see cref="GpuParticles3D" />, not <see cref="CpuParticles3D" />.</para>
 /// </summary>
-public class GpuParticlesCollisionBox3DAdapter : GpuParticlesCollisionBox3D, IGpuParticlesCollisionBox3D {
+public class GpuParticlesCollisionBox3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionBox3D {
   private readonly GpuParticlesCollisionBox3D _node;
 
-  public GpuParticlesCollisionBox3DAdapter(GpuParticlesCollisionBox3D node) => _node = node;
+  public GpuParticlesCollisionBox3DAdapter(GpuParticlesCollisionBox3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The collision box's size in 3D units.</para>
     /// </summary>

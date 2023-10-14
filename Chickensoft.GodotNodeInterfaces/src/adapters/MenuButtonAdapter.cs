@@ -6,10 +6,11 @@ using System;
 /// <para>A button that brings up a <see cref="PopupMenu" /> when clicked. To create new items inside this <see cref="PopupMenu" />, use <c>get_popup().add_item("My Item Name")</c>. You can also create them directly from Godot editor's inspector.</para>
 /// <para>See also <see cref="BaseButton" /> which contains common properties and methods associated with this node.</para>
 /// </summary>
-public class MenuButtonAdapter : MenuButton, IMenuButton {
+public class MenuButtonAdapter : ButtonAdapter, IMenuButton {
   private readonly MenuButton _node;
 
-  public MenuButtonAdapter(MenuButton node) => _node = node;
+  public MenuButtonAdapter(MenuButton node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Returns the <see cref="PopupMenu" /> contained in this button.</para>
     /// <para><b>Warning:</b> This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their <see cref="Window.Visible" /> property.</para>

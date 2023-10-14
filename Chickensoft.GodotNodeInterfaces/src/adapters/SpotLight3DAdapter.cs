@@ -7,10 +7,11 @@ using System;
 /// <para><b>Note:</b> When using the Mobile rendering method, only 8 spot lights can be displayed on each mesh resource. Attempting to display more than 8 spot lights on a single mesh resource will result in spot lights flickering in and out as the camera moves. When using the Compatibility rendering method, only 8 spot lights can be displayed on each mesh resource by default, but this can be increased by adjusting <c>ProjectSettings.rendering/limits/opengl/max_lights_per_object</c>.</para>
 /// <para><b>Note:</b> When using the Mobile or Compatibility rendering methods, spot lights will only correctly affect meshes whose visibility AABB intersects with the light's AABB. If using a shader to deform the mesh in a way that makes it go outside its AABB, <see cref="GeometryInstance3D.ExtraCullMargin" /> must be increased on the mesh. Otherwise, the light may not be visible on the mesh.</para>
 /// </summary>
-public class SpotLight3DAdapter : SpotLight3D, ISpotLight3D {
+public class SpotLight3DAdapter : Light3DAdapter, ISpotLight3D {
   private readonly SpotLight3D _node;
 
-  public SpotLight3DAdapter(SpotLight3D node) => _node = node;
+  public SpotLight3DAdapter(SpotLight3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The spotlight's angle in degrees.</para>
     /// <para><b>Note:</b> <see cref="SpotLight3D.SpotAngle" /> is not affected by <see cref="Node3D.Scale" /> (the light's scale or its parent's scale).</para>

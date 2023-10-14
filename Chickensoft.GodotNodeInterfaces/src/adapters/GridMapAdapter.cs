@@ -10,10 +10,11 @@ using Godot.Collections;
 /// <para>Internally, a GridMap is split into a sparse collection of octants for efficient rendering and physics processing. Every octant has the same dimensions and can contain several cells.</para>
 /// <para><b>Note:</b> GridMap doesn't extend <see cref="VisualInstance3D" /> and therefore can't be hidden or cull masked based on <see cref="VisualInstance3D.Layers" />. If you make a light not affect the first layer, the whole GridMap won't be lit by the light in question.</para>
 /// </summary>
-public class GridMapAdapter : GridMap, IGridMap {
+public class GridMapAdapter : Node3DAdapter, IGridMap {
   private readonly GridMap _node;
 
-  public GridMapAdapter(GridMap node) => _node = node;
+  public GridMapAdapter(GridMap node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, this GridMap creates a navigation region for each cell that uses a <see cref="GridMap.MeshLibrary" /> item with a navigation mesh. The created navigation region will use the navigation layers bitmask assigned to the <see cref="MeshLibrary" />'s item.</para>
     /// </summary>

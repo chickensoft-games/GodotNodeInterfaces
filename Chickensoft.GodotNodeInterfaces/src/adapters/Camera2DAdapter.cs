@@ -8,10 +8,11 @@ using System;
 /// <para>This node is intended to be a simple helper to get things going quickly, but more functionality may be desired to change how the camera works. To make your own custom camera node, inherit it from <see cref="Node2D" /> and change the transform of the canvas by setting <see cref="Viewport.CanvasTransform" /> in <see cref="Viewport" /> (you can obtain the current <see cref="Viewport" /> by using <see cref="Node.GetViewport" />).</para>
 /// <para>Note that the <see cref="Camera2D" /> node's <c>position</c> doesn't represent the actual position of the screen, which may differ due to applied smoothing or limits. You can use <see cref="Camera2D.GetScreenCenterPosition" /> to get the real position.</para>
 /// </summary>
-public class Camera2DAdapter : Camera2D, ICamera2D {
+public class Camera2DAdapter : Node2DAdapter, ICamera2D {
   private readonly Camera2D _node;
 
-  public Camera2DAdapter(Camera2D node) => _node = node;
+  public Camera2DAdapter(Camera2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Aligns the camera to the tracked node.</para>
     /// </summary>

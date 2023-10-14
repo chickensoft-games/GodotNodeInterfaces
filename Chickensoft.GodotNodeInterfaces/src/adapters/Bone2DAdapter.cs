@@ -8,10 +8,11 @@ using System;
 /// <para>Each bone has a <see cref="Bone2D.Rest" /> transform that you can reset to with <see cref="Bone2D.ApplyRest" />. These rest poses are relative to the bone's parent.</para>
 /// <para>If in the editor, you can set the rest pose of an entire skeleton using a menu option, from the code, you need to iterate over the bones to set their individual rest poses.</para>
 /// </summary>
-public class Bone2DAdapter : Bone2D, IBone2D {
+public class Bone2DAdapter : Node2DAdapter, IBone2D {
   private readonly Bone2D _node;
 
-  public Bone2DAdapter(Bone2D node) => _node = node;
+  public Bone2DAdapter(Bone2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Stores the node's current transforms in <see cref="Bone2D.Rest" />.</para>
     /// </summary>

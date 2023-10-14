@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>Once added to the scene tree and enabled using <see cref="AudioListener3D.MakeCurrent" />, this node will override the location sounds are heard from. This can be used to listen from a location different from the <see cref="Camera3D" />.</para>
 /// </summary>
-public class AudioListener3DAdapter : AudioListener3D, IAudioListener3D {
+public class AudioListener3DAdapter : Node3DAdapter, IAudioListener3D {
   private readonly AudioListener3D _node;
 
-  public AudioListener3DAdapter(AudioListener3D node) => _node = node;
+  public AudioListener3DAdapter(AudioListener3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Disables the listener to use the current camera's listener instead.</para>
     /// </summary>

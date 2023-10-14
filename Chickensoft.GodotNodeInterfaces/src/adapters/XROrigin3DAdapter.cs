@@ -8,10 +8,11 @@ using System;
 /// <para>It is the position of this node that you update when your character needs to move through your game world while we're not moving in the real world. Movement in the real world is always in relation to this origin point.</para>
 /// <para>For example, if your character is driving a car, the XROrigin3D node should be a child node of this car. Or, if you're implementing a teleport system to move your character, you should change the position of this node.</para>
 /// </summary>
-public class XROrigin3DAdapter : XROrigin3D, IXROrigin3D {
+public class XROrigin3DAdapter : Node3DAdapter, IXROrigin3D {
   private readonly XROrigin3D _node;
 
-  public XROrigin3DAdapter(XROrigin3D node) => _node = node;
+  public XROrigin3DAdapter(XROrigin3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Is this XROrigin3D node the current origin used by the <see cref="XRServer" />?</para>
     /// </summary>

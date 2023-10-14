@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A node that provides a <see cref="Shape2D" /> to a <see cref="CollisionObject2D" /> parent and allows to edit it. This can give a detection shape to an <see cref="Area2D" /> or turn a <see cref="PhysicsBody2D" /> into a solid object.</para>
 /// </summary>
-public class CollisionShape2DAdapter : CollisionShape2D, ICollisionShape2D {
+public class CollisionShape2DAdapter : Node2DAdapter, ICollisionShape2D {
   private readonly CollisionShape2D _node;
 
-  public CollisionShape2DAdapter(CollisionShape2D node) => _node = node;
+  public CollisionShape2DAdapter(CollisionShape2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The collision shape debug color.</para>
     /// <para><b>Note:</b> The default value is <c>ProjectSettings.debug/shapes/collision/shape_color</c>. The <c>Color(0, 0, 0, 1)</c> value documented here is a placeholder, and not the actual default debug color.</para>

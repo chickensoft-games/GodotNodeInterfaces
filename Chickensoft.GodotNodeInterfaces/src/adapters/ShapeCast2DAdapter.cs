@@ -8,10 +8,11 @@ using Godot.Collections;
 /// <para>Immediate collision overlaps can be done with the <see cref="ShapeCast2D.TargetPosition" /> set to <c>Vector2(0, 0)</c> and by calling <see cref="ShapeCast2D.ForceShapecastUpdate" /> within the same physics frame. This helps to overcome some limitations of <see cref="Area2D" /> when used as an instantaneous detection area, as collision information isn't immediately available to it.</para>
 /// <para><b>Note:</b> Shape casting is more computationally expensive than ray casting.</para>
 /// </summary>
-public class ShapeCast2DAdapter : ShapeCast2D, IShapeCast2D {
+public class ShapeCast2DAdapter : Node2DAdapter, IShapeCast2D {
   private readonly ShapeCast2D _node;
 
-  public ShapeCast2DAdapter(ShapeCast2D node) => _node = node;
+  public ShapeCast2DAdapter(ShapeCast2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a collision exception so the shape does not report collisions with the specified <see cref="CollisionObject2D" /> node.</para>
     /// </summary>

@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>Also known as 9-slice panels, <see cref="NinePatchRect" /> produces clean panels of any size based on a small texture. To do so, it splits the texture in a 3×3 grid. When you scale the node, it tiles the texture's edges horizontally or vertically, tiles the center on both axes, and leaves the corners unchanged.</para>
 /// </summary>
-public class NinePatchRectAdapter : NinePatchRect, INinePatchRect {
+public class NinePatchRectAdapter : ControlAdapter, INinePatchRect {
   private readonly NinePatchRect _node;
 
-  public NinePatchRectAdapter(NinePatchRect node) => _node = node;
+  public NinePatchRectAdapter(NinePatchRect node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The stretch mode to use for horizontal stretching/tiling. See <see cref="NinePatchRect.AxisStretchMode" /> for possible values.</para>
     /// </summary>

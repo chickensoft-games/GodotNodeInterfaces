@@ -6,9 +6,10 @@ using Godot;
 /// <para>See also <see cref="BaseButton" /> which contains common properties and methods associated with this node.</para>
 /// <para>When <see cref="BaseButton.ButtonGroup" /> specifies a <see cref="ButtonGroup" />, <see cref="CheckBox" /> changes its appearance to that of a radio button and uses the various <c>radio_*</c> theme properties.</para>
 /// </summary>
-public class CheckBoxAdapter : CheckBox, ICheckBox {
+public class CheckBoxAdapter : ButtonAdapter, ICheckBox {
   private readonly CheckBox _node;
 
-  public CheckBoxAdapter(CheckBox node) => _node = node;
+  public CheckBoxAdapter(CheckBox node) : base(node) { _node = node; }
+
 
 }

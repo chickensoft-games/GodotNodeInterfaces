@@ -10,10 +10,11 @@ using System;
 /// <para><b>Note:</b> <see cref="ParticleProcessMaterial.CollisionMode" /> must be <see cref="ParticleProcessMaterial.CollisionModeEnum.Rigid" /> or <see cref="ParticleProcessMaterial.CollisionModeEnum.HideOnContact" /> on the <see cref="GpuParticles3D" />'s process material for collision to work.</para>
 /// <para><b>Note:</b> Particle collision only affects <see cref="GpuParticles3D" />, not <see cref="CpuParticles3D" />.</para>
 /// </summary>
-public class GpuParticlesCollisionSdf3DAdapter : GpuParticlesCollisionSdf3D, IGpuParticlesCollisionSdf3D {
+public class GpuParticlesCollisionSdf3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionSdf3D {
   private readonly GpuParticlesCollisionSdf3D _node;
 
-  public GpuParticlesCollisionSdf3DAdapter(GpuParticlesCollisionSdf3D node) => _node = node;
+  public GpuParticlesCollisionSdf3DAdapter(GpuParticlesCollisionSdf3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The visual layers to account for when baking the particle collision SDF. Only <see cref="MeshInstance3D" />s whose <see cref="VisualInstance3D.Layers" /> match with this <see cref="GpuParticlesCollisionSdf3D.BakeMask" /> will be included in the generated particle collision SDF. By default, all objects are taken into account for the particle collision SDF baking.</para>
     /// </summary>

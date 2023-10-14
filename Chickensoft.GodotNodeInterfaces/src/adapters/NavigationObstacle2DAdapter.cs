@@ -8,10 +8,11 @@ using System;
 /// <para>Obstacles are <b>not</b> a replacement for a (re)baked navigation mesh. Obstacles <b>don't</b> change the resulting path from the pathfinding, obstacles only affect the navigation avoidance agent movement by altering the suggested velocity of the avoidance agent.</para>
 /// <para>Obstacles using vertices can warp to a new position but should not moved every frame as each move requires a rebuild of the avoidance map.</para>
 /// </summary>
-public class NavigationObstacle2DAdapter : NavigationObstacle2D, INavigationObstacle2D {
+public class NavigationObstacle2DAdapter : Node2DAdapter, INavigationObstacle2D {
   private readonly NavigationObstacle2D _node;
 
-  public NavigationObstacle2DAdapter(NavigationObstacle2D node) => _node = node;
+  public NavigationObstacle2DAdapter(NavigationObstacle2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c> the obstacle affects avoidance using agents.</para>
     /// </summary>

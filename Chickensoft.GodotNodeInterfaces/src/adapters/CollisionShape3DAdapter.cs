@@ -6,10 +6,11 @@ using System;
 /// <para>A node that provides a <see cref="Shape3D" /> to a <see cref="CollisionObject3D" /> parent and allows to edit it. This can give a detection shape to an <see cref="Area3D" /> or turn a <see cref="PhysicsBody3D" /> into a solid object.</para>
 /// <para><b>Warning:</b> A non-uniformly scaled <see cref="CollisionShape3D" /> will likely not behave as expected. Make sure to keep its scale the same on all axes and adjust its <see cref="CollisionShape3D.Shape" /> resource instead.</para>
 /// </summary>
-public class CollisionShape3DAdapter : CollisionShape3D, ICollisionShape3D {
+public class CollisionShape3DAdapter : Node3DAdapter, ICollisionShape3D {
   private readonly CollisionShape3D _node;
 
-  public CollisionShape3DAdapter(CollisionShape3D node) => _node = node;
+  public CollisionShape3DAdapter(CollisionShape3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>A disabled collision shape has no effect in the world.</para>
     /// </summary>

@@ -6,10 +6,11 @@ using System;
 /// <para>An array of 2D points is extruded to quickly and easily create a variety of 3D meshes. See also <see cref="CsgMesh3D" /> for using 3D meshes as CSG nodes.</para>
 /// <para><b>Note:</b> CSG nodes are intended to be used for level prototyping. Creating CSG nodes has a significant CPU cost compared to creating a <see cref="MeshInstance3D" /> with a <see cref="PrimitiveMesh" />. Moving a CSG node within another CSG node also has a significant CPU cost, so it should be avoided during gameplay.</para>
 /// </summary>
-public class CsgPolygon3DAdapter : CsgPolygon3D, ICsgPolygon3D {
+public class CsgPolygon3DAdapter : CsgPrimitive3DAdapter, ICsgPolygon3D {
   private readonly CsgPolygon3D _node;
 
-  public CsgPolygon3DAdapter(CsgPolygon3D node) => _node = node;
+  public CsgPolygon3DAdapter(CsgPolygon3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>When <see cref="CsgPolygon3D.Mode" /> is <see cref="CsgPolygon3D.ModeEnum.Depth" />, the depth of the extrusion.</para>
     /// </summary>

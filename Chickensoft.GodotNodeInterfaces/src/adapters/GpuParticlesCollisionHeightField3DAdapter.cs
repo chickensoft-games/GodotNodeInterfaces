@@ -9,10 +9,11 @@ using System;
 /// <para><b>Note:</b> <see cref="ParticleProcessMaterial.CollisionMode" /> must be <c>true</c> on the <see cref="GpuParticles3D" />'s process material for collision to work.</para>
 /// <para><b>Note:</b> Particle collision only affects <see cref="GpuParticles3D" />, not <see cref="CpuParticles3D" />.</para>
 /// </summary>
-public class GpuParticlesCollisionHeightField3DAdapter : GpuParticlesCollisionHeightField3D, IGpuParticlesCollisionHeightField3D {
+public class GpuParticlesCollisionHeightField3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionHeightField3D {
   private readonly GpuParticlesCollisionHeightField3D _node;
 
-  public GpuParticlesCollisionHeightField3DAdapter(GpuParticlesCollisionHeightField3D node) => _node = node;
+  public GpuParticlesCollisionHeightField3DAdapter(GpuParticlesCollisionHeightField3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, the <see cref="GpuParticlesCollisionHeightField3D" /> will follow the current camera in global space. The <see cref="GpuParticlesCollisionHeightField3D" /> does not need to be a child of the <see cref="Camera3D" /> node for this to work.</para>
     /// <para>Following the camera has a performance cost, as it will force the heightmap to update whenever the camera moves. Consider lowering <see cref="GpuParticlesCollisionHeightField3D.Resolution" /> to improve performance if <see cref="GpuParticlesCollisionHeightField3D.FollowCameraEnabled" /> is <c>true</c>.</para>

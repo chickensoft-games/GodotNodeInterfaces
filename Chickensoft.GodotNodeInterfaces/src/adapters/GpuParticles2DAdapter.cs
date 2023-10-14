@@ -7,10 +7,11 @@ using System;
 /// <para>Use the <see cref="GpuParticles2D.ProcessMaterial" /> property to add a <see cref="ParticleProcessMaterial" /> to configure particle appearance and behavior. Alternatively, you can add a <see cref="ShaderMaterial" /> which will be applied to all particles.</para>
 /// <para>2D particles can optionally collide with <see cref="LightOccluder2D" />, but they don't collide with <see cref="PhysicsBody2D" /> nodes.</para>
 /// </summary>
-public class GpuParticles2DAdapter : GpuParticles2D, IGpuParticles2D {
+public class GpuParticles2DAdapter : Node2DAdapter, IGpuParticles2D {
   private readonly GpuParticles2D _node;
 
-  public GpuParticles2DAdapter(GpuParticles2D node) => _node = node;
+  public GpuParticles2DAdapter(GpuParticles2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Number of particles emitted in one emission cycle.</para>
     /// </summary>

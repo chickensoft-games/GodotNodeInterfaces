@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>Range is an abstract base class for controls that represent a number within a range, using a configured <see cref="Range.Step" /> and <see cref="Range.Page" /> size. See e.g. <see cref="ScrollBar" /> and <see cref="Slider" /> for examples of higher-level nodes using Range.</para>
 /// </summary>
-public class RangeAdapter : Godot.Range, IRange {
+public class RangeAdapter : ControlAdapter, IRange {
   private readonly Godot.Range _node;
 
-  public RangeAdapter(Godot.Range node) => _node = node;
+  public RangeAdapter(Godot.Range node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Called when the <see cref="Range" />'s value is changed (following the same conditions as <see cref="Range.ValueChanged" />).</para>
     /// </summary>

@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>The <see cref="VisualInstance3D" /> is used to connect a resource to a visual representation. All visual 3D nodes inherit from the <see cref="VisualInstance3D" />. In general, you should not access the <see cref="VisualInstance3D" /> properties directly as they are accessed and managed by the nodes that inherit from <see cref="VisualInstance3D" />. <see cref="VisualInstance3D" /> is the node representation of the <see cref="RenderingServer" /> instance.</para>
 /// </summary>
-public class VisualInstance3DAdapter : VisualInstance3D, IVisualInstance3D {
+public class VisualInstance3DAdapter : Node3DAdapter, IVisualInstance3D {
   private readonly VisualInstance3D _node;
 
-  public VisualInstance3DAdapter(VisualInstance3D node) => _node = node;
+  public VisualInstance3DAdapter(VisualInstance3D node) : base(node) { _node = node; }
+
 
     public Aabb _GetAabb() => _node._GetAabb();
     /// <summary>

@@ -6,10 +6,11 @@ using System;
 /// <para>3D particle node used to create a variety of particle systems and effects. <see cref="GpuParticles3D" /> features an emitter that generates some number of particles at a given rate.</para>
 /// <para>Use <see cref="GpuParticles3D.ProcessMaterial" /> to add a <see cref="ParticleProcessMaterial" /> to configure particle appearance and behavior. Alternatively, you can add a <see cref="ShaderMaterial" /> which will be applied to all particles.</para>
 /// </summary>
-public class GpuParticles3DAdapter : GpuParticles3D, IGpuParticles3D {
+public class GpuParticles3DAdapter : GeometryInstance3DAdapter, IGpuParticles3D {
   private readonly GpuParticles3D _node;
 
-  public GpuParticles3DAdapter(GpuParticles3D node) => _node = node;
+  public GpuParticles3DAdapter(GpuParticles3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Number of particles to emit.</para>
     /// </summary>

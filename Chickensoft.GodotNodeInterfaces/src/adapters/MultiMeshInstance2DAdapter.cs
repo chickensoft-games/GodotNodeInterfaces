@@ -5,10 +5,11 @@ using Godot;
 /// <para><see cref="MultiMeshInstance2D" /> is a specialized node to instance a <see cref="MultiMesh" /> resource in 2D.</para>
 /// <para>Usage is the same as <see cref="MultiMeshInstance3D" />.</para>
 /// </summary>
-public class MultiMeshInstance2DAdapter : MultiMeshInstance2D, IMultiMeshInstance2D {
+public class MultiMeshInstance2DAdapter : Node2DAdapter, IMultiMeshInstance2D {
   private readonly MultiMeshInstance2D _node;
 
-  public MultiMeshInstance2DAdapter(MultiMeshInstance2D node) => _node = node;
+  public MultiMeshInstance2DAdapter(MultiMeshInstance2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The <see cref="MultiMesh" /> that will be drawn by the <see cref="MultiMeshInstance2D" />.</para>
     /// </summary>

@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>TextureProgressBar works like <see cref="ProgressBar" />, but uses up to 3 textures instead of Godot's <see cref="Theme" /> resource. It can be used to create horizontal, vertical and radial progress bars.</para>
 /// </summary>
-public class TextureProgressBarAdapter : TextureProgressBar, ITextureProgressBar {
+public class TextureProgressBarAdapter : RangeAdapter, ITextureProgressBar {
   private readonly TextureProgressBar _node;
 
-  public TextureProgressBarAdapter(TextureProgressBar node) => _node = node;
+  public TextureProgressBarAdapter(TextureProgressBar node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The fill direction. See <see cref="TextureProgressBar.FillModeEnum" /> for possible values.</para>
     /// </summary>

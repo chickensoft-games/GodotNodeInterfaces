@@ -8,10 +8,11 @@ using System;
 /// <para>The position of the controller node is automatically updated by the <see cref="XRServer" />. This makes this node ideal to add child nodes to visualize the controller.</para>
 /// <para>As many XR runtimes now use a configurable action map all inputs are named.</para>
 /// </summary>
-public class XRController3DAdapter : XRController3D, IXRController3D {
+public class XRController3DAdapter : XRNode3DAdapter, IXRController3D {
   private readonly XRController3D _node;
 
-  public XRController3DAdapter(XRController3D node) => _node = node;
+  public XRController3DAdapter(XRController3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Returns a numeric value for the input with the given <paramref name="name" />. This is used for triggers and grip sensors.</para>
     /// </summary>

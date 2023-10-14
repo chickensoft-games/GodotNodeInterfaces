@@ -6,10 +6,11 @@ using System;
 /// <para>This node allows you to create a cylinder (or cone) for use with the CSG system.</para>
 /// <para><b>Note:</b> CSG nodes are intended to be used for level prototyping. Creating CSG nodes has a significant CPU cost compared to creating a <see cref="MeshInstance3D" /> with a <see cref="PrimitiveMesh" />. Moving a CSG node within another CSG node also has a significant CPU cost, so it should be avoided during gameplay.</para>
 /// </summary>
-public class CsgCylinder3DAdapter : CsgCylinder3D, ICsgCylinder3D {
+public class CsgCylinder3DAdapter : CsgPrimitive3DAdapter, ICsgCylinder3D {
   private readonly CsgCylinder3D _node;
 
-  public CsgCylinder3DAdapter(CsgCylinder3D node) => _node = node;
+  public CsgCylinder3DAdapter(CsgCylinder3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c> a cone is created, the <see cref="CsgCylinder3D.Radius" /> will only apply to one side.</para>
     /// </summary>

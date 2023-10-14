@@ -9,10 +9,11 @@ using System;
 /// GetCancelButton().Pressed += Canceled;
 /// </code></para>
 /// </summary>
-public class ConfirmationDialogAdapter : ConfirmationDialog, IConfirmationDialog {
+public class ConfirmationDialogAdapter : AcceptDialogAdapter, IConfirmationDialog {
   private readonly ConfirmationDialog _node;
 
-  public ConfirmationDialogAdapter(ConfirmationDialog node) => _node = node;
+  public ConfirmationDialogAdapter(ConfirmationDialog node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The text displayed by the cancel button (see <see cref="ConfirmationDialog.GetCancelButton" />).</para>
     /// </summary>

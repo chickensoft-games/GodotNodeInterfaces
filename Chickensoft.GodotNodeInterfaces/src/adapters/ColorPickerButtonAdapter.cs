@@ -7,10 +7,11 @@ using System;
 /// <para>See also <see cref="BaseButton" /> which contains common properties and methods associated with this node.</para>
 /// <para><b>Note:</b> By default, the button may not be wide enough for the color preview swatch to be visible. Make sure to set <see cref="Control.CustomMinimumSize" /> to a big enough value to give the button enough space.</para>
 /// </summary>
-public class ColorPickerButtonAdapter : ColorPickerButton, IColorPickerButton {
+public class ColorPickerButtonAdapter : ButtonAdapter, IColorPickerButton {
   private readonly ColorPickerButton _node;
 
-  public ColorPickerButtonAdapter(ColorPickerButton node) => _node = node;
+  public ColorPickerButtonAdapter(ColorPickerButton node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The currently selected color.</para>
     /// </summary>

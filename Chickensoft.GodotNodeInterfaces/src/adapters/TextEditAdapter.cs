@@ -8,10 +8,11 @@ using Godot.Collections;
 /// <para><b>Note:</b> Most viewport, caret and edit methods contain a <c>caret_index</c> argument for <see cref="TextEdit.CaretMultiple" /> support. The argument should be one of the following: <c>-1</c> for all carets, <c>0</c> for the main caret, or greater than <c>0</c> for secondary carets.</para>
 /// <para><b>Note:</b> When holding down Alt, the vertical scroll wheel will scroll 5 times as fast as it would normally do. This also works in the Godot script editor.</para>
 /// </summary>
-public class TextEditAdapter : TextEdit, ITextEdit {
+public class TextEditAdapter : ControlAdapter, ITextEdit {
   private readonly TextEdit _node;
 
-  public TextEditAdapter(TextEdit node) => _node = node;
+  public TextEditAdapter(TextEdit node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Override this method to define what happens when the user presses the backspace key.</para>
     /// </summary>

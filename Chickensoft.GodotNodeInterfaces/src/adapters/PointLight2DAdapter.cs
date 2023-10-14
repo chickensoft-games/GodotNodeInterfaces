@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>Casts light in a 2D environment. This light's shape is defined by a (usually grayscale) texture.</para>
 /// </summary>
-public class PointLight2DAdapter : PointLight2D, IPointLight2D {
+public class PointLight2DAdapter : Light2DAdapter, IPointLight2D {
   private readonly PointLight2D _node;
 
-  public PointLight2DAdapter(PointLight2D node) => _node = node;
+  public PointLight2DAdapter(PointLight2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The height of the light. Used with 2D normal mapping. The units are in pixels, e.g. if the height is 100, then it will illuminate an object 100 pixels away at a 45° angle to the plane.</para>
     /// </summary>

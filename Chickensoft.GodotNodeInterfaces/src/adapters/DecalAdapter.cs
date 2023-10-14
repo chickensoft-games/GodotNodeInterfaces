@@ -10,10 +10,11 @@ using System;
 /// <para><b>Note:</b> Decals are only supported in the Forward+ and Mobile rendering methods, not Compatibility. When using the Mobile rendering method, only 8 decals can be displayed on each mesh resource. Attempting to display more than 8 decals on a single mesh resource will result in decals flickering in and out as the camera moves.</para>
 /// <para><b>Note:</b> When using the Mobile rendering method, decals will only correctly affect meshes whose visibility AABB intersects with the decal's AABB. If using a shader to deform the mesh in a way that makes it go outside its AABB, <see cref="GeometryInstance3D.ExtraCullMargin" /> must be increased on the mesh. Otherwise, the decal may not be visible on the mesh.</para>
 /// </summary>
-public class DecalAdapter : Decal, IDecal {
+public class DecalAdapter : VisualInstance3DAdapter, IDecal {
   private readonly Decal _node;
 
-  public DecalAdapter(Decal node) => _node = node;
+  public DecalAdapter(Decal node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Blends the albedo <see cref="Color" /> of the decal with albedo <see cref="Color" /> of the underlying mesh. This can be set to <c>0.0</c> to create a decal that only affects normal or ORM. In this case, an albedo texture is still required as its alpha channel will determine where the normal and ORM will be overridden. See also <see cref="Decal.Modulate" />.</para>
     /// </summary>

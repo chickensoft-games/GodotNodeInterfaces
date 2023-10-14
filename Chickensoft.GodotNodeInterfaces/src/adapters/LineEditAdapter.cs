@@ -27,10 +27,11 @@ using Godot.Collections;
 /// <para>- Cmd + Left Arrow: Same as Home, move the caret to the beginning of the line</para>
 /// <para>- Cmd + Right Arrow: Same as End, move the caret to the end of the line</para>
 /// </summary>
-public class LineEditAdapter : LineEdit, ILineEdit {
+public class LineEditAdapter : ControlAdapter, ILineEdit {
   private readonly LineEdit _node;
 
-  public LineEditAdapter(LineEdit node) => _node = node;
+  public LineEditAdapter(LineEdit node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Text alignment as defined in the <see cref="HorizontalAlignment" /> enum.</para>
     /// </summary>

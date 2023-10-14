@@ -8,10 +8,11 @@ using System;
 /// <para><b>Note:</b> The ID values used for items are limited to 32 bits, not full 64 bits of <see cref="T:System.Int32" />. This has a range of <c>-2^32</c> to <c>2^32 - 1</c>, i.e. <c>-2147483648</c> to <c>2147483647</c>.</para>
 /// <para><b>Note:</b> The <see cref="Button.Text" /> and <see cref="Button.Icon" /> properties are set automatically based on the selected item. They shouldn't be changed manually.</para>
 /// </summary>
-public class OptionButtonAdapter : OptionButton, IOptionButton {
+public class OptionButtonAdapter : ButtonAdapter, IOptionButton {
   private readonly OptionButton _node;
 
-  public OptionButtonAdapter(OptionButton node) => _node = node;
+  public OptionButtonAdapter(OptionButton node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds an item, with a <paramref name="texture" /> icon, text <paramref name="label" /> and (optionally) <paramref name="id" />. If no <paramref name="id" /> is passed, the item index will be used as the item's ID. New items are appended at the end.</para>
     /// </summary>

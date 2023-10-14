@@ -7,10 +7,11 @@ using Godot.Collections;
 /// <para><see cref="Area2D" /> is a region of 2D space defined by one or multiple <see cref="CollisionShape2D" /> or <see cref="CollisionPolygon2D" /> child nodes. It detects when other <see cref="CollisionObject2D" />s enter or exit it, and it also keeps track of which collision objects haven't exited it yet (i.e. which one are overlapping it).</para>
 /// <para>This node can also locally alter or override physics parameters (gravity, damping) and route audio to custom audio buses.</para>
 /// </summary>
-public class Area2DAdapter : Area2D, IArea2D {
+public class Area2DAdapter : CollisionObject2DAdapter, IArea2D {
   private readonly Area2D _node;
 
-  public Area2DAdapter(Area2D node) => _node = node;
+  public Area2DAdapter(Area2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.</para>
     /// <para>See <c>ProjectSettings.physics/2d/default_angular_damp</c> for more details about damping.</para>

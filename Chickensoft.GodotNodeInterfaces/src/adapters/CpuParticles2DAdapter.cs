@@ -6,10 +6,11 @@ using System;
 /// <para>CPU-based 2D particle node used to create a variety of particle systems and effects.</para>
 /// <para>See also <see cref="GpuParticles2D" />, which provides the same functionality with hardware acceleration, but may not run on older devices.</para>
 /// </summary>
-public class CpuParticles2DAdapter : CpuParticles2D, ICpuParticles2D {
+public class CpuParticles2DAdapter : Node2DAdapter, ICpuParticles2D {
   private readonly CpuParticles2D _node;
 
-  public CpuParticles2DAdapter(CpuParticles2D node) => _node = node;
+  public CpuParticles2DAdapter(CpuParticles2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Number of particles emitted in one emission cycle.</para>
     /// </summary>

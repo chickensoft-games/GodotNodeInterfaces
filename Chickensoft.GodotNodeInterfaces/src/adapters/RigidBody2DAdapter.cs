@@ -10,10 +10,11 @@ using Godot.Collections;
 /// <para>If you need to override the default physics behavior, you can write a custom force integration function. See <see cref="RigidBody2D.CustomIntegrator" />.</para>
 /// <para><b>Note:</b> Changing the 2D transform or <see cref="RigidBody2D.LinearVelocity" /> of a <see cref="RigidBody2D" /> very often may lead to some unpredictable behaviors. If you need to directly affect the body, prefer <see cref="RigidBody2D._IntegrateForces(Godot.PhysicsDirectBodyState2D)" /> as it allows you to directly access the physics state.</para>
 /// </summary>
-public class RigidBody2DAdapter : RigidBody2D, IRigidBody2D {
+public class RigidBody2DAdapter : PhysicsBody2DAdapter, IRigidBody2D {
   private readonly RigidBody2D _node;
 
-  public RigidBody2DAdapter(RigidBody2D node) => _node = node;
+  public RigidBody2DAdapter(RigidBody2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Allows you to read and safely modify the simulation state for the object. Use this instead of <see cref="Node._PhysicsProcess(System.Double)" /> if you need to directly change the body's <c>position</c> or other physics properties. By default, it works in addition to the usual physics behavior, but <see cref="RigidBody2D.CustomIntegrator" /> allows you to disable the default behavior and write custom force integration for a body.</para>
     /// </summary>

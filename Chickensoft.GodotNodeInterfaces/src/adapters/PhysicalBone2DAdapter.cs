@@ -7,10 +7,11 @@ using System;
 /// <para><b>Note:</b> To make the <see cref="Bone2D" />s visually follow the <see cref="PhysicalBone2D" /> node, use a <see cref="SkeletonModification2DPhysicalBones" /> modification on the <see cref="Skeleton2D" /> parent.</para>
 /// <para><b>Note:</b> The <see cref="PhysicalBone2D" /> node does not automatically create a <see cref="Joint2D" /> node to keep <see cref="PhysicalBone2D" /> nodes together. They must be created manually. For most cases, you want to use a <see cref="PinJoint2D" /> node. The <see cref="PhysicalBone2D" /> node will automatically configure the <see cref="Joint2D" /> node once it's been added as a child node.</para>
 /// </summary>
-public class PhysicalBone2DAdapter : PhysicalBone2D, IPhysicalBone2D {
+public class PhysicalBone2DAdapter : RigidBody2DAdapter, IPhysicalBone2D {
   private readonly PhysicalBone2D _node;
 
-  public PhysicalBone2DAdapter(PhysicalBone2D node) => _node = node;
+  public PhysicalBone2DAdapter(PhysicalBone2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, the <see cref="PhysicalBone2D" /> will automatically configure the first <see cref="Joint2D" /> child node. The automatic configuration is limited to setting up the node properties and positioning the <see cref="Joint2D" />.</para>
     /// </summary>

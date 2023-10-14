@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para><see cref="SpringArm3D" /> casts a ray or a shape along its Z axis and moves all its direct children to the collision point, with an optional margin. This is useful for 3rd person cameras that move closer to the player when inside a tight space (you may need to exclude the player's collider from the <see cref="SpringArm3D" />'s collision check).</para>
 /// </summary>
-public class SpringArm3DAdapter : SpringArm3D, ISpringArm3D {
+public class SpringArm3DAdapter : Node3DAdapter, ISpringArm3D {
   private readonly SpringArm3D _node;
 
-  public SpringArm3DAdapter(SpringArm3D node) => _node = node;
+  public SpringArm3DAdapter(SpringArm3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds the <see cref="PhysicsBody3D" /> object with the given <see cref="Rid" /> to the list of <see cref="PhysicsBody3D" /> objects excluded from the collision check.</para>
     /// </summary>

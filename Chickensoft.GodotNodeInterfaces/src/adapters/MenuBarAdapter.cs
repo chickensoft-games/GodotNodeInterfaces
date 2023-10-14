@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A horizontal menu bar that creates a <see cref="MenuButton" /> for each <see cref="PopupMenu" /> child. New items are created by adding <see cref="PopupMenu" />s to this node.</para>
 /// </summary>
-public class MenuBarAdapter : MenuBar, IMenuBar {
+public class MenuBarAdapter : ControlAdapter, IMenuBar {
   private readonly MenuBar _node;
 
-  public MenuBarAdapter(MenuBar node) => _node = node;
+  public MenuBarAdapter(MenuBar node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Flat <see cref="MenuBar" /> don't display item decoration.</para>
     /// </summary>

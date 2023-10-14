@@ -17,10 +17,11 @@ using System;
 /// <para><b>Note:</b> <see cref="SpinBox" /> relies on an underlying <see cref="LineEdit" /> node. To theme a <see cref="SpinBox" />'s background, add theme items for <see cref="LineEdit" /> and customize them.</para>
 /// <para><b>Note:</b> If you want to implement drag and drop for the underlying <see cref="LineEdit" />, you can use <see cref="Control.SetDragForwarding(Godot.Callable,Godot.Callable,Godot.Callable)" /> on the node returned by <see cref="SpinBox.GetLineEdit" />.</para>
 /// </summary>
-public class SpinBoxAdapter : SpinBox, ISpinBox {
+public class SpinBoxAdapter : RangeAdapter, ISpinBox {
   private readonly SpinBox _node;
 
-  public SpinBoxAdapter(SpinBox node) => _node = node;
+  public SpinBoxAdapter(SpinBox node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Changes the alignment of the underlying <see cref="LineEdit" />.</para>
     /// </summary>

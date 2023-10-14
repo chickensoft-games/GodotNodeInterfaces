@@ -6,10 +6,11 @@ using System;
 /// <para>This node takes its parent <see cref="Path3D" />, and returns the coordinates of a point within it, given a distance from the first vertex.</para>
 /// <para>It is useful for making other nodes follow a path, without coding the movement pattern. For that, the nodes must be children of this node. The descendant nodes will then move accordingly when setting the <see cref="PathFollow3D.Progress" /> in this node.</para>
 /// </summary>
-public class PathFollow3DAdapter : PathFollow3D, IPathFollow3D {
+public class PathFollow3DAdapter : Node3DAdapter, IPathFollow3D {
   private readonly PathFollow3D _node;
 
-  public PathFollow3DAdapter(PathFollow3D node) => _node = node;
+  public PathFollow3DAdapter(PathFollow3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, the position between two cached points is interpolated cubically, and linearly otherwise.</para>
     /// <para>The points along the <see cref="Curve3D" /> of the <see cref="Path3D" /> are precomputed before use, for faster calculations. The point at the requested offset is then calculated interpolating between two adjacent cached points. This may present a problem if the curve makes sharp turns, as the cached points may not follow the curve closely enough.</para>

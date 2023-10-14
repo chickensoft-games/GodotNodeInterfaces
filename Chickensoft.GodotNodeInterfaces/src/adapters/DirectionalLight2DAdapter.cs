@@ -6,10 +6,11 @@ using System;
 /// <para>A directional light is a type of <see cref="Light2D" /> node that models an infinite number of parallel rays covering the entire scene. It is used for lights with strong intensity that are located far away from the scene (for example: to model sunlight or moonlight).</para>
 /// <para><b>Note:</b> <see cref="DirectionalLight2D" /> does not support light cull masks (but it supports shadow cull masks). It will always light up 2D nodes, regardless of the 2D node's <see cref="CanvasItem.LightMask" />.</para>
 /// </summary>
-public class DirectionalLight2DAdapter : DirectionalLight2D, IDirectionalLight2D {
+public class DirectionalLight2DAdapter : Light2DAdapter, IDirectionalLight2D {
   private readonly DirectionalLight2D _node;
 
-  public DirectionalLight2DAdapter(DirectionalLight2D node) => _node = node;
+  public DirectionalLight2DAdapter(DirectionalLight2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The height of the light. Used with 2D normal mapping. Ranges from 0 (parallel to the plane) to 1 (perpendicular to the plane).</para>
     /// </summary>

@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A link between two positions on <see cref="NavigationRegion2D" />s that agents can be routed through. These positions can be on the same <see cref="NavigationRegion2D" /> or on two different ones. Links are useful to express navigation methods other than traveling along the surface of the navigation polygon, such as ziplines, teleporters, or gaps that can be jumped across.</para>
 /// </summary>
-public class NavigationLink2DAdapter : NavigationLink2D, INavigationLink2D {
+public class NavigationLink2DAdapter : Node2DAdapter, INavigationLink2D {
   private readonly NavigationLink2D _node;
 
-  public NavigationLink2DAdapter(NavigationLink2D node) => _node = node;
+  public NavigationLink2DAdapter(NavigationLink2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Whether this link can be traveled in both directions or only from <see cref="NavigationLink2D.StartPosition" /> to <see cref="NavigationLink2D.EndPosition" />.</para>
     /// </summary>

@@ -7,10 +7,11 @@ using System;
 /// <para><b>Warning:</b> Certain configurations may be impossible to draw nicely, such as very sharp angles. In these situations, the node uses fallback drawing logic to look decent.</para>
 /// <para><b>Note:</b> <see cref="Line2D" /> is drawn using a 2D mesh.</para>
 /// </summary>
-public class Line2DAdapter : Line2D, ILine2D {
+public class Line2DAdapter : Node2DAdapter, ILine2D {
   private readonly Line2D _node;
 
-  public Line2DAdapter(Line2D node) => _node = node;
+  public Line2DAdapter(Line2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a point with the specified <paramref name="position" /> relative to the polyline's own position. If no <paramref name="index" /> is provided, the new point will be added to the end of the points array.</para>
     /// <para>If <paramref name="index" /> is given, the new point is inserted before the existing point identified by index <paramref name="index" />. The indices of the points after the new point get increased by 1. The provided <paramref name="index" /> must not exceed the number of existing points in the polyline. See <see cref="Line2D.GetPointCount" />.</para>

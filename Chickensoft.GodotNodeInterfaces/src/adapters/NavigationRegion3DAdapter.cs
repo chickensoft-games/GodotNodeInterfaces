@@ -11,10 +11,11 @@ using System;
 /// <para>The cost of traveling distances inside this region can be controlled with the <see cref="NavigationRegion3D.TravelCost" /> multiplier.</para>
 /// <para><b>Note:</b> This node caches changes to its properties, so if you make changes to the underlying region <see cref="Rid" /> in <see cref="NavigationServer3D" />, they will not be reflected in this node's properties.</para>
 /// </summary>
-public class NavigationRegion3DAdapter : NavigationRegion3D, INavigationRegion3D {
+public class NavigationRegion3DAdapter : Node3DAdapter, INavigationRegion3D {
   private readonly NavigationRegion3D _node;
 
-  public NavigationRegion3DAdapter(NavigationRegion3D node) => _node = node;
+  public NavigationRegion3DAdapter(NavigationRegion3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Bakes the <see cref="NavigationMesh" />. If <paramref name="onThread" /> is set to <c>true</c> (default), the baking is done on a separate thread. Baking on separate thread is useful because navigation baking is not a cheap operation. When it is completed, it automatically sets the new <see cref="NavigationMesh" />. Please note that baking on separate thread may be very slow if geometry is parsed from meshes as async access to each mesh involves heavy synchronization. Also, please note that baking on a separate thread is automatically disabled on operating systems that cannot use threads (such as Web with threads disabled).</para>
     /// </summary>

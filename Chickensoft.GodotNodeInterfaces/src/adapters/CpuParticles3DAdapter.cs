@@ -6,10 +6,11 @@ using System;
 /// <para>CPU-based 3D particle node used to create a variety of particle systems and effects.</para>
 /// <para>See also <see cref="GpuParticles3D" />, which provides the same functionality with hardware acceleration, but may not run on older devices.</para>
 /// </summary>
-public class CpuParticles3DAdapter : CpuParticles3D, ICpuParticles3D {
+public class CpuParticles3DAdapter : GeometryInstance3DAdapter, ICpuParticles3D {
   private readonly CpuParticles3D _node;
 
-  public CpuParticles3DAdapter(CpuParticles3D node) => _node = node;
+  public CpuParticles3DAdapter(CpuParticles3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Number of particles emitted in one emission cycle.</para>
     /// </summary>

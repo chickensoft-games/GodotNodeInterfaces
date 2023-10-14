@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A node that displays a 2D texture in a 3D environment. The texture displayed can be a region from a larger atlas texture, or a frame from a sprite sheet animation. See also <see cref="SpriteBase3D" /> where properties such as the billboard mode are defined.</para>
 /// </summary>
-public class Sprite3DAdapter : Sprite3D, ISprite3D {
+public class Sprite3DAdapter : SpriteBase3DAdapter, ISprite3D {
   private readonly Sprite3D _node;
 
-  public Sprite3DAdapter(Sprite3D node) => _node = node;
+  public Sprite3DAdapter(Sprite3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Current frame to display from sprite sheet. <see cref="Sprite3D.Hframes" /> or <see cref="Sprite3D.Vframes" /> must be greater than 1.</para>
     /// </summary>

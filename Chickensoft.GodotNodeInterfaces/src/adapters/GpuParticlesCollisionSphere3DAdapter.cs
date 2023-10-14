@@ -8,10 +8,11 @@ using System;
 /// <para><b>Note:</b> <see cref="ParticleProcessMaterial.CollisionMode" /> must be <see cref="ParticleProcessMaterial.CollisionModeEnum.Rigid" /> or <see cref="ParticleProcessMaterial.CollisionModeEnum.HideOnContact" /> on the <see cref="GpuParticles3D" />'s process material for collision to work.</para>
 /// <para><b>Note:</b> Particle collision only affects <see cref="GpuParticles3D" />, not <see cref="CpuParticles3D" />.</para>
 /// </summary>
-public class GpuParticlesCollisionSphere3DAdapter : GpuParticlesCollisionSphere3D, IGpuParticlesCollisionSphere3D {
+public class GpuParticlesCollisionSphere3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionSphere3D {
   private readonly GpuParticlesCollisionSphere3D _node;
 
-  public GpuParticlesCollisionSphere3DAdapter(GpuParticlesCollisionSphere3D node) => _node = node;
+  public GpuParticlesCollisionSphere3DAdapter(GpuParticlesCollisionSphere3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The collision sphere's radius in 3D units.</para>
     /// </summary>

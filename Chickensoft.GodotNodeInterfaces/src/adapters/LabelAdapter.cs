@@ -6,10 +6,11 @@ using Godot.Collections;
 /// <summary>
 /// <para>A control for displaying plain text. It gives you control over the horizontal and vertical alignment and can wrap the text inside the node's bounding rectangle. It doesn't support bold, italics, or other rich text formatting. For that, use <see cref="RichTextLabel" /> instead.</para>
 /// </summary>
-public class LabelAdapter : Label, ILabel {
+public class LabelAdapter : ControlAdapter, ILabel {
   private readonly Label _node;
 
-  public LabelAdapter(Label node) => _node = node;
+  public LabelAdapter(Label node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If set to something other than <see cref="TextServer.AutowrapMode.Off" />, the text gets wrapped inside the node's bounding rectangle. If you resize the node, it will change its height automatically to show all the text. To see how each mode behaves, see <see cref="TextServer.AutowrapMode" />.</para>
     /// </summary>

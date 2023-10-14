@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>This node selects a bone in a <see cref="Skeleton3D" /> and attaches to it. This means that the <see cref="BoneAttachment3D" /> node will either dynamically copy or override the 3D transform of the selected bone.</para>
 /// </summary>
-public class BoneAttachment3DAdapter : BoneAttachment3D, IBoneAttachment3D {
+public class BoneAttachment3DAdapter : Node3DAdapter, IBoneAttachment3D {
   private readonly BoneAttachment3D _node;
 
-  public BoneAttachment3DAdapter(BoneAttachment3D node) => _node = node;
+  public BoneAttachment3DAdapter(BoneAttachment3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The index of the attached bone.</para>
     /// </summary>

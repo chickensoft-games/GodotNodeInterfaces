@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A control that provides a horizontal bar with tabs. Similar to <see cref="TabContainer" /> but is only in charge of drawing tabs, not interacting with children.</para>
 /// </summary>
-public class TabBarAdapter : TabBar, ITabBar {
+public class TabBarAdapter : ControlAdapter, ITabBar {
   private readonly TabBar _node;
 
-  public TabBarAdapter(TabBar node) => _node = node;
+  public TabBarAdapter(TabBar node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a new tab.</para>
     /// </summary>

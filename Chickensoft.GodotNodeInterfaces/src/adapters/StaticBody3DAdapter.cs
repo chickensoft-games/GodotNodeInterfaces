@@ -6,10 +6,11 @@ using Godot;
 /// <para>When <see cref="StaticBody3D" /> is moved, it is teleported to its new position without affecting other physics bodies in its path. If this is not desired, use <see cref="AnimatableBody3D" /> instead.</para>
 /// <para><see cref="StaticBody3D" /> is useful for completely static objects like floors and walls, as well as moving surfaces like conveyor belts and circular revolving platforms (by using <see cref="StaticBody3D.ConstantLinearVelocity" /> and <see cref="StaticBody3D.ConstantAngularVelocity" />).</para>
 /// </summary>
-public class StaticBody3DAdapter : StaticBody3D, IStaticBody3D {
+public class StaticBody3DAdapter : PhysicsBody3DAdapter, IStaticBody3D {
   private readonly StaticBody3D _node;
 
-  public StaticBody3DAdapter(StaticBody3D node) => _node = node;
+  public StaticBody3DAdapter(StaticBody3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The body's constant angular velocity. This does not rotate the body, but affects touching bodies, as if it were rotating.</para>
     /// </summary>

@@ -3,10 +3,11 @@ namespace Chickensoft.GodotNodeInterfaces;
 using Godot;
 using System;
 
-public class ImporterMeshInstance3DAdapter : ImporterMeshInstance3D, IImporterMeshInstance3D {
+public class ImporterMeshInstance3DAdapter : Node3DAdapter, IImporterMeshInstance3D {
   private readonly ImporterMeshInstance3D _node;
 
-  public ImporterMeshInstance3DAdapter(ImporterMeshInstance3D node) => _node = node;
+  public ImporterMeshInstance3DAdapter(ImporterMeshInstance3D node) : base(node) { _node = node; }
+
 
     public GeometryInstance3D.ShadowCastingSetting CastShadow { get => _node.CastShadow; set => _node.CastShadow = value; }
 

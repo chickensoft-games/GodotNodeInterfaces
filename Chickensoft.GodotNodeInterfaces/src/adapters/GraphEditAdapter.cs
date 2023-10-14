@@ -8,10 +8,11 @@ using Godot.Collections;
 /// <para><see cref="GraphEdit" /> by itself is only an empty container, representing an infinite grid where <see cref="GraphNode" />s can be placed. Each <see cref="GraphNode" /> represents a node in the graph, a single unit of data in the connected scheme. <see cref="GraphEdit" />, in turn, helps to control various interactions with nodes and between nodes. When the user attempts to connect, disconnect, or delete a <see cref="GraphNode" />, a signal is emitted in the <see cref="GraphEdit" />, but no action is taken by default. It is the responsibility of the programmer utilizing this control to implement the necessary logic to determine how each request should be handled.</para>
 /// <para><b>Performance:</b> It is greatly advised to enable low-processor usage mode (see <see cref="OS.LowProcessorUsageMode" />) when using GraphEdits.</para>
 /// </summary>
-public class GraphEditAdapter : GraphEdit, IGraphEdit {
+public class GraphEditAdapter : ControlAdapter, IGraphEdit {
   private readonly GraphEdit _node;
 
-  public GraphEditAdapter(GraphEdit node) => _node = node;
+  public GraphEditAdapter(GraphEdit node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Virtual method which can be overridden to customize how connections are drawn.</para>
     /// </summary>

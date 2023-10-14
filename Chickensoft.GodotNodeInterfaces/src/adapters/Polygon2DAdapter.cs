@@ -6,10 +6,11 @@ using Godot.Collections;
 /// <summary>
 /// <para>A Polygon2D is defined by a set of points. Each point is connected to the next, with the final point being connected to the first, resulting in a closed polygon. Polygon2Ds can be filled with color (solid or gradient) or filled with a given texture.</para>
 /// </summary>
-public class Polygon2DAdapter : Polygon2D, IPolygon2D {
+public class Polygon2DAdapter : Node2DAdapter, IPolygon2D {
   private readonly Polygon2D _node;
 
-  public Polygon2DAdapter(Polygon2D node) => _node = node;
+  public Polygon2DAdapter(Polygon2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a bone with the specified <paramref name="path" /> and <paramref name="weights" />.</para>
     /// </summary>

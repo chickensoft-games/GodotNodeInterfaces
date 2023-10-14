@@ -20,10 +20,11 @@ using System;
 /// <para>To iterate over all the <see cref="TreeItem" /> objects in a <see cref="Tree" /> object, use <see cref="TreeItem.GetNext" /> and <see cref="TreeItem.GetFirstChild" /> after getting the root through <see cref="Tree.GetRoot" />. You can use <see cref="GodotObject.Free" /> on a <see cref="TreeItem" /> to remove it from the <see cref="Tree" />.</para>
 /// <para><b>Incremental search:</b> Like <see cref="ItemList" /> and <see cref="PopupMenu" />, <see cref="Tree" /> supports searching within the list while the control is focused. Press a key that matches the first letter of an item's name to select the first item starting with the given letter. After that point, there are two ways to perform incremental search: 1) Press the same key again before the timeout duration to select the next item starting with the same letter. 2) Press letter keys that match the rest of the word before the timeout duration to match to select the item in question directly. Both of these actions will be reset to the beginning of the list if the timeout duration has passed since the last keystroke was registered. You can adjust the timeout duration by changing <c>ProjectSettings.gui/timers/incremental_search_max_interval_msec</c>.</para>
 /// </summary>
-public class TreeAdapter : Tree, ITree {
+public class TreeAdapter : ControlAdapter, ITree {
   private readonly Tree _node;
 
-  public TreeAdapter(Tree node) => _node = node;
+  public TreeAdapter(Tree node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, the currently selected cell may be selected again.</para>
     /// </summary>

@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para><see cref="FileDialog" /> is a preset dialog used to choose files and directories in the filesystem. It supports filter masks. <see cref="FileDialog" /> automatically sets its window title according to the <see cref="FileDialog.FileMode" />. If you want to use a custom title, disable this by setting <see cref="FileDialog.ModeOverridesTitle" /> to <c>false</c>.</para>
 /// </summary>
-public class FileDialogAdapter : FileDialog, IFileDialog {
+public class FileDialogAdapter : ConfirmationDialogAdapter, IFileDialog {
   private readonly FileDialog _node;
 
-  public FileDialogAdapter(FileDialog node) => _node = node;
+  public FileDialogAdapter(FileDialog node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The file system access scope. See <see cref="FileDialog.AccessEnum" /> constants.</para>
     /// <para><b>Warning:</b> Currently, in sandboxed environments such as Web builds or sandboxed macOS apps, FileDialog cannot access the host file system. See <a href="https://github.com/godotengine/godot-proposals/issues/1123">godot-proposals#1123</a>.</para>

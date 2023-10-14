@@ -6,10 +6,11 @@ using System;
 /// <para>A node that provides a thickened polygon shape (a prism) to a <see cref="CollisionObject3D" /> parent and allows to edit it. The polygon can be concave or convex. This can give a detection shape to an <see cref="Area3D" /> or turn <see cref="PhysicsBody3D" /> into a solid object.</para>
 /// <para><b>Warning:</b> A non-uniformly scaled <see cref="CollisionShape3D" /> will likely not behave as expected. Make sure to keep its scale the same on all axes and adjust its shape resource instead.</para>
 /// </summary>
-public class CollisionPolygon3DAdapter : CollisionPolygon3D, ICollisionPolygon3D {
+public class CollisionPolygon3DAdapter : Node3DAdapter, ICollisionPolygon3D {
   private readonly CollisionPolygon3D _node;
 
-  public CollisionPolygon3DAdapter(CollisionPolygon3D node) => _node = node;
+  public CollisionPolygon3DAdapter(CollisionPolygon3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Length that the resulting collision extends in either direction perpendicular to its 2D polygon.</para>
     /// </summary>

@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A rectangle box that displays only a colored border around its rectangle. It is used to visualize the extents of a <see cref="Control" />.</para>
 /// </summary>
-public class ReferenceRectAdapter : ReferenceRect, IReferenceRect {
+public class ReferenceRectAdapter : ControlAdapter, IReferenceRect {
   private readonly ReferenceRect _node;
 
-  public ReferenceRectAdapter(ReferenceRect node) => _node = node;
+  public ReferenceRectAdapter(ReferenceRect node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Sets the border color of the <see cref="ReferenceRect" />.</para>
     /// </summary>

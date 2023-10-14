@@ -7,10 +7,11 @@ using System;
 /// <para><b>Note:</b> Changing a <see cref="SubViewportContainer" />'s <see cref="Control.Scale" /> will cause its contents to appear distorted. To change its visual size without causing distortion, adjust the node's margins instead (if it's not already in a container).</para>
 /// <para><b>Note:</b> The <see cref="SubViewportContainer" /> forwards mouse-enter and mouse-exit notifications to its sub-viewports.</para>
 /// </summary>
-public class SubViewportContainerAdapter : SubViewportContainer, ISubViewportContainer {
+public class SubViewportContainerAdapter : ContainerAdapter, ISubViewportContainer {
   private readonly SubViewportContainer _node;
 
-  public SubViewportContainerAdapter(SubViewportContainer node) => _node = node;
+  public SubViewportContainerAdapter(SubViewportContainer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Virtual method to be implemented by the user. If it returns <c>true</c>, the <paramref name="event" /> is propagated to <see cref="SubViewport" /> children. Propagation doesn't happen if it returns <c>false</c>. If the function is not implemented, all events are propagated to SubViewports.</para>
     /// </summary>

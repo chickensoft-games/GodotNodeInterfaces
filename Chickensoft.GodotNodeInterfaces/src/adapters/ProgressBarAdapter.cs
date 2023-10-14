@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A control used for visual representation of a percentage. Shows fill percentage from right to left.</para>
 /// </summary>
-public class ProgressBarAdapter : ProgressBar, IProgressBar {
+public class ProgressBarAdapter : RangeAdapter, IProgressBar {
   private readonly ProgressBar _node;
 
-  public ProgressBarAdapter(ProgressBar node) => _node = node;
+  public ProgressBarAdapter(ProgressBar node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The fill direction. See <see cref="ProgressBar.FillModeEnum" /> for possible values.</para>
     /// </summary>

@@ -15,10 +15,11 @@ using Godot.Collections;
 /// <para><see cref="Theme" /> resources change the Control's appearance. If you change the <see cref="Theme" /> on a <see cref="Control" /> node, it affects all of its children. To override some of the theme's parameters, call one of the <c>add_theme_*_override</c> methods, like <see cref="Control.AddThemeFontOverride(Godot.StringName,Godot.Font)" />. You can override the theme with the Inspector.</para>
 /// <para><b>Note:</b> Theme items are <i>not</i> <see cref="GodotObject" /> properties. This means you can't access their values using <see cref="GodotObject.Get(Godot.StringName)" /> and <see cref="GodotObject.Set(Godot.StringName,Godot.Variant)" />. Instead, use the <c>get_theme_*</c> and <c>add_theme_*_override</c> methods provided by this class.</para>
 /// </summary>
-public class ControlAdapter : Control, IControl {
+public class ControlAdapter : CanvasItemAdapter, IControl {
   private readonly Control _node;
 
-  public ControlAdapter(Control node) => _node = node;
+  public ControlAdapter(Control node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Godot calls this method to test if <paramref name="data" /> from a control's <see cref="Control._GetDragData(Godot.Vector2)" /> can be dropped at <paramref name="atPosition" />. <paramref name="atPosition" /> is local to this control.</para>
     /// <para>This method should only be used to test the data. Process the data in <see cref="Control._DropData(Godot.Vector2,Godot.Variant)" />.</para>

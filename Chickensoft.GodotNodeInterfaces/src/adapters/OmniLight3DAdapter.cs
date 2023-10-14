@@ -7,10 +7,11 @@ using System;
 /// <para><b>Note:</b> When using the Mobile rendering method, only 8 omni lights can be displayed on each mesh resource. Attempting to display more than 8 omni lights on a single mesh resource will result in omni lights flickering in and out as the camera moves. When using the Compatibility rendering method, only 8 omni lights can be displayed on each mesh resource by default, but this can be increased by adjusting <c>ProjectSettings.rendering/limits/opengl/max_lights_per_object</c>.</para>
 /// <para><b>Note:</b> When using the Mobile or Compatibility rendering methods, omni lights will only correctly affect meshes whose visibility AABB intersects with the light's AABB. If using a shader to deform the mesh in a way that makes it go outside its AABB, <see cref="GeometryInstance3D.ExtraCullMargin" /> must be increased on the mesh. Otherwise, the light may not be visible on the mesh.</para>
 /// </summary>
-public class OmniLight3DAdapter : OmniLight3D, IOmniLight3D {
+public class OmniLight3DAdapter : Light3DAdapter, IOmniLight3D {
   private readonly OmniLight3D _node;
 
-  public OmniLight3DAdapter(OmniLight3D node) => _node = node;
+  public OmniLight3DAdapter(OmniLight3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The light's attenuation (drop-off) curve. A number of presets are available in the <b>Inspector</b> by right-clicking the curve. Zero and negative values are allowed but can produce unusual effects.</para>
     /// <para><b>Note:</b> Very high <see cref="OmniLight3D.OmniAttenuation" /> values (typically above 10) can impact performance negatively if the light is made to use a larger <see cref="OmniLight3D.OmniRange" /> to compensate. This is because culling opportunities will become less common and shading costs will be increased (as the light will cover more pixels on screen while resulting in the same amount of brightness). To improve performance, use the lowest <see cref="OmniLight3D.OmniAttenuation" /> value possible for the visuals you're trying to achieve.</para>

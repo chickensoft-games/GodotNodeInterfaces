@@ -8,10 +8,11 @@ using Godot.Collections;
 /// <para>For performance reasons, all TileMap updates are batched at the end of a frame. Notably, this means that scene tiles from a <see cref="TileSetScenesCollectionSource" /> may be initialized after their parent.</para>
 /// <para>To force an update earlier on, call <see cref="TileMap.UpdateInternals" />.</para>
 /// </summary>
-public class TileMapAdapter : TileMap, ITileMap {
+public class TileMapAdapter : Node2DAdapter, ITileMap {
   private readonly TileMap _node;
 
-  public TileMapAdapter(TileMap node) => _node = node;
+  public TileMapAdapter(TileMap node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Called with a TileData object about to be used internally by the TileMap, allowing its modification at runtime.</para>
     /// <para>This method is only called if <see cref="TileMap._UseTileDataRuntimeUpdate(System.Int32,Godot.Vector2I)" /> is implemented and returns <c>true</c> for the given tile <paramref name="coords" /> and <paramref name="layer" />.</para>

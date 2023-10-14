@@ -8,10 +8,11 @@ using System;
 /// <para>See also <see cref="AudioStreamPlayer" /> to play a sound non-positionally.</para>
 /// <para><b>Note:</b> Hiding an <see cref="AudioStreamPlayer3D" /> node does not disable its audio output. To temporarily disable an <see cref="AudioStreamPlayer3D" />'s audio output, set <see cref="AudioStreamPlayer3D.VolumeDb" /> to a very low value like <c>-100</c> (which isn't audible to human hearing).</para>
 /// </summary>
-public class AudioStreamPlayer3DAdapter : AudioStreamPlayer3D, IAudioStreamPlayer3D {
+public class AudioStreamPlayer3DAdapter : Node3DAdapter, IAudioStreamPlayer3D {
   private readonly AudioStreamPlayer3D _node;
 
-  public AudioStreamPlayer3DAdapter(AudioStreamPlayer3D node) => _node = node;
+  public AudioStreamPlayer3DAdapter(AudioStreamPlayer3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Determines which <see cref="Area3D" /> layers affect the sound for reverb and audio bus effects. Areas can be used to redirect <see cref="AudioStream" />s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.</para>
     /// </summary>

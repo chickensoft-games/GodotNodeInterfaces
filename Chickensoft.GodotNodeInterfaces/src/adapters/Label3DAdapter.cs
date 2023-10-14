@@ -6,10 +6,11 @@ using Godot.Collections;
 /// <summary>
 /// <para>A node for displaying plain text in 3D space. By adjusting various properties of this node, you can configure things such as the text's appearance and whether it always faces the camera.</para>
 /// </summary>
-public class Label3DAdapter : Label3D, ILabel3D {
+public class Label3DAdapter : GeometryInstance3DAdapter, ILabel3D {
   private readonly Label3D _node;
 
-  public Label3DAdapter(Label3D node) => _node = node;
+  public Label3DAdapter(Label3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Threshold at which antialiasing will be applied on the alpha channel.</para>
     /// </summary>

@@ -8,10 +8,11 @@ using System;
 /// <para>Slots can be configured in the Inspector dock once you add at least one child <see cref="Control" />. The properties are grouped by each slot's index in the "Slot" section.</para>
 /// <para><b>Note:</b> While GraphNode is set up using slots and slot indices, connections are made between the ports which are enabled. Because of that <see cref="GraphEdit" /> uses the port's index and not the slot's index. You can use <see cref="GraphNode.GetInputPortSlot(System.Int32)" /> and <see cref="GraphNode.GetOutputPortSlot(System.Int32)" /> to get the slot index from the port index.</para>
 /// </summary>
-public class GraphNodeAdapter : GraphNode, IGraphNode {
+public class GraphNodeAdapter : GraphElementAdapter, IGraphNode {
   private readonly GraphNode _node;
 
-  public GraphNodeAdapter(GraphNode node) => _node = node;
+  public GraphNodeAdapter(GraphNode node) : base(node) { _node = node; }
+
 
     public void _DrawPort(int slotIndex, Vector2I position, bool left, Color color) => _node._DrawPort(slotIndex, position, left, color);
     /// <summary>

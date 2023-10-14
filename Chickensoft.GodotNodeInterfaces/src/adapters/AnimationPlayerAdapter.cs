@@ -8,10 +8,11 @@ using System;
 /// <para><see cref="AnimationPlayer" /> is better-suited than <see cref="Tween" /> for more complex animations, for example ones with non-trivial timings. It can also be used over <see cref="Tween" /> if the animation track editor is more convenient than doing it in code.</para>
 /// <para>Updating the target properties of animations occurs at the process frame.</para>
 /// </summary>
-public class AnimationPlayerAdapter : AnimationPlayer, IAnimationPlayer {
+public class AnimationPlayerAdapter : AnimationMixerAdapter, IAnimationPlayer {
   private readonly AnimationPlayer _node;
 
-  public AnimationPlayerAdapter(AnimationPlayer node) => _node = node;
+  public AnimationPlayerAdapter(AnimationPlayer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Returns the key of the animation which is queued to play after the <paramref name="animationFrom" /> animation.</para>
     /// </summary>

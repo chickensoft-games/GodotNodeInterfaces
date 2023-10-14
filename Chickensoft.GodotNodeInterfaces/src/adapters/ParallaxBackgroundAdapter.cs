@@ -6,10 +6,11 @@ using System;
 /// <para>A ParallaxBackground uses one or more <see cref="ParallaxLayer" /> child nodes to create a parallax effect. Each <see cref="ParallaxLayer" /> can move at a different speed using <see cref="ParallaxLayer.MotionOffset" />. This creates an illusion of depth in a 2D game. If not used with a <see cref="Camera2D" />, you must manually calculate the <see cref="ParallaxBackground.ScrollOffset" />.</para>
 /// <para><b>Note:</b> Each <see cref="ParallaxBackground" /> is drawn on one specific <see cref="Viewport" /> and cannot be shared between multiple <see cref="Viewport" />s, see <see cref="CanvasLayer.CustomViewport" />. When using multiple <see cref="Viewport" />s, for example in a split-screen game, you need create an individual <see cref="ParallaxBackground" /> for each <see cref="Viewport" /> you want it to be drawn on.</para>
 /// </summary>
-public class ParallaxBackgroundAdapter : ParallaxBackground, IParallaxBackground {
+public class ParallaxBackgroundAdapter : CanvasLayerAdapter, IParallaxBackground {
   private readonly ParallaxBackground _node;
 
-  public ParallaxBackgroundAdapter(ParallaxBackground node) => _node = node;
+  public ParallaxBackgroundAdapter(ParallaxBackground node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The base position offset for all <see cref="ParallaxLayer" /> children.</para>
     /// </summary>

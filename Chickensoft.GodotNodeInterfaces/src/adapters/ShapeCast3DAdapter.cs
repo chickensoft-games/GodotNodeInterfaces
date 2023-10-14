@@ -8,10 +8,11 @@ using Godot.Collections;
 /// <para>Immediate collision overlaps can be done with the <see cref="ShapeCast3D.TargetPosition" /> set to <c>Vector3(0, 0, 0)</c> and by calling <see cref="ShapeCast3D.ForceShapecastUpdate" /> within the same physics frame. This helps to overcome some limitations of <see cref="Area3D" /> when used as an instantaneous detection area, as collision information isn't immediately available to it.</para>
 /// <para><b>Note:</b> Shape casting is more computationally expensive than ray casting.</para>
 /// </summary>
-public class ShapeCast3DAdapter : ShapeCast3D, IShapeCast3D {
+public class ShapeCast3DAdapter : Node3DAdapter, IShapeCast3D {
   private readonly ShapeCast3D _node;
 
-  public ShapeCast3DAdapter(ShapeCast3D node) => _node = node;
+  public ShapeCast3DAdapter(ShapeCast3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a collision exception so the shape does not report collisions with the specified <see cref="CollisionObject3D" /> node.</para>
     /// </summary>

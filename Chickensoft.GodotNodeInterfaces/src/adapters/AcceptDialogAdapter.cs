@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>The default use of <see cref="AcceptDialog" /> is to allow it to only be accepted or closed, with the same result. However, the <see cref="AcceptDialog.Confirmed" /> and <see cref="AcceptDialog.Canceled" /> signals allow to make the two actions different, and the <see cref="AcceptDialog.AddButton(System.String,System.Boolean,System.String)" /> method allows to add custom buttons and actions.</para>
 /// </summary>
-public class AcceptDialogAdapter : AcceptDialog, IAcceptDialog {
+public class AcceptDialogAdapter : WindowAdapter, IAcceptDialog {
   private readonly AcceptDialog _node;
 
-  public AcceptDialogAdapter(AcceptDialog node) => _node = node;
+  public AcceptDialogAdapter(AcceptDialog node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a button with label <paramref name="text" /> and a custom <paramref name="action" /> to the dialog and returns the created button. <paramref name="action" /> will be passed to the <see cref="AcceptDialog.CustomAction" /> signal when pressed.</para>
     /// <para>If <c>true</c>, <paramref name="right" /> will place the button to the right of any sibling buttons.</para>

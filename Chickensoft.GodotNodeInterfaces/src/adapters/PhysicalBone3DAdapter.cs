@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>The <see cref="PhysicalBone3D" /> node is a physics body that can be used to make bones in a <see cref="Skeleton3D" /> react to physics.</para>
 /// </summary>
-public class PhysicalBone3DAdapter : PhysicalBone3D, IPhysicalBone3D {
+public class PhysicalBone3DAdapter : PhysicsBody3DAdapter, IPhysicalBone3D {
   private readonly PhysicalBone3D _node;
 
-  public PhysicalBone3DAdapter(PhysicalBone3D node) => _node = node;
+  public PhysicalBone3DAdapter(PhysicalBone3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Called during physics processing, allowing you to read and safely modify the simulation state for the object. By default, it works in addition to the usual physics behavior, but the <see cref="PhysicalBone3D.CustomIntegrator" /> property allows you to disable the default behavior and do fully custom force integration for a body.</para>
     /// </summary>

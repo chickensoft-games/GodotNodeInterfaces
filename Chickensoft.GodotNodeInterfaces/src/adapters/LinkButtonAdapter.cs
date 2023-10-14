@@ -7,10 +7,11 @@ using Godot.Collections;
 /// <para>A button that represents a link. This type of button is primarily used for interactions that cause a context change (like linking to a web page).</para>
 /// <para>See also <see cref="BaseButton" /> which contains common properties and methods associated with this node.</para>
 /// </summary>
-public class LinkButtonAdapter : LinkButton, ILinkButton {
+public class LinkButtonAdapter : BaseButtonAdapter, ILinkButton {
   private readonly LinkButton _node;
 
-  public LinkButtonAdapter(LinkButton node) => _node = node;
+  public LinkButtonAdapter(LinkButton node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Language code used for line-breaking and text shaping algorithms, if left empty current locale is used instead.</para>
     /// </summary>

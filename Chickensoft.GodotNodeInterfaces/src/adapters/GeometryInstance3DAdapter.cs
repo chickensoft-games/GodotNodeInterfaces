@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>Base node for geometry-based visual instances. Shares some common functionality like visibility and custom materials.</para>
 /// </summary>
-public class GeometryInstance3DAdapter : GeometryInstance3D, IGeometryInstance3D {
+public class GeometryInstance3DAdapter : VisualInstance3DAdapter, IGeometryInstance3D {
   private readonly GeometryInstance3D _node;
 
-  public GeometryInstance3DAdapter(GeometryInstance3D node) => _node = node;
+  public GeometryInstance3DAdapter(GeometryInstance3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The selected shadow casting flag. See <see cref="GeometryInstance3D.ShadowCastingSetting" /> for possible values.</para>
     /// </summary>

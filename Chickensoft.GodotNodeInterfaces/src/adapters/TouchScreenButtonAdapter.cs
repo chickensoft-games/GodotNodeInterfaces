@@ -7,10 +7,11 @@ using System;
 /// <para>This node inherits from <see cref="Node2D" />. Unlike with <see cref="Control" /> nodes, you cannot set anchors on it. If you want to create menus or user interfaces, you may want to use <see cref="Button" /> nodes instead. To make button nodes react to touch events, you can enable the Emulate Mouse option in the Project Settings.</para>
 /// <para>You can configure TouchScreenButton to be visible only on touch devices, helping you develop your game both for desktop and mobile devices.</para>
 /// </summary>
-public class TouchScreenButtonAdapter : TouchScreenButton, ITouchScreenButton {
+public class TouchScreenButtonAdapter : Node2DAdapter, ITouchScreenButton {
   private readonly TouchScreenButton _node;
 
-  public TouchScreenButtonAdapter(TouchScreenButton node) => _node = node;
+  public TouchScreenButtonAdapter(TouchScreenButton node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The button's action. Actions can be handled with <see cref="InputEventAction" />.</para>
     /// </summary>

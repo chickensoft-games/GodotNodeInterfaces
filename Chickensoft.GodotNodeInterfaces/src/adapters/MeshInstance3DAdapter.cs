@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>MeshInstance3D is a node that takes a <see cref="Mesh" /> resource and adds it to the current scenario by creating an instance of it. This is the class most often used render 3D geometry and can be used to instance a single <see cref="Mesh" /> in many places. This allows reusing geometry, which can save on resources. When a <see cref="Mesh" /> has to be instantiated more than thousands of times at close proximity, consider using a <see cref="MultiMesh" /> in a <see cref="MultiMeshInstance3D" /> instead.</para>
 /// </summary>
-public class MeshInstance3DAdapter : MeshInstance3D, IMeshInstance3D {
+public class MeshInstance3DAdapter : GeometryInstance3DAdapter, IMeshInstance3D {
   private readonly MeshInstance3D _node;
 
-  public MeshInstance3DAdapter(MeshInstance3D node) => _node = node;
+  public MeshInstance3DAdapter(MeshInstance3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>This helper creates a <see cref="StaticBody3D" /> child node with a <see cref="ConvexPolygonShape3D" /> collision shape calculated from the mesh geometry. It's mainly used for testing.</para>
     /// <para>If <paramref name="clean" /> is <c>true</c> (default), duplicate and interior vertices are removed automatically. You can set it to <c>false</c> to make the process faster if not needed.</para>

@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A link between two positions on <see cref="NavigationRegion3D" />s that agents can be routed through. These positions can be on the same <see cref="NavigationRegion3D" /> or on two different ones. Links are useful to express navigation methods other than traveling along the surface of the navigation mesh, such as ziplines, teleporters, or gaps that can be jumped across.</para>
 /// </summary>
-public class NavigationLink3DAdapter : NavigationLink3D, INavigationLink3D {
+public class NavigationLink3DAdapter : Node3DAdapter, INavigationLink3D {
   private readonly NavigationLink3D _node;
 
-  public NavigationLink3DAdapter(NavigationLink3D node) => _node = node;
+  public NavigationLink3DAdapter(NavigationLink3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Whether this link can be traveled in both directions or only from <see cref="NavigationLink3D.StartPosition" /> to <see cref="NavigationLink3D.EndPosition" />.</para>
     /// </summary>

@@ -7,10 +7,11 @@ using Godot;
 /// <para><b>Note:</b> VisibleOnScreenEnabler3D uses an approximate heuristic for performance reasons. It doesn't take walls and other occlusion into account. The heuristic is an implementation detail and may change in future versions. If you need precise visibility checking, use another method such as adding an <see cref="Area3D" /> node as a child of a <see cref="Camera3D" /> node and/or <c>Vector3.dot</c>.</para>
 /// <para><b>Note:</b> VisibleOnScreenEnabler3D will not affect nodes added after scene initialization.</para>
 /// </summary>
-public class VisibleOnScreenEnabler3DAdapter : VisibleOnScreenEnabler3D, IVisibleOnScreenEnabler3D {
+public class VisibleOnScreenEnabler3DAdapter : VisibleOnScreenNotifier3DAdapter, IVisibleOnScreenEnabler3D {
   private readonly VisibleOnScreenEnabler3D _node;
 
-  public VisibleOnScreenEnabler3DAdapter(VisibleOnScreenEnabler3D node) => _node = node;
+  public VisibleOnScreenEnabler3DAdapter(VisibleOnScreenEnabler3D node) : base(node) { _node = node; }
+
 
     public VisibleOnScreenEnabler3D.EnableModeEnum EnableMode { get => _node.EnableMode; set => _node.EnableMode = value; }
 

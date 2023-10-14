@@ -7,10 +7,11 @@ using System;
 /// <para>When <see cref="StaticBody2D" /> is moved, it is teleported to its new position without affecting other physics bodies in its path. If this is not desired, use <see cref="AnimatableBody2D" /> instead.</para>
 /// <para><see cref="StaticBody2D" /> is useful for completely static objects like floors and walls, as well as moving surfaces like conveyor belts and circular revolving platforms (by using <see cref="StaticBody2D.ConstantLinearVelocity" /> and <see cref="StaticBody2D.ConstantAngularVelocity" />).</para>
 /// </summary>
-public class StaticBody2DAdapter : StaticBody2D, IStaticBody2D {
+public class StaticBody2DAdapter : PhysicsBody2DAdapter, IStaticBody2D {
   private readonly StaticBody2D _node;
 
-  public StaticBody2DAdapter(StaticBody2D node) => _node = node;
+  public StaticBody2DAdapter(StaticBody2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The body's constant angular velocity. This does not rotate the body, but affects touching bodies, as if it were rotating.</para>
     /// </summary>

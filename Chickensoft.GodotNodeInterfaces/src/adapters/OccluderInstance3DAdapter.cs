@@ -10,10 +10,11 @@ using System;
 /// <para><b>Note:</b> Occlusion culling is only effective if <c>ProjectSettings.rendering/occlusion_culling/use_occlusion_culling</c> is <c>true</c>. Enabling occlusion culling has a cost on the CPU. Only enable occlusion culling if you actually plan to use it. Large open scenes with few or no objects blocking the view will generally not benefit much from occlusion culling. Large open scenes generally benefit more from mesh LOD and visibility ranges (<see cref="GeometryInstance3D.VisibilityRangeBegin" /> and <see cref="GeometryInstance3D.VisibilityRangeEnd" />) compared to occlusion culling.</para>
 /// <para><b>Note:</b> Due to memory constraints, occlusion culling is not supported by default in Web export templates. It can be enabled by compiling custom Web export templates with <c>module_raycast_enabled=yes</c>.</para>
 /// </summary>
-public class OccluderInstance3DAdapter : OccluderInstance3D, IOccluderInstance3D {
+public class OccluderInstance3DAdapter : Node3DAdapter, IOccluderInstance3D {
   private readonly OccluderInstance3D _node;
 
-  public OccluderInstance3DAdapter(OccluderInstance3D node) => _node = node;
+  public OccluderInstance3DAdapter(OccluderInstance3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The visual layers to account for when baking for occluders. Only <see cref="MeshInstance3D" />s whose <see cref="VisualInstance3D.Layers" /> match with this <see cref="OccluderInstance3D.BakeMask" /> will be included in the generated occluder mesh. By default, all objects with <i>opaque</i> materials are taken into account for the occluder baking.</para>
     /// <para>To improve performance and avoid artifacts, it is recommended to exclude dynamic objects, small objects and fixtures from the baking process by moving them to a separate visual layer and excluding this layer in <see cref="OccluderInstance3D.BakeMask" />.</para>

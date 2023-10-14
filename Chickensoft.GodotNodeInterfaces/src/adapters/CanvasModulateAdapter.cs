@@ -4,10 +4,11 @@ using Godot;
 /// <summary>
 /// <para><see cref="CanvasModulate" /> applies a color tint to all nodes on a canvas. Only one can be used to tint a canvas, but <see cref="CanvasLayer" />s can be used to render things independently.</para>
 /// </summary>
-public class CanvasModulateAdapter : CanvasModulate, ICanvasModulate {
+public class CanvasModulateAdapter : Node2DAdapter, ICanvasModulate {
   private readonly CanvasModulate _node;
 
-  public CanvasModulateAdapter(CanvasModulate node) => _node = node;
+  public CanvasModulateAdapter(CanvasModulate node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The tint color to apply.</para>
     /// </summary>

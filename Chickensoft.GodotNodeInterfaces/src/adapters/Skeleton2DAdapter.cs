@@ -6,10 +6,11 @@ using System;
 /// <para><see cref="Skeleton2D" /> parents a hierarchy of <see cref="Bone2D" /> nodes. It holds a reference to each <see cref="Bone2D" />'s rest pose and acts as a single point of access to its bones.</para>
 /// <para>To set up different types of inverse kinematics for the given Skeleton2D, a <see cref="SkeletonModificationStack2D" /> should be created. The inverse kinematics be applied by increasing <see cref="SkeletonModificationStack2D.ModificationCount" /> and creating the desired number of modifications.</para>
 /// </summary>
-public class Skeleton2DAdapter : Skeleton2D, ISkeleton2D {
+public class Skeleton2DAdapter : Node2DAdapter, ISkeleton2D {
   private readonly Skeleton2D _node;
 
-  public Skeleton2DAdapter(Skeleton2D node) => _node = node;
+  public Skeleton2DAdapter(Skeleton2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Executes all the modifications on the <see cref="SkeletonModificationStack2D" />, if the Skeleton2D has one assigned.</para>
     /// </summary>

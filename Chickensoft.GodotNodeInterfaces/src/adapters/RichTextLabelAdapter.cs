@@ -10,10 +10,11 @@ using Godot.Collections;
 /// <para><b>Note:</b> <c>push_*/pop_*</c> functions won't affect BBCode.</para>
 /// <para><b>Note:</b> Unlike <see cref="Label" />, <see cref="RichTextLabel" /> doesn't have a <i>property</i> to horizontally align text to the center. Instead, enable <see cref="RichTextLabel.BbcodeEnabled" /> and surround the text in a <c>[center]</c> tag as follows: <c>[center]Example[/center]</c>. There is currently no built-in way to vertically align text either, but this can be emulated by relying on anchors/containers and the <see cref="RichTextLabel.FitContent" /> property.</para>
 /// </summary>
-public class RichTextLabelAdapter : RichTextLabel, IRichTextLabel {
+public class RichTextLabelAdapter : ControlAdapter, IRichTextLabel {
   private readonly RichTextLabel _node;
 
-  public RichTextLabelAdapter(RichTextLabel node) => _node = node;
+  public RichTextLabelAdapter(RichTextLabel node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds an image's opening and closing tags to the tag stack, optionally providing a <paramref name="width" /> and <paramref name="height" /> to resize the image, a <paramref name="color" /> to tint the image and a <paramref name="region" /> to only use parts of the image.</para>
     /// <para>If <paramref name="width" /> or <paramref name="height" /> is set to 0, the image size will be adjusted in order to keep the original aspect ratio.</para>

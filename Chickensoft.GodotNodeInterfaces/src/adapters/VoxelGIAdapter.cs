@@ -9,10 +9,11 @@ using System;
 /// <para><b>Performance:</b> <see cref="VoxelGI" /> is relatively demanding on the GPU and is not suited to low-end hardware such as integrated graphics (consider <see cref="LightmapGI" /> instead). To improve performance, adjust <c>ProjectSettings.rendering/global_illumination/voxel_gi/quality</c> and enable <c>ProjectSettings.rendering/global_illumination/gi/use_half_resolution</c> in the Project Settings. To provide a fallback for low-end hardware, consider adding an option to disable <see cref="VoxelGI" /> in your project's options menus. A <see cref="VoxelGI" /> node can be disabled by hiding it.</para>
 /// <para><b>Note:</b> Meshes should have sufficiently thick walls to avoid light leaks (avoid one-sided walls). For interior levels, enclose your level geometry in a sufficiently large box and bridge the loops to close the mesh. To further prevent light leaks, you can also strategically place temporary <see cref="MeshInstance3D" /> nodes with their <see cref="GeometryInstance3D.GIMode" /> set to <see cref="GeometryInstance3D.GIModeEnum.Static" />. These temporary nodes can then be hidden after baking the <see cref="VoxelGI" /> node.</para>
 /// </summary>
-public class VoxelGIAdapter : VoxelGI, IVoxelGI {
+public class VoxelGIAdapter : VisualInstance3DAdapter, IVoxelGI {
   private readonly VoxelGI _node;
 
-  public VoxelGIAdapter(VoxelGI node) => _node = node;
+  public VoxelGIAdapter(VoxelGI node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Bakes the effect from all <see cref="GeometryInstance3D" />s marked with <see cref="GeometryInstance3D.GIModeEnum.Static" /> and <see cref="Light3D" />s marked with either <see cref="Light3D.BakeMode.Static" /> or <see cref="Light3D.BakeMode.Dynamic" />. If <paramref name="createVisualDebug" /> is <c>true</c>, after baking the light, this will generate a <see cref="MultiMesh" /> that has a cube representing each solid cell with each cube colored to the cell's albedo color. This can be used to visualize the <see cref="VoxelGI" />'s data and debug any issues that may be occurring.</para>
     /// <para><b>Note:</b> <see cref="VoxelGI.Bake(Godot.Node,System.Boolean)" /> works from the editor and in exported projects. This makes it suitable for procedurally generated or user-built levels. Baking a <see cref="VoxelGI" /> node generally takes from 5 to 20 seconds in most scenes. Reducing <see cref="VoxelGI.Subdiv" /> can speed up baking.</para>

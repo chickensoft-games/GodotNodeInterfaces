@@ -6,10 +6,11 @@ using System;
 /// <para>A node that provides a thickened polygon shape (a prism) to a <see cref="CollisionObject2D" /> parent and allows to edit it. The polygon can be concave or convex. This can give a detection shape to an <see cref="Area2D" /> or turn <see cref="PhysicsBody2D" /> into a solid object.</para>
 /// <para><b>Warning:</b> A non-uniformly scaled <see cref="CollisionShape2D" /> will likely not behave as expected. Make sure to keep its scale the same on all axes and adjust its shape resource instead.</para>
 /// </summary>
-public class CollisionPolygon2DAdapter : CollisionPolygon2D, ICollisionPolygon2D {
+public class CollisionPolygon2DAdapter : Node2DAdapter, ICollisionPolygon2D {
   private readonly CollisionPolygon2D _node;
 
-  public CollisionPolygon2DAdapter(CollisionPolygon2D node) => _node = node;
+  public CollisionPolygon2DAdapter(CollisionPolygon2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Collision build mode. Use one of the <see cref="CollisionPolygon2D.BuildModeEnum" /> constants.</para>
     /// </summary>

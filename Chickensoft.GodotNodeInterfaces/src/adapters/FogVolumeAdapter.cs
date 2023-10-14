@@ -6,10 +6,11 @@ using Godot;
 /// <para>Performance of <see cref="FogVolume" />s is directly related to their relative size on the screen and the complexity of their attached <see cref="FogMaterial" />. It is best to keep <see cref="FogVolume" />s relatively small and simple where possible.</para>
 /// <para><b>Note:</b> <see cref="FogVolume" />s only have a visible effect if <see cref="Environment.VolumetricFogEnabled" /> is <c>true</c>. If you don't want fog to be globally visible (but only within <see cref="FogVolume" /> nodes), set <see cref="Environment.VolumetricFogDensity" /> to <c>0.0</c>.</para>
 /// </summary>
-public class FogVolumeAdapter : FogVolume, IFogVolume {
+public class FogVolumeAdapter : VisualInstance3DAdapter, IFogVolume {
   private readonly FogVolume _node;
 
-  public FogVolumeAdapter(FogVolume node) => _node = node;
+  public FogVolumeAdapter(FogVolume node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The <see cref="Material" /> used by the <see cref="FogVolume" />. Can be either a built-in <see cref="FogMaterial" /> or a custom <see cref="ShaderMaterial" />.</para>
     /// </summary>

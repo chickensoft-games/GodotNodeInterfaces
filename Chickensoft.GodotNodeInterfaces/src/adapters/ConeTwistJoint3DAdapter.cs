@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A physics joint that connects two 3D physics bodies in a way that simulates a ball-and-socket joint. The twist axis is initiated as the X axis of the <see cref="ConeTwistJoint3D" />. Once the physics bodies swing, the twist axis is calculated as the middle of the X axes of the joint in the local space of the two physics bodies. Useful for limbs like shoulders and hips, lamps hanging off a ceiling, etc.</para>
 /// </summary>
-public class ConeTwistJoint3DAdapter : ConeTwistJoint3D, IConeTwistJoint3D {
+public class ConeTwistJoint3DAdapter : Joint3DAdapter, IConeTwistJoint3D {
   private readonly ConeTwistJoint3D _node;
 
-  public ConeTwistJoint3DAdapter(ConeTwistJoint3D node) => _node = node;
+  public ConeTwistJoint3DAdapter(ConeTwistJoint3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The speed with which the swing or twist will take place.</para>
     /// <para>The higher, the faster.</para>

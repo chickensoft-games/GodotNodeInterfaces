@@ -9,10 +9,11 @@ using Godot.Collections;
 /// <para>Note that "global pose" below refers to the overall transform of the bone with respect to skeleton, so it is not the actual global/world transform of the bone.</para>
 /// <para>To setup different types of inverse kinematics, consider using <see cref="SkeletonIK3D" />, or add a custom IK implementation in <see cref="Node._Process(System.Double)" /> as a child node.</para>
 /// </summary>
-public class Skeleton3DAdapter : Skeleton3D, ISkeleton3D {
+public class Skeleton3DAdapter : Node3DAdapter, ISkeleton3D {
   private readonly Skeleton3D _node;
 
-  public Skeleton3DAdapter(Skeleton3D node) => _node = node;
+  public Skeleton3DAdapter(Skeleton3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a bone, with name <paramref name="name" />. <see cref="Skeleton3D.GetBoneCount" /> will become the bone index.</para>
     /// </summary>

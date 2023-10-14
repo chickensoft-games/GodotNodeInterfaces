@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para><see cref="AnimatedSprite2D" /> is similar to the <see cref="Sprite2D" /> node, except it carries multiple textures as animation frames. Animations are created using a <see cref="SpriteFrames" /> resource, which allows you to import image files (or a folder containing said files) to provide the animation frames for the sprite. The <see cref="SpriteFrames" /> resource can be configured in the editor via the SpriteFrames bottom panel.</para>
 /// </summary>
-public class AnimatedSprite2DAdapter : AnimatedSprite2D, IAnimatedSprite2D {
+public class AnimatedSprite2DAdapter : Node2DAdapter, IAnimatedSprite2D {
   private readonly AnimatedSprite2D _node;
 
-  public AnimatedSprite2DAdapter(AnimatedSprite2D node) => _node = node;
+  public AnimatedSprite2DAdapter(AnimatedSprite2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The current animation from the <see cref="AnimatedSprite2D.SpriteFrames" /> resource. If this value is changed, the <see cref="AnimatedSprite2D.Frame" /> counter and the <see cref="AnimatedSprite2D.FrameProgress" /> are reset.</para>
     /// </summary>

@@ -7,10 +7,11 @@ using Godot.Collections;
 /// <para>A deformable 3D physics mesh. Used to create elastic or deformable objects such as cloth, rubber, or other flexible materials.</para>
 /// <para><b>Note:</b> There are many known bugs in <see cref="SoftBody3D" />. Therefore, it's not recommended to use them for things that can affect gameplay (such as trampolines).</para>
 /// </summary>
-public class SoftBody3DAdapter : SoftBody3D, ISoftBody3D {
+public class SoftBody3DAdapter : MeshInstance3DAdapter, ISoftBody3D {
   private readonly SoftBody3D _node;
 
-  public SoftBody3DAdapter(SoftBody3D node) => _node = node;
+  public SoftBody3DAdapter(SoftBody3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a body to the list of bodies that this body can't collide with.</para>
     /// </summary>

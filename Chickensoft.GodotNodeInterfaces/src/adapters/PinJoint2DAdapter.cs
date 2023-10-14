@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A physics joint that attaches two 2D physics bodies at a single point, allowing them to freely rotate. For example, a <see cref="RigidBody2D" /> can be attached to a <see cref="StaticBody2D" /> to create a pendulum or a seesaw.</para>
 /// </summary>
-public class PinJoint2DAdapter : PinJoint2D, IPinJoint2D {
+public class PinJoint2DAdapter : Joint2DAdapter, IPinJoint2D {
   private readonly PinJoint2D _node;
 
-  public PinJoint2DAdapter(PinJoint2D node) => _node = node;
+  public PinJoint2DAdapter(PinJoint2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, the pin maximum and minimum rotation, defined by <see cref="PinJoint2D.AngularLimitLower" /> and <see cref="PinJoint2D.AngularLimitUpper" /> are applied.</para>
     /// </summary>

@@ -6,10 +6,11 @@ using System;
 /// <para>RemoteTransform3D pushes its own <see cref="Transform3D" /> to another <see cref="Node3D" /> derived Node (called the remote node) in the scene.</para>
 /// <para>It can be set to update another Node's position, rotation and/or scale. It can use either global or local coordinates.</para>
 /// </summary>
-public class RemoteTransform3DAdapter : RemoteTransform3D, IRemoteTransform3D {
+public class RemoteTransform3DAdapter : Node3DAdapter, IRemoteTransform3D {
   private readonly RemoteTransform3D _node;
 
-  public RemoteTransform3DAdapter(RemoteTransform3D node) => _node = node;
+  public RemoteTransform3DAdapter(RemoteTransform3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para><see cref="RemoteTransform3D" /> caches the remote node. It may not notice if the remote node disappears; <see cref="RemoteTransform3D.ForceUpdateCache" /> forces it to update the cache again.</para>
     /// </summary>

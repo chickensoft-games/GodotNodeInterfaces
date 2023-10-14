@@ -6,10 +6,11 @@ using System;
 /// <para>This node allows you to create a sphere for use with the CSG system.</para>
 /// <para><b>Note:</b> CSG nodes are intended to be used for level prototyping. Creating CSG nodes has a significant CPU cost compared to creating a <see cref="MeshInstance3D" /> with a <see cref="PrimitiveMesh" />. Moving a CSG node within another CSG node also has a significant CPU cost, so it should be avoided during gameplay.</para>
 /// </summary>
-public class CsgSphere3DAdapter : CsgSphere3D, ICsgSphere3D {
+public class CsgSphere3DAdapter : CsgPrimitive3DAdapter, ICsgSphere3D {
   private readonly CsgSphere3D _node;
 
-  public CsgSphere3DAdapter(CsgSphere3D node) => _node = node;
+  public CsgSphere3DAdapter(CsgSphere3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The material used to render the sphere.</para>
     /// </summary>

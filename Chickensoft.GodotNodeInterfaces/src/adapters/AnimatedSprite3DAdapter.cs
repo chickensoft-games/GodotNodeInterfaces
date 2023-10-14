@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para><see cref="AnimatedSprite3D" /> is similar to the <see cref="Sprite3D" /> node, except it carries multiple textures as animation <see cref="AnimatedSprite3D.SpriteFrames" />. Animations are created using a <see cref="SpriteFrames" /> resource, which allows you to import image files (or a folder containing said files) to provide the animation frames for the sprite. The <see cref="SpriteFrames" /> resource can be configured in the editor via the SpriteFrames bottom panel.</para>
 /// </summary>
-public class AnimatedSprite3DAdapter : AnimatedSprite3D, IAnimatedSprite3D {
+public class AnimatedSprite3DAdapter : SpriteBase3DAdapter, IAnimatedSprite3D {
   private readonly AnimatedSprite3D _node;
 
-  public AnimatedSprite3DAdapter(AnimatedSprite3D node) => _node = node;
+  public AnimatedSprite3DAdapter(AnimatedSprite3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The current animation from the <see cref="AnimatedSprite3D.SpriteFrames" /> resource. If this value is changed, the <see cref="AnimatedSprite3D.Frame" /> counter and the <see cref="AnimatedSprite3D.FrameProgress" /> are reset.</para>
     /// </summary>

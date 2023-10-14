@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para><see cref="GraphElement" /> allows to create custom elements for a <see cref="GraphEdit" /> graph. By default such elements can be selected, resized, and repositioned, but they cannot be connected. For a graph element that allows for connections see <see cref="GraphNode" />.</para>
 /// </summary>
-public class GraphElementAdapter : GraphElement, IGraphElement {
+public class GraphElementAdapter : ContainerAdapter, IGraphElement {
   private readonly GraphElement _node;
 
-  public GraphElementAdapter(GraphElement node) => _node = node;
+  public GraphElementAdapter(GraphElement node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, the user can drag the GraphElement.</para>
     /// </summary>

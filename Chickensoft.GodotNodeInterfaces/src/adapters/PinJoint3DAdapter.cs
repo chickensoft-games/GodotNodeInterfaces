@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A physics joint that attaches two 3D physics bodies at a single point, allowing them to freely rotate. For example, a <see cref="RigidBody3D" /> can be attached to a <see cref="StaticBody3D" /> to create a pendulum or a seesaw.</para>
 /// </summary>
-public class PinJoint3DAdapter : PinJoint3D, IPinJoint3D {
+public class PinJoint3DAdapter : Joint3DAdapter, IPinJoint3D {
   private readonly PinJoint3D _node;
 
-  public PinJoint3DAdapter(PinJoint3D node) => _node = node;
+  public PinJoint3DAdapter(PinJoint3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Returns the value of the specified parameter.</para>
     /// </summary>

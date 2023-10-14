@@ -21,10 +21,11 @@ using System;
 /// <para>See also <see cref="BaseButton" /> which contains common properties and methods associated with this node.</para>
 /// <para><b>Note:</b> Buttons do not interpret touch input and therefore don't support multitouch, since mouse emulation can only press one button at a given time. Use <see cref="TouchScreenButton" /> for buttons that trigger gameplay movement or actions.</para>
 /// </summary>
-public class ButtonAdapter : Button, IButton {
+public class ButtonAdapter : BaseButtonAdapter, IButton {
   private readonly Button _node;
 
-  public ButtonAdapter(Button node) => _node = node;
+  public ButtonAdapter(Button node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Text alignment policy for the button's text, use one of the <see cref="HorizontalAlignment" /> constants.</para>
     /// </summary>

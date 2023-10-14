@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A container type that arranges its child controls in a way that preserves their proportions automatically when the container is resized. Useful when a container has a dynamic size and the child nodes must adjust their sizes accordingly without losing their aspect ratios.</para>
 /// </summary>
-public class AspectRatioContainerAdapter : AspectRatioContainer, IAspectRatioContainer {
+public class AspectRatioContainerAdapter : ContainerAdapter, IAspectRatioContainer {
   private readonly AspectRatioContainer _node;
 
-  public AspectRatioContainerAdapter(AspectRatioContainer node) => _node = node;
+  public AspectRatioContainerAdapter(AspectRatioContainer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Specifies the horizontal relative position of child controls.</para>
     /// </summary>

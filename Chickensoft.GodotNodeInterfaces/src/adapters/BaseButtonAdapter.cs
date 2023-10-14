@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para><see cref="BaseButton" /> is an abstract base class for GUI buttons. It doesn't display anything by itself.</para>
 /// </summary>
-public class BaseButtonAdapter : BaseButton, IBaseButton {
+public class BaseButtonAdapter : ControlAdapter, IBaseButton {
   private readonly BaseButton _node;
 
-  public BaseButtonAdapter(BaseButton node) => _node = node;
+  public BaseButtonAdapter(BaseButton node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Called when the button is pressed. If you need to know the button's pressed state (and <see cref="BaseButton.ToggleMode" /> is active), use <see cref="BaseButton._Toggled(System.Boolean)" /> instead.</para>
     /// </summary>

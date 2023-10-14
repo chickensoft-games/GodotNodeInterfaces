@@ -6,10 +6,11 @@ using System;
 /// <para>A widget that provides an interface for selecting or modifying a color. It can optionally provide functionalities like a color sampler (eyedropper), color modes, and presets.</para>
 /// <para><b>Note:</b> This control is the color picker widget itself. You can use a <see cref="ColorPickerButton" /> instead if you need a button that brings up a <see cref="ColorPicker" /> in a popup.</para>
 /// </summary>
-public class ColorPickerAdapter : ColorPicker, IColorPicker {
+public class ColorPickerAdapter : VBoxContainerAdapter, IColorPicker {
   private readonly ColorPicker _node;
 
-  public ColorPickerAdapter(ColorPicker node) => _node = node;
+  public ColorPickerAdapter(ColorPicker node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds the given color to a list of color presets. The presets are displayed in the color picker and the user will be able to select them.</para>
     /// <para><b>Note:</b> The presets list is only for <i>this</i> color picker.</para>

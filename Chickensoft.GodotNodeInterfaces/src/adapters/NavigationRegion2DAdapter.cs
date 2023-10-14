@@ -11,10 +11,11 @@ using System;
 /// <para>The pathfinding cost of traveling distances inside this region can be controlled with the <see cref="NavigationRegion2D.TravelCost" /> multiplier.</para>
 /// <para><b>Note:</b> This node caches changes to its properties, so if you make changes to the underlying region <see cref="Rid" /> in <see cref="NavigationServer2D" />, they will not be reflected in this node's properties.</para>
 /// </summary>
-public class NavigationRegion2DAdapter : NavigationRegion2D, INavigationRegion2D {
+public class NavigationRegion2DAdapter : Node2DAdapter, INavigationRegion2D {
   private readonly NavigationRegion2D _node;
 
-  public NavigationRegion2DAdapter(NavigationRegion2D node) => _node = node;
+  public NavigationRegion2DAdapter(NavigationRegion2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>A bitfield determining all avoidance layers for the avoidance constrain.</para>
     /// </summary>

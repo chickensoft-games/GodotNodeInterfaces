@@ -7,10 +7,11 @@ using Godot.Collections;
 /// <para>CodeEdit is a specialized <see cref="TextEdit" /> designed for editing plain text code files. It has many features commonly found in code editors such as line numbers, line folding, code completion, indent management, and string/comment management.</para>
 /// <para><b>Note:</b> Regardless of locale, <see cref="CodeEdit" /> will by default always use left-to-right text direction to correctly display source code.</para>
 /// </summary>
-public class CodeEditAdapter : CodeEdit, ICodeEdit {
+public class CodeEditAdapter : TextEditAdapter, ICodeEdit {
   private readonly CodeEdit _node;
 
-  public CodeEditAdapter(CodeEdit node) => _node = node;
+  public CodeEditAdapter(CodeEdit node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Override this method to define how the selected entry should be inserted. If <paramref name="replace" /> is true, any existing text should be replaced.</para>
     /// </summary>

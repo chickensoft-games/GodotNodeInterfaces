@@ -8,10 +8,11 @@ using System;
 /// <para><b>Note:</b> Due to a bug, VideoStreamPlayer does not support localization remapping yet.</para>
 /// <para><b>Warning:</b> On Web, video playback <i>will</i> perform poorly due to missing architecture-specific assembly optimizations.</para>
 /// </summary>
-public class VideoStreamPlayerAdapter : VideoStreamPlayer, IVideoStreamPlayer {
+public class VideoStreamPlayerAdapter : ControlAdapter, IVideoStreamPlayer {
   private readonly VideoStreamPlayer _node;
 
-  public VideoStreamPlayerAdapter(VideoStreamPlayer node) => _node = node;
+  public VideoStreamPlayerAdapter(VideoStreamPlayer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The embedded audio track to play.</para>
     /// </summary>

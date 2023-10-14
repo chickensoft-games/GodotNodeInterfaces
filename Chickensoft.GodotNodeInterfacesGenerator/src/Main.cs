@@ -194,6 +194,16 @@ public static class GodotNodeInterfacesGenerator {
         ? $" : I{baseType.Name}"
         : "";
 
+      var adapterParent = extendsAnotherNode
+        ? $"{baseType.Name}Adapter, "
+        : "";
+
+      var adapterBaseCall = extendsAnotherNode
+        ? " : base(node) "
+        : " ";
+
+      var adapterAbstract = type.IsAbstract ? " abstract " : " ";
+
       var interfaceMemberCode = interfaceMembers.ToString();
       var adapterMemberCode = adapterMembers.ToString();
 
@@ -229,10 +239,11 @@ public static class GodotNodeInterfacesGenerator {
 
       {{usings}}
       {{mainDocumentation}}
-      public class {{adapterName}} : {{TypeName(type)}}, {{interfaceName}} {
+      public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}} {
         private readonly {{TypeName(type)}} _node;
 
-        public {{adapterName}}({{TypeName(type)}} node) => _node = node;
+        public {{adapterName}}({{TypeName(type)}} node){{adapterBaseCall}}{ _node = node; }
+
       {{adapterMemberCode}}
       }
       """;
@@ -240,10 +251,8 @@ public static class GodotNodeInterfacesGenerator {
       var interfaceFilePath = Path.Join(INTERFACES_PATH, interfaceFilename);
       File.WriteAllText(interfaceFilePath, interfaceContents);
 
-      if (canBeInstantiated) {
-        var adapterFilePath = Path.Join(ADAPTERS_PATH, adapterFilename);
-        File.WriteAllText(adapterFilePath, adapterContents);
-      }
+      var adapterFilePath = Path.Join(ADAPTERS_PATH, adapterFilename);
+      File.WriteAllText(adapterFilePath, adapterContents);
     }
   }
 

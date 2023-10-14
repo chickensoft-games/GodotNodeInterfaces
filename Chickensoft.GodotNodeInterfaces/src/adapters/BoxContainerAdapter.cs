@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A container that arranges its child controls horizontally or vertically, rearranging them automatically when their minimum size changes.</para>
 /// </summary>
-public class BoxContainerAdapter : BoxContainer, IBoxContainer {
+public class BoxContainerAdapter : ContainerAdapter, IBoxContainer {
   private readonly BoxContainer _node;
 
-  public BoxContainerAdapter(BoxContainer node) => _node = node;
+  public BoxContainerAdapter(BoxContainer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a <see cref="Control" /> node to the box as a spacer. If <paramref name="begin" /> is <c>true</c>, it will insert the <see cref="Control" /> node in front of all other children.</para>
     /// </summary>

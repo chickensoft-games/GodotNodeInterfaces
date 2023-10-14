@@ -7,10 +7,11 @@ using System;
 /// <para>The "normal" state must contain a texture (<see cref="TextureButton.TextureNormal" />); other textures are optional.</para>
 /// <para>See also <see cref="BaseButton" /> which contains common properties and methods associated with this node.</para>
 /// </summary>
-public class TextureButtonAdapter : TextureButton, ITextureButton {
+public class TextureButtonAdapter : BaseButtonAdapter, ITextureButton {
   private readonly TextureButton _node;
 
-  public TextureButtonAdapter(TextureButton node) => _node = node;
+  public TextureButtonAdapter(TextureButton node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, texture is flipped horizontally.</para>
     /// </summary>

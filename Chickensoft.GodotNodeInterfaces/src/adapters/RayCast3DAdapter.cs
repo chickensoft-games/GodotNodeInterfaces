@@ -8,10 +8,11 @@ using System;
 /// <para><see cref="RayCast3D" /> calculates intersection every physics frame, and it holds the result until the next physics frame. For an immediate raycast, or if you want to configure a <see cref="RayCast3D" /> multiple times within the same physics frame, use <see cref="RayCast3D.ForceRaycastUpdate" />.</para>
 /// <para>To sweep over a region of 3D space, you can approximate the region with multiple <see cref="RayCast3D" />s or use <see cref="ShapeCast3D" />.</para>
 /// </summary>
-public class RayCast3DAdapter : RayCast3D, IRayCast3D {
+public class RayCast3DAdapter : Node3DAdapter, IRayCast3D {
   private readonly RayCast3D _node;
 
-  public RayCast3DAdapter(RayCast3D node) => _node = node;
+  public RayCast3DAdapter(RayCast3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Adds a collision exception so the ray does not report collisions with the specified <see cref="CollisionObject3D" /> node.</para>
     /// </summary>

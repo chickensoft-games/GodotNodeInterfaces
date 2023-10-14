@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A container that accepts only two child controls, then arranges them horizontally or vertically and creates a divisor between them. The divisor can be dragged around to change the size relation between the child controls.</para>
 /// </summary>
-public class SplitContainerAdapter : SplitContainer, ISplitContainer {
+public class SplitContainerAdapter : ContainerAdapter, ISplitContainer {
   private readonly SplitContainer _node;
 
-  public SplitContainerAdapter(SplitContainer node) => _node = node;
+  public SplitContainerAdapter(SplitContainer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Clamps the <see cref="SplitContainer.SplitOffset" /> value to not go outside the currently possible minimal and maximum values.</para>
     /// </summary>

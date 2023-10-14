@@ -6,10 +6,11 @@ using System;
 /// <para>Once added to the scene tree and enabled using <see cref="AudioListener2D.MakeCurrent" />, this node will override the location sounds are heard from. Only one <see cref="AudioListener2D" /> can be current. Using <see cref="AudioListener2D.MakeCurrent" /> will disable the previous <see cref="AudioListener2D" />.</para>
 /// <para>If there is no active <see cref="AudioListener2D" /> in the current <see cref="Viewport" />, center of the screen will be used as a hearing point for the audio. <see cref="AudioListener2D" /> needs to be inside <see cref="SceneTree" /> to function.</para>
 /// </summary>
-public class AudioListener2DAdapter : AudioListener2D, IAudioListener2D {
+public class AudioListener2DAdapter : Node2DAdapter, IAudioListener2D {
   private readonly AudioListener2D _node;
 
-  public AudioListener2DAdapter(AudioListener2D node) => _node = node;
+  public AudioListener2DAdapter(AudioListener2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Disables the <see cref="AudioListener2D" />. If it's not set as current, this method will have no effect.</para>
     /// </summary>

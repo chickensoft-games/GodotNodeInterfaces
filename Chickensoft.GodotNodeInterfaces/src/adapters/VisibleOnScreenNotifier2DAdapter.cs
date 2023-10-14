@@ -7,10 +7,11 @@ using System;
 /// <para>If you want nodes to be disabled automatically when they exit the screen, use <see cref="VisibleOnScreenEnabler2D" /> instead.</para>
 /// <para><b>Note:</b> VisibleOnScreenNotifier2D uses the render culling code to determine whether it's visible on screen, which also means that its <see cref="CanvasItem.Visible" /> must be <c>true</c> to work correctly.</para>
 /// </summary>
-public class VisibleOnScreenNotifier2DAdapter : VisibleOnScreenNotifier2D, IVisibleOnScreenNotifier2D {
+public class VisibleOnScreenNotifier2DAdapter : Node2DAdapter, IVisibleOnScreenNotifier2D {
   private readonly VisibleOnScreenNotifier2D _node;
 
-  public VisibleOnScreenNotifier2DAdapter(VisibleOnScreenNotifier2D node) => _node = node;
+  public VisibleOnScreenNotifier2DAdapter(VisibleOnScreenNotifier2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, the bounding rectangle is on the screen.</para>
     /// <para><b>Note:</b> It takes one frame for the node's visibility to be assessed once added to the scene tree, so this method will return <c>false</c> right after it is instantiated, even if it will be on screen in the draw pass.</para>

@@ -6,10 +6,11 @@ using System;
 /// <para>The <see cref="Generic6DofJoint3D" /> (6 Degrees Of Freedom) joint allows for implementing custom types of joints by locking the rotation and translation of certain axes.</para>
 /// <para>The first 3 DOF represent the linear motion of the physics bodies and the last 3 DOF represent the angular motion of the physics bodies. Each axis can be either locked, or limited.</para>
 /// </summary>
-public class Generic6DofJoint3DAdapter : Generic6DofJoint3D, IGeneric6DofJoint3D {
+public class Generic6DofJoint3DAdapter : Joint3DAdapter, IGeneric6DofJoint3D {
   private readonly Generic6DofJoint3D _node;
 
-  public Generic6DofJoint3DAdapter(Generic6DofJoint3D node) => _node = node;
+  public Generic6DofJoint3DAdapter(Generic6DofJoint3D node) : base(node) { _node = node; }
+
 
     public bool GetFlagX(Generic6DofJoint3D.Flag flag) => _node.GetFlagX(flag);
 

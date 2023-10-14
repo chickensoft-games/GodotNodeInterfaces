@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A directional light is a type of <see cref="Light3D" /> node that models an infinite number of parallel rays covering the entire scene. It is used for lights with strong intensity that are located far away from the scene to model sunlight or moonlight. The worldspace location of the DirectionalLight3D transform (origin) is ignored. Only the basis is used to determine light direction.</para>
 /// </summary>
-public class DirectionalLight3DAdapter : DirectionalLight3D, IDirectionalLight3D {
+public class DirectionalLight3DAdapter : Light3DAdapter, IDirectionalLight3D {
   private readonly DirectionalLight3D _node;
 
-  public DirectionalLight3DAdapter(DirectionalLight3D node) => _node = node;
+  public DirectionalLight3DAdapter(DirectionalLight3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Orthogonal" />.</para>
     /// </summary>

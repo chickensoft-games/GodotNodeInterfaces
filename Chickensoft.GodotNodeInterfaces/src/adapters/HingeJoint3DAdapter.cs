@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A physics joint that restricts the rotation of a 3D physics body around an axis relative to another physics body. For example, Body A can be a <see cref="StaticBody3D" /> representing a door hinge that a <see cref="RigidBody3D" /> rotates around.</para>
 /// </summary>
-public class HingeJoint3DAdapter : HingeJoint3D, IHingeJoint3D {
+public class HingeJoint3DAdapter : Joint3DAdapter, IHingeJoint3D {
   private readonly HingeJoint3D _node;
 
-  public HingeJoint3DAdapter(HingeJoint3D node) => _node = node;
+  public HingeJoint3DAdapter(HingeJoint3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Returns the value of the specified flag.</para>
     /// </summary>

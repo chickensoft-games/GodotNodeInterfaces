@@ -7,10 +7,11 @@ using System;
 /// <para>If you want nodes to be disabled automatically when they exit the screen, use <see cref="VisibleOnScreenEnabler3D" /> instead.</para>
 /// <para><b>Note:</b> VisibleOnScreenNotifier3D uses the render culling code to determine whether it's visible on screen, which also means that its <see cref="Node3D.Visible" /> must be <c>true</c> to work correctly.</para>
 /// </summary>
-public class VisibleOnScreenNotifier3DAdapter : VisibleOnScreenNotifier3D, IVisibleOnScreenNotifier3D {
+public class VisibleOnScreenNotifier3DAdapter : VisualInstance3DAdapter, IVisibleOnScreenNotifier3D {
   private readonly VisibleOnScreenNotifier3D _node;
 
-  public VisibleOnScreenNotifier3DAdapter(VisibleOnScreenNotifier3D node) => _node = node;
+  public VisibleOnScreenNotifier3DAdapter(VisibleOnScreenNotifier3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The VisibleOnScreenNotifier3D's bounding box.</para>
     /// </summary>

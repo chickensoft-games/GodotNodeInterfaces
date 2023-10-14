@@ -6,10 +6,11 @@ using Godot.Collections;
 /// <summary>
 /// <para><see cref="Camera3D" /> is a special node that displays what is visible from its current location. Cameras register themselves in the nearest <see cref="Viewport" /> node (when ascending the tree). Only one camera can be active per viewport. If no viewport is available ascending the tree, the camera will register in the global viewport. In other words, a camera just provides 3D display capabilities to a <see cref="Viewport" />, and, without one, a scene registered in that <see cref="Viewport" /> (or higher viewports) can't be displayed.</para>
 /// </summary>
-public class Camera3DAdapter : Camera3D, ICamera3D {
+public class Camera3DAdapter : Node3DAdapter, ICamera3D {
   private readonly Camera3D _node;
 
-  public Camera3DAdapter(Camera3D node) => _node = node;
+  public Camera3DAdapter(Camera3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The <see cref="CameraAttributes" /> to use for this camera.</para>
     /// </summary>

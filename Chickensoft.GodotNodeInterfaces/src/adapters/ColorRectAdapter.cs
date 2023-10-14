@@ -4,10 +4,11 @@ using Godot;
 /// <summary>
 /// <para>Displays a rectangle filled with a solid <see cref="ColorRect.Color" />. If you need to display the border alone, consider using a <see cref="Panel" /> instead.</para>
 /// </summary>
-public class ColorRectAdapter : ColorRect, IColorRect {
+public class ColorRectAdapter : ControlAdapter, IColorRect {
   private readonly ColorRect _node;
 
-  public ColorRectAdapter(ColorRect node) => _node = node;
+  public ColorRectAdapter(ColorRect node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The fill color of the rectangle.</para>
     /// </summary>

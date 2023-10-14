@@ -19,10 +19,11 @@ using System;
 /// </code></para>
 /// <para><b>Note:</b> Since <see cref="CanvasGroup" /> and <see cref="CanvasItem.ClipChildren" /> both utilize the backbuffer, children of a <see cref="CanvasGroup" /> who have their <see cref="CanvasItem.ClipChildren" /> set to anything other than <see cref="CanvasItem.ClipChildrenMode.Disabled" /> will not function correctly.</para>
 /// </summary>
-public class CanvasGroupAdapter : CanvasGroup, ICanvasGroup {
+public class CanvasGroupAdapter : Node2DAdapter, ICanvasGroup {
   private readonly CanvasGroup _node;
 
-  public CanvasGroupAdapter(CanvasGroup node) => _node = node;
+  public CanvasGroupAdapter(CanvasGroup node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Sets the size of the margin used to expand the clearing rect of this <see cref="CanvasGroup" />. This expands the area of the backbuffer that will be used by the <see cref="CanvasGroup" />. A smaller margin will reduce the area of the backbuffer used which can increase performance, however if <see cref="CanvasGroup.UseMipmaps" /> is enabled, a small margin may result in mipmap errors at the edge of the <see cref="CanvasGroup" />. Accordingly, this should be left as small as possible, but should be increased if artifacts appear along the edges of the canvas group.</para>
     /// </summary>

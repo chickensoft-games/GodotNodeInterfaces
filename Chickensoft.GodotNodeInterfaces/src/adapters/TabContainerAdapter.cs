@@ -6,10 +6,11 @@ using System;
 /// <para>Arranges child controls into a tabbed view, creating a tab for each one. The active tab's corresponding control is made visible, while all other child controls are hidden. Ignores non-control children.</para>
 /// <para><b>Note:</b> The drawing of the clickable tabs is handled by this node; <see cref="TabBar" /> is not needed.</para>
 /// </summary>
-public class TabContainerAdapter : TabContainer, ITabContainer {
+public class TabContainerAdapter : ContainerAdapter, ITabContainer {
   private readonly TabContainer _node;
 
-  public TabContainerAdapter(TabContainer node) => _node = node;
+  public TabContainerAdapter(TabContainer node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, all tabs are drawn in front of the panel. If <c>false</c>, inactive tabs are drawn behind the panel.</para>
     /// </summary>

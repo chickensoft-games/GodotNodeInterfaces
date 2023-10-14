@@ -10,10 +10,11 @@ using System;
 /// <para><b>Note:</b> Lightmap baking on <see cref="CsgShape3D" />s and <see cref="PrimitiveMesh" />es is not supported, as these cannot store UV2 data required for baking.</para>
 /// <para><b>Note:</b> If no custom lightmappers are installed, <see cref="LightmapGI" /> can only be baked when using the Vulkan backend (Forward+ or Mobile), not OpenGL.</para>
 /// </summary>
-public class LightmapGIAdapter : LightmapGI, ILightmapGI {
+public class LightmapGIAdapter : VisualInstance3DAdapter, ILightmapGI {
   private readonly LightmapGI _node;
 
-  public LightmapGIAdapter(LightmapGI node) => _node = node;
+  public LightmapGIAdapter(LightmapGI node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The bias to use when computing shadows. Increasing <see cref="LightmapGI.Bias" /> can fix shadow acne on the resulting baked lightmap, but can introduce peter-panning (shadows not connecting to their casters). Real-time <see cref="Light3D" /> shadows are not affected by this <see cref="LightmapGI.Bias" /> property.</para>
     /// </summary>

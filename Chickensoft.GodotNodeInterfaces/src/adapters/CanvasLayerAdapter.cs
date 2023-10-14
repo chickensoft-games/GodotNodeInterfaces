@@ -8,10 +8,11 @@ using System;
 /// <para><b>Note:</b> Embedded <see cref="Window" />s are placed on layer <c>1024</c>. <see cref="CanvasItem" />s on layers <c>1025</c> and higher appear in front of embedded windows.</para>
 /// <para><b>Note:</b> Each <see cref="CanvasLayer" /> is drawn on one specific <see cref="Viewport" /> and cannot be shared between multiple <see cref="Viewport" />s, see <see cref="CanvasLayer.CustomViewport" />. When using multiple <see cref="Viewport" />s, for example in a split-screen game, you need create an individual <see cref="CanvasLayer" /> for each <see cref="Viewport" /> you want it to be drawn on.</para>
 /// </summary>
-public class CanvasLayerAdapter : CanvasLayer, ICanvasLayer {
+public class CanvasLayerAdapter : ICanvasLayer {
   private readonly CanvasLayer _node;
 
-  public CanvasLayerAdapter(CanvasLayer node) => _node = node;
+  public CanvasLayerAdapter(CanvasLayer node) { _node = node; }
+
     /// <summary>
     /// <para>The custom <see cref="Viewport" /> node assigned to the <see cref="CanvasLayer" />. If <c>null</c>, uses the default viewport instead.</para>
     /// </summary>

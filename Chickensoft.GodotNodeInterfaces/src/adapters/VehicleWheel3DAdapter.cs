@@ -6,10 +6,11 @@ using System;
 /// <para>A node used as a child of a <see cref="VehicleBody3D" /> parent to simulate the behavior of one of its wheels. This node also acts as a collider to detect if the wheel is touching a surface.</para>
 /// <para><b>Note:</b> This class has known issues and isn't designed to provide realistic 3D vehicle physics. If you want advanced vehicle physics, you may need to write your own physics integration using another <see cref="PhysicsBody3D" /> class.</para>
 /// </summary>
-public class VehicleWheel3DAdapter : VehicleWheel3D, IVehicleWheel3D {
+public class VehicleWheel3DAdapter : Node3DAdapter, IVehicleWheel3D {
   private readonly VehicleWheel3D _node;
 
-  public VehicleWheel3DAdapter(VehicleWheel3D node) => _node = node;
+  public VehicleWheel3DAdapter(VehicleWheel3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Slows down the wheel by applying a braking force. The wheel is only slowed down if it is in contact with a surface. The force you need to apply to adequately slow down your vehicle depends on the <see cref="RigidBody3D.Mass" /> of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 30 range for hard braking.</para>
     /// </summary>

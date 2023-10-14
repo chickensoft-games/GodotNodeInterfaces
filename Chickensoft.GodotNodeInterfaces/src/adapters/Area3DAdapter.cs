@@ -8,10 +8,11 @@ using Godot.Collections;
 /// <para>This node can also locally alter or override physics parameters (gravity, damping) and route audio to custom audio buses.</para>
 /// <para><b>Warning:</b> Using a <see cref="ConcavePolygonShape3D" /> inside a <see cref="CollisionShape3D" /> child of this node (created e.g. by using the <b>Create Trimesh Collision Sibling</b> option in the <b>Mesh</b> menu that appears when selecting a <see cref="MeshInstance3D" /> node) may give unexpected results, since this collision shape is hollow. If this is not desired, it has to be split into multiple <see cref="ConvexPolygonShape3D" />s or primitive shapes like <see cref="BoxShape3D" />, or in some cases it may be replaceable by a <see cref="CollisionPolygon3D" />.</para>
 /// </summary>
-public class Area3DAdapter : Area3D, IArea3D {
+public class Area3DAdapter : CollisionObject3DAdapter, IArea3D {
   private readonly Area3D _node;
 
-  public Area3DAdapter(Area3D node) => _node = node;
+  public Area3DAdapter(Area3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.</para>
     /// <para>See <c>ProjectSettings.physics/3d/default_angular_damp</c> for more details about damping.</para>

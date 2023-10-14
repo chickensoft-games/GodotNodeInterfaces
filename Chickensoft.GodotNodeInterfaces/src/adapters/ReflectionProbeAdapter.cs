@@ -9,10 +9,11 @@ using System;
 /// <para><b>Note:</b> Reflection probes are only supported in the Forward+ and Mobile rendering methods, not Compatibility. When using the Mobile rendering method, only 8 reflection probes can be displayed on each mesh resource. Attempting to display more than 8 reflection probes on a single mesh resource will result in reflection probes flickering in and out as the camera moves.</para>
 /// <para><b>Note:</b> When using the Mobile rendering method, reflection probes will only correctly affect meshes whose visibility AABB intersects with the reflection probe's AABB. If using a shader to deform the mesh in a way that makes it go outside its AABB, <see cref="GeometryInstance3D.ExtraCullMargin" /> must be increased on the mesh. Otherwise, the reflection probe may not be visible on the mesh.</para>
 /// </summary>
-public class ReflectionProbeAdapter : ReflectionProbe, IReflectionProbe {
+public class ReflectionProbeAdapter : VisualInstance3DAdapter, IReflectionProbe {
   private readonly ReflectionProbe _node;
 
-  public ReflectionProbeAdapter(ReflectionProbe node) => _node = node;
+  public ReflectionProbeAdapter(ReflectionProbe node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The custom ambient color to use within the <see cref="ReflectionProbe" />'s box defined by its <see cref="ReflectionProbe.Size" />. Only effective if <see cref="ReflectionProbe.AmbientMode" /> is <see cref="ReflectionProbe.AmbientModeEnum.Color" />.</para>
     /// </summary>

@@ -7,10 +7,11 @@ using System;
 /// <para><b>Note:</b> The origin point of your VehicleBody3D will determine the center of gravity of your vehicle. To make the vehicle more grounded, the origin point is usually kept low, moving the <see cref="CollisionShape3D" /> and <see cref="MeshInstance3D" /> upwards.</para>
 /// <para><b>Note:</b> This class has known issues and isn't designed to provide realistic 3D vehicle physics. If you want advanced vehicle physics, you may have to write your own physics integration using <see cref="CharacterBody3D" /> or <see cref="RigidBody3D" />.</para>
 /// </summary>
-public class VehicleBody3DAdapter : VehicleBody3D, IVehicleBody3D {
+public class VehicleBody3DAdapter : RigidBody3DAdapter, IVehicleBody3D {
   private readonly VehicleBody3D _node;
 
-  public VehicleBody3DAdapter(VehicleBody3D node) => _node = node;
+  public VehicleBody3DAdapter(VehicleBody3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>Slows down the vehicle by applying a braking force. The vehicle is only slowed down if the wheels are in contact with a surface. The force you need to apply to adequately slow down your vehicle depends on the <see cref="RigidBody3D.Mass" /> of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 30 range for hard braking.</para>
     /// </summary>

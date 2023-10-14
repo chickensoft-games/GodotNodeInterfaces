@@ -4,10 +4,11 @@ using Godot;
 /// <summary>
 /// <para>Node used for displaying a <see cref="Mesh" /> in 2D. A <see cref="MeshInstance2D" /> can be automatically created from an existing <see cref="Sprite2D" /> via a tool in the editor toolbar. Select the <see cref="Sprite2D" /> node, then choose <b>Sprite2D &gt; Convert to MeshInstance2D</b> at the top of the 2D editor viewport.</para>
 /// </summary>
-public class MeshInstance2DAdapter : MeshInstance2D, IMeshInstance2D {
+public class MeshInstance2DAdapter : Node2DAdapter, IMeshInstance2D {
   private readonly MeshInstance2D _node;
 
-  public MeshInstance2DAdapter(MeshInstance2D node) => _node = node;
+  public MeshInstance2DAdapter(MeshInstance2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The <see cref="Mesh" /> that will be drawn by the <see cref="MeshInstance2D" />.</para>
     /// </summary>

@@ -7,10 +7,11 @@ using Godot;
 /// <para>Particle attractors work in real-time and can be moved, rotated and scaled during gameplay. Unlike collision shapes, non-uniform scaling of attractors is also supported.</para>
 /// <para><b>Note:</b> Particle attractors only affect <see cref="GpuParticles3D" />, not <see cref="CpuParticles3D" />.</para>
 /// </summary>
-public class GpuParticlesAttractorVectorField3DAdapter : GpuParticlesAttractorVectorField3D, IGpuParticlesAttractorVectorField3D {
+public class GpuParticlesAttractorVectorField3DAdapter : GpuParticlesAttractor3DAdapter, IGpuParticlesAttractorVectorField3D {
   private readonly GpuParticlesAttractorVectorField3D _node;
 
-  public GpuParticlesAttractorVectorField3DAdapter(GpuParticlesAttractorVectorField3D node) => _node = node;
+  public GpuParticlesAttractorVectorField3DAdapter(GpuParticlesAttractorVectorField3D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>The size of the vector field box in 3D units.</para>
     /// </summary>

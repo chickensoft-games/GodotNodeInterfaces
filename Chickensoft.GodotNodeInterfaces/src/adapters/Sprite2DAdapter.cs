@@ -5,10 +5,11 @@ using System;
 /// <summary>
 /// <para>A node that displays a 2D texture. The texture displayed can be a region from a larger atlas texture, or a frame from a sprite sheet animation.</para>
 /// </summary>
-public class Sprite2DAdapter : Sprite2D, ISprite2D {
+public class Sprite2DAdapter : Node2DAdapter, ISprite2D {
   private readonly Sprite2D _node;
 
-  public Sprite2DAdapter(Sprite2D node) => _node = node;
+  public Sprite2DAdapter(Sprite2D node) : base(node) { _node = node; }
+
     /// <summary>
     /// <para>If <c>true</c>, texture is centered.</para>
     /// </summary>
