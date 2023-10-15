@@ -81,7 +81,7 @@ And here's what the adapter factory looks like:
 
 ```csharp
 public static class GodotNodes {
-  private static readonly Dictionary<Type, Func<Node, IAdapter>> _adapters = new() {
+  private static readonly Dictionary<Type, Func<Node, IGodotNodeAdapter>> _adapters = new() {
       [typeof(INode)] = node => new NodeAdapter(node),
       [typeof(IAnimationPlayer)] = node => new AnimationPlayerAdapter(node),
       [typeof(IAnimationTree)] = node => new AnimationTreeAdapter(node),
