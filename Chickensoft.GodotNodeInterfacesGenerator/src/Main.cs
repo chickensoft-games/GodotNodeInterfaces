@@ -200,6 +200,22 @@ public static class GodotNodeInterfacesGenerator {
           interfaceMembers.AppendLine(propertySignature);
           adapterMembers.AppendLine(adapterCode);
         }
+        else if (member is EventInfo eventInfo) {
+          // For events
+          var eventDocumentation = XmlDocToDocComment(
+            eventInfo.GetDocumentation() ?? "", 2
+          );
+
+          var eventHandlerType = TypeName(eventInfo.EventHandlerType!);
+          var eventId = GetId(eventInfo);
+
+          var eventSignature = $"{eventDocumentation}\n{"  ".Repeat(2)}event {eventHandlerType} {eventId};";
+
+          var adapterCode = $"{eventDocumentation}\n{"  ".Repeat(2)}public event {eventHandlerType} {eventId} {{ add => _node.{eventId} += value; remove => _node.{eventId} -= value; }}";
+
+          interfaceMembers.AppendLine(eventSignature);
+          adapterMembers.AppendLine(adapterCode);
+        }
       }
 
       var baseType = type.BaseType!;
