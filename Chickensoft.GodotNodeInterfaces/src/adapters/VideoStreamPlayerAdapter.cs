@@ -11,7 +11,14 @@ using System;
 public class VideoStreamPlayerAdapter : ControlAdapter, IVideoStreamPlayer {
   private readonly VideoStreamPlayer _node;
 
-  public VideoStreamPlayerAdapter(VideoStreamPlayer node) : base(node) { _node = node; }
+  public VideoStreamPlayerAdapter(Node node) : base(node) {
+    if (node is not VideoStreamPlayer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VideoStreamPlayer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The embedded audio track to play.</para>

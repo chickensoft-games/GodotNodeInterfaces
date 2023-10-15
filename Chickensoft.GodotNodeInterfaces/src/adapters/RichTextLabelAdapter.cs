@@ -13,7 +13,14 @@ using Godot.Collections;
 public class RichTextLabelAdapter : ControlAdapter, IRichTextLabel {
   private readonly RichTextLabel _node;
 
-  public RichTextLabelAdapter(RichTextLabel node) : base(node) { _node = node; }
+  public RichTextLabelAdapter(Node node) : base(node) {
+    if (node is not RichTextLabel typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RichTextLabel"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds an image's opening and closing tags to the tag stack, optionally providing a <paramref name="width" /> and <paramref name="height" /> to resize the image, a <paramref name="color" /> to tint the image and a <paramref name="region" /> to only use parts of the image.</para>

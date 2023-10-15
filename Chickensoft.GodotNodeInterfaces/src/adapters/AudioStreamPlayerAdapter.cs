@@ -9,7 +9,14 @@ using System;
 public class AudioStreamPlayerAdapter : NodeAdapter, IAudioStreamPlayer {
   private readonly AudioStreamPlayer _node;
 
-  public AudioStreamPlayerAdapter(AudioStreamPlayer node) : base(node) { _node = node; }
+  public AudioStreamPlayerAdapter(Node node) : base(node) {
+    if (node is not AudioStreamPlayer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AudioStreamPlayer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, audio plays when added to scene tree.</para>

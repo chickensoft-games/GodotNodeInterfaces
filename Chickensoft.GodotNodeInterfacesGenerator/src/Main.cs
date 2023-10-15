@@ -43,8 +43,13 @@ public static class GodotNodeInterfacesGenerator {
     var typesThatExtendGodotNode = godotAssembly.GetTypes()
       .Where(t => t.IsSubclassOf(typeof(Node)) || t == typeof(Node));
 
+    // map of types to the code that constructs an adapter of that type.
+    var adapterFactoryCases = new List<string>();
+
     foreach (var type in typesThatExtendGodotNode) {
       // Look at each type of Godot node.
+
+      var typeName = TypeName(type);
 
       _usings.Clear();
       _usings.Add("Godot");
@@ -193,7 +198,16 @@ public static class GodotNodeInterfacesGenerator {
         }
       }
 
+      var allBaseClasses = new List<Type>();
       var baseType = type.BaseType!;
+
+      var currentBaseType = baseType;
+      do {
+        allBaseClasses.Add(currentBaseType!);
+        currentBaseType = currentBaseType.BaseType;
+        if (currentBaseType == null) { break; }
+      } while (currentBaseType != typeof(Node));
+
       // see if base type also extends Godot.Node
       var extendsAnotherNode = baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node);
 
@@ -225,11 +239,17 @@ public static class GodotNodeInterfacesGenerator {
       var canBeInstantiated =
         !type.IsAbstract && hasPublicParameterlessConstructor;
 
+      if (canBeInstantiated) {
+        adapterFactoryCases.Add(
+          $"    [typeof({interfaceName})] = node => new {adapterName}(node)"
+        );
+      }
+
       var partialClassForVerification = $$"""
 
       // Apply interface to a Godot node implementation to make sure the
       // generated interface is correct.
-      internal partial class {{type.Name}}Node : {{TypeName(type)}}, {{interfaceName}} { }
+      internal partial class {{type.Name}}Node : {{typeName}}, {{interfaceName}} { }
 
       """;
 
@@ -250,9 +270,16 @@ public static class GodotNodeInterfacesGenerator {
       {{usings}}
       {{mainDocumentation}}
       public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
-        private readonly {{TypeName(type)}} _node;
+        private readonly {{typeName}} _node;
 
-        public {{adapterName}}({{TypeName(type)}} node){{adapterBaseCall}}{ _node = node; }
+        public {{adapterName}}(Node node){{adapterBaseCall}}{
+          if (node is not {{typeName}} typedNode) {
+            throw new System.InvalidCastException(
+              $"{node.GetType().Name} is not a {{typeName}}"
+            );
+          }
+          _node = typedNode;
+        }
 
       {{adapterMemberCode}}
       }
@@ -264,6 +291,34 @@ public static class GodotNodeInterfacesGenerator {
       var adapterFilePath = Path.Join(ADAPTERS_PATH, adapterFilename);
       File.WriteAllText(adapterFilePath, adapterContents);
     }
+
+    var adapterFactoryFilename = ADAPTERS_PATH + "/GodotNodes.cs";
+
+    var adapterFactoryCaseCode =
+      string.Join(",\n  ", adapterFactoryCases).TrimEnd();
+    var adapterFactoryContents = $$"""
+    namespace Chickensoft.GodotNodeInterfaces;
+
+    using System;
+    using System.Collections.Generic;
+    using Godot;
+
+    public static class GodotNodes {
+      private static readonly Dictionary<Type, Func<Node, IAdapter>> _adapters = new() {
+      {{adapterFactoryCaseCode}}
+      };
+
+      /// <summary>
+      /// Creates an adapter for the given Godot node. This will throw if the
+      /// incorrect adapter type was specified for the node.
+      /// </summary>
+      /// <typeparam name="T">Adapter type.</typeparam>
+      /// <param name="node">Godot node.</param>
+      public static T Adapt<T>(Node node) where T : class, INode => (T)_adapters[typeof(T)](node);
+    }
+    """;
+
+    File.WriteAllText(adapterFactoryFilename, adapterFactoryContents);
   }
 
   private static string GetId(MemberInfo type) =>

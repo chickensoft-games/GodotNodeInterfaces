@@ -7,7 +7,14 @@ using Godot;
 public class CanvasModulateAdapter : Node2DAdapter, ICanvasModulate {
   private readonly CanvasModulate _node;
 
-  public CanvasModulateAdapter(CanvasModulate node) : base(node) { _node = node; }
+  public CanvasModulateAdapter(Node node) : base(node) {
+    if (node is not CanvasModulate typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CanvasModulate"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The tint color to apply.</para>

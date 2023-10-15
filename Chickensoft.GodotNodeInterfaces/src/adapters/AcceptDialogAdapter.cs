@@ -8,7 +8,14 @@ using System;
 public class AcceptDialogAdapter : WindowAdapter, IAcceptDialog {
   private readonly AcceptDialog _node;
 
-  public AcceptDialogAdapter(AcceptDialog node) : base(node) { _node = node; }
+  public AcceptDialogAdapter(Node node) : base(node) {
+    if (node is not AcceptDialog typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AcceptDialog"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a button with label <paramref name="text" /> and a custom <paramref name="action" /> to the dialog and returns the created button. <paramref name="action" /> will be passed to the <see cref="AcceptDialog.CustomAction" /> signal when pressed.</para>

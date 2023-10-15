@@ -8,7 +8,14 @@ using System;
 public class PinJoint2DAdapter : Joint2DAdapter, IPinJoint2D {
   private readonly PinJoint2D _node;
 
-  public PinJoint2DAdapter(PinJoint2D node) : base(node) { _node = node; }
+  public PinJoint2DAdapter(Node node) : base(node) {
+    if (node is not PinJoint2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PinJoint2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the pin maximum and minimum rotation, defined by <see cref="PinJoint2D.AngularLimitLower" /> and <see cref="PinJoint2D.AngularLimitUpper" /> are applied.</para>

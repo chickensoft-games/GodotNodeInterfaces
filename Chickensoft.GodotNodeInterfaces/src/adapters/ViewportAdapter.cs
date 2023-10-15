@@ -13,7 +13,14 @@ using Godot.Collections;
 public class ViewportAdapter : NodeAdapter, IViewport {
   private readonly Viewport _node;
 
-  public ViewportAdapter(Viewport node) : base(node) { _node = node; }
+  public ViewportAdapter(Node node) : base(node) {
+    if (node is not Viewport typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Viewport"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the viewport will process 2D audio streams.</para>

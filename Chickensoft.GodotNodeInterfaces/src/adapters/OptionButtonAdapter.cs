@@ -11,7 +11,14 @@ using System;
 public class OptionButtonAdapter : ButtonAdapter, IOptionButton {
   private readonly OptionButton _node;
 
-  public OptionButtonAdapter(OptionButton node) : base(node) { _node = node; }
+  public OptionButtonAdapter(Node node) : base(node) {
+    if (node is not OptionButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a OptionButton"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds an item, with a <paramref name="texture" /> icon, text <paramref name="label" /> and (optionally) <paramref name="id" />. If no <paramref name="id" /> is passed, the item index will be used as the item's ID. New items are appended at the end.</para>

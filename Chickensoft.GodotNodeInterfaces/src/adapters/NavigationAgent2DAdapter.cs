@@ -10,7 +10,14 @@ using System;
 public class NavigationAgent2DAdapter : NodeAdapter, INavigationAgent2D {
   private readonly NavigationAgent2D _node;
 
-  public NavigationAgent2DAdapter(NavigationAgent2D node) : base(node) { _node = node; }
+  public NavigationAgent2DAdapter(Node node) : base(node) {
+    if (node is not NavigationAgent2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NavigationAgent2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c> the agent is registered for an RVO avoidance callback on the <see cref="NavigationServer2D" />. When <see cref="NavigationAgent2D.Velocity" /> is used and the processing is completed a <c>safe_velocity</c> Vector2 is received with a signal connection to <see cref="NavigationAgent2D.VelocityComputed" />. Avoidance processing with many registered agents has a significant performance cost and should only be enabled on agents that currently require it.</para>

@@ -7,7 +7,14 @@ using Godot;
 public class VBoxContainerAdapter : BoxContainerAdapter, IVBoxContainer {
   private readonly VBoxContainer _node;
 
-  public VBoxContainerAdapter(VBoxContainer node) : base(node) { _node = node; }
+  public VBoxContainerAdapter(Node node) : base(node) {
+    if (node is not VBoxContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VBoxContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

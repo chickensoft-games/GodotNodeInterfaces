@@ -9,7 +9,14 @@ using Godot;
 public class GpuParticlesAttractorBox3DAdapter : GpuParticlesAttractor3DAdapter, IGpuParticlesAttractorBox3D {
   private readonly GpuParticlesAttractorBox3D _node;
 
-  public GpuParticlesAttractorBox3DAdapter(GpuParticlesAttractorBox3D node) : base(node) { _node = node; }
+  public GpuParticlesAttractorBox3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesAttractorBox3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesAttractorBox3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The attractor box's size in 3D units.</para>

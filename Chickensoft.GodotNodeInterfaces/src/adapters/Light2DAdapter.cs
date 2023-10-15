@@ -8,7 +8,14 @@ using System;
 public class Light2DAdapter : Node2DAdapter, ILight2D {
   private readonly Light2D _node;
 
-  public Light2DAdapter(Light2D node) : base(node) { _node = node; }
+  public Light2DAdapter(Node node) : base(node) {
+    if (node is not Light2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Light2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The Light2D's blend mode. See <see cref="Light2D.BlendModeEnum" /> constants for values.</para>

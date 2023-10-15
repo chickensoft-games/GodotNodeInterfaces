@@ -8,7 +8,14 @@ using System;
 public class NinePatchRectAdapter : ControlAdapter, INinePatchRect {
   private readonly NinePatchRect _node;
 
-  public NinePatchRectAdapter(NinePatchRect node) : base(node) { _node = node; }
+  public NinePatchRectAdapter(Node node) : base(node) {
+    if (node is not NinePatchRect typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NinePatchRect"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The stretch mode to use for horizontal stretching/tiling. See <see cref="NinePatchRect.AxisStretchMode" /> for possible values.</para>

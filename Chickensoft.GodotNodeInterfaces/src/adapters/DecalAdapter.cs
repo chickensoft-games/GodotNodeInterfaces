@@ -13,7 +13,14 @@ using System;
 public class DecalAdapter : VisualInstance3DAdapter, IDecal {
   private readonly Decal _node;
 
-  public DecalAdapter(Decal node) : base(node) { _node = node; }
+  public DecalAdapter(Node node) : base(node) {
+    if (node is not Decal typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Decal"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Blends the albedo <see cref="Color" /> of the decal with albedo <see cref="Color" /> of the underlying mesh. This can be set to <c>0.0</c> to create a decal that only affects normal or ORM. In this case, an albedo texture is still required as its alpha channel will determine where the normal and ORM will be overridden. See also <see cref="Decal.Modulate" />.</para>

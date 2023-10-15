@@ -8,7 +8,14 @@ using System;
 public class ContainerAdapter : ControlAdapter, IContainer {
   private readonly Container _node;
 
-  public ContainerAdapter(Container node) : base(node) { _node = node; }
+  public ContainerAdapter(Node node) : base(node) {
+    if (node is not Container typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Container"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Implement to return a list of allowed horizontal <see cref="Control.SizeFlags" /> for child nodes. This doesn't technically prevent the usages of any other size flags, if your implementation requires that. This only limits the options available to the user in the Inspector dock.</para>

@@ -8,7 +8,14 @@ using System;
 public class SliderAdapter : RangeAdapter, ISlider {
   private readonly Slider _node;
 
-  public SliderAdapter(Slider node) : base(node) { _node = node; }
+  public SliderAdapter(Node node) : base(node) {
+    if (node is not Slider typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Slider"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the slider can be interacted with. If <c>false</c>, the value can be changed only by code.</para>

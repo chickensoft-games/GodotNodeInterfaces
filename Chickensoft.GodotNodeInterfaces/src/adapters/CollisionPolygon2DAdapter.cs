@@ -9,7 +9,14 @@ using System;
 public class CollisionPolygon2DAdapter : Node2DAdapter, ICollisionPolygon2D {
   private readonly CollisionPolygon2D _node;
 
-  public CollisionPolygon2DAdapter(CollisionPolygon2D node) : base(node) { _node = node; }
+  public CollisionPolygon2DAdapter(Node node) : base(node) {
+    if (node is not CollisionPolygon2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CollisionPolygon2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Collision build mode. Use one of the <see cref="CollisionPolygon2D.BuildModeEnum" /> constants.</para>

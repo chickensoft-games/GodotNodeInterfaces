@@ -7,7 +7,14 @@ using Godot;
 public class PanelContainerAdapter : ContainerAdapter, IPanelContainer {
   private readonly PanelContainer _node;
 
-  public PanelContainerAdapter(PanelContainer node) : base(node) { _node = node; }
+  public PanelContainerAdapter(Node node) : base(node) {
+    if (node is not PanelContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PanelContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

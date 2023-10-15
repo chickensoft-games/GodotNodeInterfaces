@@ -8,7 +8,14 @@ using System;
 public class AspectRatioContainerAdapter : ContainerAdapter, IAspectRatioContainer {
   private readonly AspectRatioContainer _node;
 
-  public AspectRatioContainerAdapter(AspectRatioContainer node) : base(node) { _node = node; }
+  public AspectRatioContainerAdapter(Node node) : base(node) {
+    if (node is not AspectRatioContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AspectRatioContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Specifies the horizontal relative position of child controls.</para>

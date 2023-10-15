@@ -10,7 +10,14 @@ using System;
 public class Line2DAdapter : Node2DAdapter, ILine2D {
   private readonly Line2D _node;
 
-  public Line2DAdapter(Line2D node) : base(node) { _node = node; }
+  public Line2DAdapter(Node node) : base(node) {
+    if (node is not Line2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Line2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a point with the specified <paramref name="position" /> relative to the polyline's own position. If no <paramref name="index" /> is provided, the new point will be added to the end of the points array.</para>

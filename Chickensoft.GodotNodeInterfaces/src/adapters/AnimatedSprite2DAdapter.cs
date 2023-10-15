@@ -8,7 +8,14 @@ using System;
 public class AnimatedSprite2DAdapter : Node2DAdapter, IAnimatedSprite2D {
   private readonly AnimatedSprite2D _node;
 
-  public AnimatedSprite2DAdapter(AnimatedSprite2D node) : base(node) { _node = node; }
+  public AnimatedSprite2DAdapter(Node node) : base(node) {
+    if (node is not AnimatedSprite2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AnimatedSprite2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The current animation from the <see cref="AnimatedSprite2D.SpriteFrames" /> resource. If this value is changed, the <see cref="AnimatedSprite2D.Frame" /> counter and the <see cref="AnimatedSprite2D.FrameProgress" /> are reset.</para>

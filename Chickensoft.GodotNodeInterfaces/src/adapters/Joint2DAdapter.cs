@@ -8,7 +8,14 @@ using System;
 public class Joint2DAdapter : Node2DAdapter, IJoint2D {
   private readonly Joint2D _node;
 
-  public Joint2DAdapter(Joint2D node) : base(node) { _node = node; }
+  public Joint2DAdapter(Node node) : base(node) {
+    if (node is not Joint2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Joint2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>When <see cref="Joint2D.NodeA" /> and <see cref="Joint2D.NodeB" /> move in different directions the <see cref="Joint2D.Bias" /> controls how fast the joint pulls them back to their original position. The lower the <see cref="Joint2D.Bias" /> the more the two bodies can pull on the joint.</para>

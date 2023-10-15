@@ -9,7 +9,14 @@ using System;
 public class PathFollow3DAdapter : Node3DAdapter, IPathFollow3D {
   private readonly PathFollow3D _node;
 
-  public PathFollow3DAdapter(PathFollow3D node) : base(node) { _node = node; }
+  public PathFollow3DAdapter(Node node) : base(node) {
+    if (node is not PathFollow3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PathFollow3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the position between two cached points is interpolated cubically, and linearly otherwise.</para>

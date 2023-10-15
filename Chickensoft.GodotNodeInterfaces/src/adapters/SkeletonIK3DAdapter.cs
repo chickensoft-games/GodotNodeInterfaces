@@ -23,7 +23,14 @@ using System;
 public class SkeletonIK3DAdapter : NodeAdapter, ISkeletonIK3D {
   private readonly SkeletonIK3D _node;
 
-  public SkeletonIK3DAdapter(SkeletonIK3D node) : base(node) { _node = node; }
+  public SkeletonIK3DAdapter(Node node) : base(node) {
+    if (node is not SkeletonIK3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SkeletonIK3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns the parent <see cref="Skeleton3D" /> Node that was present when SkeletonIK entered the <see cref="SceneTree" />. Returns null if the parent node was not a <see cref="Skeleton3D" /> Node when SkeletonIK3D entered the <see cref="SceneTree" />.</para>

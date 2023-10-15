@@ -10,7 +10,14 @@ using System;
 public class TimerAdapter : NodeAdapter, ITimer {
   private readonly Timer _node;
 
-  public TimerAdapter(Timer node) : base(node) { _node = node; }
+  public TimerAdapter(Node node) : base(node) {
+    if (node is not Timer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Timer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the timer will automatically start when entering the scene tree.</para>

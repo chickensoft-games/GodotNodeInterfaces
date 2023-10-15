@@ -10,7 +10,14 @@ using System;
 public class ColorPickerButtonAdapter : ButtonAdapter, IColorPickerButton {
   private readonly ColorPickerButton _node;
 
-  public ColorPickerButtonAdapter(ColorPickerButton node) : base(node) { _node = node; }
+  public ColorPickerButtonAdapter(Node node) : base(node) {
+    if (node is not ColorPickerButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ColorPickerButton"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The currently selected color.</para>

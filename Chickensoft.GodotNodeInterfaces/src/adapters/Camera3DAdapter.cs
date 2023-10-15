@@ -9,7 +9,14 @@ using Godot.Collections;
 public class Camera3DAdapter : Node3DAdapter, ICamera3D {
   private readonly Camera3D _node;
 
-  public Camera3DAdapter(Camera3D node) : base(node) { _node = node; }
+  public Camera3DAdapter(Node node) : base(node) {
+    if (node is not Camera3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Camera3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The <see cref="CameraAttributes" /> to use for this camera.</para>

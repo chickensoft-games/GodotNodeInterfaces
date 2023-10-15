@@ -9,7 +9,14 @@ using System;
 public class CollisionObject2DAdapter : Node2DAdapter, ICollisionObject2D {
   private readonly CollisionObject2D _node;
 
-  public CollisionObject2DAdapter(CollisionObject2D node) : base(node) { _node = node; }
+  public CollisionObject2DAdapter(Node node) : base(node) {
+    if (node is not CollisionObject2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CollisionObject2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Accepts unhandled <see cref="InputEvent" />s. <paramref name="shapeIdx" /> is the child index of the clicked <see cref="Shape2D" />. Connect to <see cref="CollisionObject2D.InputEvent" /> to easily pick up these events.</para>

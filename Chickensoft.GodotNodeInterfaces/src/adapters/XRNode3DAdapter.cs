@@ -8,7 +8,14 @@ using System;
 public class XRNode3DAdapter : Node3DAdapter, IXRNode3D {
   private readonly XRNode3D _node;
 
-  public XRNode3DAdapter(XRNode3D node) : base(node) { _node = node; }
+  public XRNode3DAdapter(Node node) : base(node) {
+    if (node is not XRNode3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a XRNode3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns <c>true</c> if the <see cref="XRNode3D.Tracker" /> has current tracking data for the <see cref="XRNode3D.Pose" /> being tracked.</para>

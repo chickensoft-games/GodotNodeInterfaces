@@ -8,7 +8,14 @@ using System;
 public class FlowContainerAdapter : ContainerAdapter, IFlowContainer {
   private readonly FlowContainer _node;
 
-  public FlowContainerAdapter(FlowContainer node) : base(node) { _node = node; }
+  public FlowContainerAdapter(Node node) : base(node) {
+    if (node is not FlowContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a FlowContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The alignment of the container's children (must be one of <see cref="FlowContainer.AlignmentMode.Begin" />, <see cref="FlowContainer.AlignmentMode.Center" />, or <see cref="FlowContainer.AlignmentMode.End" />).</para>

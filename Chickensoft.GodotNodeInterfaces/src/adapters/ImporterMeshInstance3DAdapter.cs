@@ -6,7 +6,14 @@ using System;
 public class ImporterMeshInstance3DAdapter : Node3DAdapter, IImporterMeshInstance3D {
   private readonly ImporterMeshInstance3D _node;
 
-  public ImporterMeshInstance3DAdapter(ImporterMeshInstance3D node) : base(node) { _node = node; }
+  public ImporterMeshInstance3DAdapter(Node node) : base(node) {
+    if (node is not ImporterMeshInstance3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ImporterMeshInstance3D"
+      );
+    }
+    _node = typedNode;
+  }
 
 
     public GeometryInstance3D.ShadowCastingSetting CastShadow { get => _node.CastShadow; set => _node.CastShadow = value; }

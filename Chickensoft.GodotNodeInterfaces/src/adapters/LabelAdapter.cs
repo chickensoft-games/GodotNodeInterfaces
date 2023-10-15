@@ -9,7 +9,14 @@ using Godot.Collections;
 public class LabelAdapter : ControlAdapter, ILabel {
   private readonly Label _node;
 
-  public LabelAdapter(Label node) : base(node) { _node = node; }
+  public LabelAdapter(Node node) : base(node) {
+    if (node is not Label typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Label"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If set to something other than <see cref="TextServer.AutowrapMode.Off" />, the text gets wrapped inside the node's bounding rectangle. If you resize the node, it will change its height automatically to show all the text. To see how each mode behaves, see <see cref="TextServer.AutowrapMode" />.</para>

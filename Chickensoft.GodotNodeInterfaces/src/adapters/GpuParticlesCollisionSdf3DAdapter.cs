@@ -13,7 +13,14 @@ using System;
 public class GpuParticlesCollisionSdf3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionSdf3D {
   private readonly GpuParticlesCollisionSdf3D _node;
 
-  public GpuParticlesCollisionSdf3DAdapter(GpuParticlesCollisionSdf3D node) : base(node) { _node = node; }
+  public GpuParticlesCollisionSdf3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesCollisionSdf3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesCollisionSdf3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The visual layers to account for when baking the particle collision SDF. Only <see cref="MeshInstance3D" />s whose <see cref="VisualInstance3D.Layers" /> match with this <see cref="GpuParticlesCollisionSdf3D.BakeMask" /> will be included in the generated particle collision SDF. By default, all objects are taken into account for the particle collision SDF baking.</para>

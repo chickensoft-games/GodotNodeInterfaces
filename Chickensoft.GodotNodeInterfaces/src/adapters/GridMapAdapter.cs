@@ -13,7 +13,14 @@ using Godot.Collections;
 public class GridMapAdapter : Node3DAdapter, IGridMap {
   private readonly GridMap _node;
 
-  public GridMapAdapter(GridMap node) : base(node) { _node = node; }
+  public GridMapAdapter(Node node) : base(node) {
+    if (node is not GridMap typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GridMap"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, this GridMap creates a navigation region for each cell that uses a <see cref="GridMap.MeshLibrary" /> item with a navigation mesh. The created navigation region will use the navigation layers bitmask assigned to the <see cref="MeshLibrary" />'s item.</para>

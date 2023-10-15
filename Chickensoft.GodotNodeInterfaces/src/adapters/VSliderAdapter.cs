@@ -7,7 +7,14 @@ using Godot;
 public class VSliderAdapter : SliderAdapter, IVSlider {
   private readonly VSlider _node;
 
-  public VSliderAdapter(VSlider node) : base(node) { _node = node; }
+  public VSliderAdapter(Node node) : base(node) {
+    if (node is not VSlider typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VSlider"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

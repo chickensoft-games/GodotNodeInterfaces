@@ -11,7 +11,14 @@ using System;
 public class AudioStreamPlayer3DAdapter : Node3DAdapter, IAudioStreamPlayer3D {
   private readonly AudioStreamPlayer3D _node;
 
-  public AudioStreamPlayer3DAdapter(AudioStreamPlayer3D node) : base(node) { _node = node; }
+  public AudioStreamPlayer3DAdapter(Node node) : base(node) {
+    if (node is not AudioStreamPlayer3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AudioStreamPlayer3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Determines which <see cref="Area3D" /> layers affect the sound for reverb and audio bus effects. Areas can be used to redirect <see cref="AudioStream" />s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.</para>

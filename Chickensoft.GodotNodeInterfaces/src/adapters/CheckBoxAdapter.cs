@@ -9,7 +9,14 @@ using Godot;
 public class CheckBoxAdapter : ButtonAdapter, ICheckBox {
   private readonly CheckBox _node;
 
-  public CheckBoxAdapter(CheckBox node) : base(node) { _node = node; }
+  public CheckBoxAdapter(Node node) : base(node) {
+    if (node is not CheckBox typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CheckBox"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

@@ -9,7 +9,14 @@ using System;
 public class AnimatableBody2DAdapter : StaticBody2DAdapter, IAnimatableBody2D {
   private readonly AnimatableBody2D _node;
 
-  public AnimatableBody2DAdapter(AnimatableBody2D node) : base(node) { _node = node; }
+  public AnimatableBody2DAdapter(Node node) : base(node) {
+    if (node is not AnimatableBody2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AnimatableBody2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the body's movement will be synchronized to the physics frame. This is useful when animating movement via <see cref="AnimationPlayer" />, for example on moving platforms. Do <b>not</b> use together with <see cref="PhysicsBody2D.MoveAndCollide(Godot.Vector2,System.Boolean,System.Single,System.Boolean)" />.</para>

@@ -8,7 +8,14 @@ using System;
 public class BoxContainerAdapter : ContainerAdapter, IBoxContainer {
   private readonly BoxContainer _node;
 
-  public BoxContainerAdapter(BoxContainer node) : base(node) { _node = node; }
+  public BoxContainerAdapter(Node node) : base(node) {
+    if (node is not BoxContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a BoxContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a <see cref="Control" /> node to the box as a spacer. If <paramref name="begin" /> is <c>true</c>, it will insert the <see cref="Control" /> node in front of all other children.</para>

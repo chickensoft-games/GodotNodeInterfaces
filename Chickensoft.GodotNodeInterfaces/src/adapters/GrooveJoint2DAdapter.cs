@@ -8,7 +8,14 @@ using System;
 public class GrooveJoint2DAdapter : Joint2DAdapter, IGrooveJoint2D {
   private readonly GrooveJoint2D _node;
 
-  public GrooveJoint2DAdapter(GrooveJoint2D node) : base(node) { _node = node; }
+  public GrooveJoint2DAdapter(Node node) : base(node) {
+    if (node is not GrooveJoint2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GrooveJoint2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The body B's initial anchor position defined by the joint's origin and a local offset <see cref="GrooveJoint2D.InitialOffset" /> along the joint's Y axis (along the groove).</para>

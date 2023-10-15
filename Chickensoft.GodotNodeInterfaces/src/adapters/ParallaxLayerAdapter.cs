@@ -9,7 +9,14 @@ using Godot;
 public class ParallaxLayerAdapter : Node2DAdapter, IParallaxLayer {
   private readonly ParallaxLayer _node;
 
-  public ParallaxLayerAdapter(ParallaxLayer node) : base(node) { _node = node; }
+  public ParallaxLayerAdapter(Node node) : base(node) {
+    if (node is not ParallaxLayer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ParallaxLayer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The ParallaxLayer's <see cref="Texture2D" /> repeating. Useful for creating an infinite scrolling background. If an axis is set to <c>0</c>, the <see cref="Texture2D" /> will not be repeated.</para>

@@ -9,7 +9,14 @@ using Godot.Collections;
 public class PhysicsBody2DAdapter : CollisionObject2DAdapter, IPhysicsBody2D {
   private readonly PhysicsBody2D _node;
 
-  public PhysicsBody2DAdapter(PhysicsBody2D node) : base(node) { _node = node; }
+  public PhysicsBody2DAdapter(Node node) : base(node) {
+    if (node is not PhysicsBody2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PhysicsBody2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a body to the list of bodies that this body can't collide with.</para>

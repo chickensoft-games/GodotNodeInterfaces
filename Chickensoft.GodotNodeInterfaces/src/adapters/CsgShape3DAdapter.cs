@@ -10,7 +10,14 @@ using Godot.Collections;
 public class CsgShape3DAdapter : GeometryInstance3DAdapter, ICsgShape3D {
   private readonly CsgShape3D _node;
 
-  public CsgShape3DAdapter(CsgShape3D node) : base(node) { _node = node; }
+  public CsgShape3DAdapter(Node node) : base(node) {
+    if (node is not CsgShape3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgShape3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Calculate tangents for the CSG shape which allows the use of normal maps. This is only applied on the root shape, this setting is ignored on any child.</para>

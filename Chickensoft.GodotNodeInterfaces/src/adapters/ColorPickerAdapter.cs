@@ -9,7 +9,14 @@ using System;
 public class ColorPickerAdapter : VBoxContainerAdapter, IColorPicker {
   private readonly ColorPicker _node;
 
-  public ColorPickerAdapter(ColorPicker node) : base(node) { _node = node; }
+  public ColorPickerAdapter(Node node) : base(node) {
+    if (node is not ColorPicker typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ColorPicker"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds the given color to a list of color presets. The presets are displayed in the color picker and the user will be able to select them.</para>

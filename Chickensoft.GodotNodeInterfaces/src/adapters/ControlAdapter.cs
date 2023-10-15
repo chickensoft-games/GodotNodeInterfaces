@@ -18,7 +18,14 @@ using Godot.Collections;
 public class ControlAdapter : CanvasItemAdapter, IControl {
   private readonly Control _node;
 
-  public ControlAdapter(Control node) : base(node) { _node = node; }
+  public ControlAdapter(Node node) : base(node) {
+    if (node is not Control typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Control"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Godot calls this method to test if <paramref name="data" /> from a control's <see cref="Control._GetDragData(Godot.Vector2)" /> can be dropped at <paramref name="atPosition" />. <paramref name="atPosition" /> is local to this control.</para>

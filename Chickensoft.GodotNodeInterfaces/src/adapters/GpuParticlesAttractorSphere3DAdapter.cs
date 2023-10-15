@@ -10,7 +10,14 @@ using System;
 public class GpuParticlesAttractorSphere3DAdapter : GpuParticlesAttractor3DAdapter, IGpuParticlesAttractorSphere3D {
   private readonly GpuParticlesAttractorSphere3D _node;
 
-  public GpuParticlesAttractorSphere3DAdapter(GpuParticlesAttractorSphere3D node) : base(node) { _node = node; }
+  public GpuParticlesAttractorSphere3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesAttractorSphere3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesAttractorSphere3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The attractor sphere's radius in 3D units.</para>

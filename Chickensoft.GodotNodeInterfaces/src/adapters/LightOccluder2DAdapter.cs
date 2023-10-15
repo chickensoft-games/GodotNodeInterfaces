@@ -8,7 +8,14 @@ using System;
 public class LightOccluder2DAdapter : Node2DAdapter, ILightOccluder2D {
   private readonly LightOccluder2D _node;
 
-  public LightOccluder2DAdapter(LightOccluder2D node) : base(node) { _node = node; }
+  public LightOccluder2DAdapter(Node node) : base(node) {
+    if (node is not LightOccluder2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a LightOccluder2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The <see cref="OccluderPolygon2D" /> used to compute the shadow.</para>

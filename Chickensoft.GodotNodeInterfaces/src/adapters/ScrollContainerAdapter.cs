@@ -8,7 +8,14 @@ using System;
 public class ScrollContainerAdapter : ContainerAdapter, IScrollContainer {
   private readonly ScrollContainer _node;
 
-  public ScrollContainerAdapter(ScrollContainer node) : base(node) { _node = node; }
+  public ScrollContainerAdapter(Node node) : base(node) {
+    if (node is not ScrollContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ScrollContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Ensures the given <paramref name="control" /> is visible (must be a direct or indirect child of the ScrollContainer). Used by <see cref="ScrollContainer.FollowFocus" />.</para>

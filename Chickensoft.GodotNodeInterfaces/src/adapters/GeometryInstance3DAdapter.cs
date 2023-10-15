@@ -8,7 +8,14 @@ using System;
 public class GeometryInstance3DAdapter : VisualInstance3DAdapter, IGeometryInstance3D {
   private readonly GeometryInstance3D _node;
 
-  public GeometryInstance3DAdapter(GeometryInstance3D node) : base(node) { _node = node; }
+  public GeometryInstance3DAdapter(Node node) : base(node) {
+    if (node is not GeometryInstance3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GeometryInstance3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The selected shadow casting flag. See <see cref="GeometryInstance3D.ShadowCastingSetting" /> for possible values.</para>

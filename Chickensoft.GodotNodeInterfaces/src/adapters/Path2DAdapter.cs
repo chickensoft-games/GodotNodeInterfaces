@@ -8,7 +8,14 @@ using Godot;
 public class Path2DAdapter : Node2DAdapter, IPath2D {
   private readonly Path2D _node;
 
-  public Path2DAdapter(Path2D node) : base(node) { _node = node; }
+  public Path2DAdapter(Node node) : base(node) {
+    if (node is not Path2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Path2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>A <see cref="Curve2D" /> describing the path.</para>

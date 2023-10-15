@@ -8,7 +8,14 @@ using System;
 public class MeshInstance3DAdapter : GeometryInstance3DAdapter, IMeshInstance3D {
   private readonly MeshInstance3D _node;
 
-  public MeshInstance3DAdapter(MeshInstance3D node) : base(node) { _node = node; }
+  public MeshInstance3DAdapter(Node node) : base(node) {
+    if (node is not MeshInstance3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MeshInstance3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>This helper creates a <see cref="StaticBody3D" /> child node with a <see cref="ConvexPolygonShape3D" /> collision shape calculated from the mesh geometry. It's mainly used for testing.</para>

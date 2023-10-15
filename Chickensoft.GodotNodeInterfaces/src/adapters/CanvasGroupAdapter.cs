@@ -22,7 +22,14 @@ using System;
 public class CanvasGroupAdapter : Node2DAdapter, ICanvasGroup {
   private readonly CanvasGroup _node;
 
-  public CanvasGroupAdapter(CanvasGroup node) : base(node) { _node = node; }
+  public CanvasGroupAdapter(Node node) : base(node) {
+    if (node is not CanvasGroup typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CanvasGroup"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Sets the size of the margin used to expand the clearing rect of this <see cref="CanvasGroup" />. This expands the area of the backbuffer that will be used by the <see cref="CanvasGroup" />. A smaller margin will reduce the area of the backbuffer used which can increase performance, however if <see cref="CanvasGroup.UseMipmaps" /> is enabled, a small margin may result in mipmap errors at the edge of the <see cref="CanvasGroup" />. Accordingly, this should be left as small as possible, but should be increased if artifacts appear along the edges of the canvas group.</para>

@@ -8,7 +8,14 @@ using Godot;
 public class Path3DAdapter : Node3DAdapter, IPath3D {
   private readonly Path3D _node;
 
-  public Path3DAdapter(Path3D node) : base(node) { _node = node; }
+  public Path3DAdapter(Node node) : base(node) {
+    if (node is not Path3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Path3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>A <see cref="Curve3D" /> describing the path.</para>

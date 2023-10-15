@@ -23,7 +23,14 @@ using System;
 public class TreeAdapter : ControlAdapter, ITree {
   private readonly Tree _node;
 
-  public TreeAdapter(Tree node) : base(node) { _node = node; }
+  public TreeAdapter(Node node) : base(node) {
+    if (node is not Tree typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Tree"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the currently selected cell may be selected again.</para>

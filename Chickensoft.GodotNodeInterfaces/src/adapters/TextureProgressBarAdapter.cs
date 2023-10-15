@@ -8,7 +8,14 @@ using System;
 public class TextureProgressBarAdapter : RangeAdapter, ITextureProgressBar {
   private readonly TextureProgressBar _node;
 
-  public TextureProgressBarAdapter(TextureProgressBar node) : base(node) { _node = node; }
+  public TextureProgressBarAdapter(Node node) : base(node) {
+    if (node is not TextureProgressBar typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TextureProgressBar"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The fill direction. See <see cref="TextureProgressBar.FillModeEnum" /> for possible values.</para>

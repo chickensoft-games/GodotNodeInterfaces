@@ -8,7 +8,14 @@ using System;
 public class Marker3DAdapter : Node3DAdapter, IMarker3D {
   private readonly Marker3D _node;
 
-  public Marker3DAdapter(Marker3D node) : base(node) { _node = node; }
+  public Marker3DAdapter(Node node) : base(node) {
+    if (node is not Marker3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Marker3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Size of the gizmo cross that appears in the editor.</para>

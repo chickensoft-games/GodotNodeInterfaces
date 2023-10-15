@@ -11,7 +11,14 @@ using System;
 public class NavigationObstacle2DAdapter : Node2DAdapter, INavigationObstacle2D {
   private readonly NavigationObstacle2D _node;
 
-  public NavigationObstacle2DAdapter(NavigationObstacle2D node) : base(node) { _node = node; }
+  public NavigationObstacle2DAdapter(Node node) : base(node) {
+    if (node is not NavigationObstacle2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NavigationObstacle2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c> the obstacle affects avoidance using agents.</para>

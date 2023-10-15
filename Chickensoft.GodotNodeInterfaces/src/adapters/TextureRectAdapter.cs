@@ -8,7 +8,14 @@ using System;
 public class TextureRectAdapter : ControlAdapter, ITextureRect {
   private readonly TextureRect _node;
 
-  public TextureRectAdapter(TextureRect node) : base(node) { _node = node; }
+  public TextureRectAdapter(Node node) : base(node) {
+    if (node is not TextureRect typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TextureRect"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Defines how minimum size is determined based on the texture's size. See <see cref="TextureRect.ExpandModeEnum" /> for options.</para>

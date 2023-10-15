@@ -13,7 +13,14 @@ using System;
 public class GpuParticlesCollision3DAdapter : VisualInstance3DAdapter, IGpuParticlesCollision3D {
   private readonly GpuParticlesCollision3D _node;
 
-  public GpuParticlesCollision3DAdapter(GpuParticlesCollision3D node) : base(node) { _node = node; }
+  public GpuParticlesCollision3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesCollision3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesCollision3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The particle rendering layers (<see cref="VisualInstance3D.Layers" />) that will be affected by the collision shape. By default, all particles that have <see cref="ParticleProcessMaterial.CollisionMode" /> set to <see cref="ParticleProcessMaterial.CollisionModeEnum.Rigid" /> or <see cref="ParticleProcessMaterial.CollisionModeEnum.HideOnContact" /> will be affected by a collision shape.</para>

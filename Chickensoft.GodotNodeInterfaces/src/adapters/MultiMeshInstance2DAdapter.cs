@@ -8,7 +8,14 @@ using Godot;
 public class MultiMeshInstance2DAdapter : Node2DAdapter, IMultiMeshInstance2D {
   private readonly MultiMeshInstance2D _node;
 
-  public MultiMeshInstance2DAdapter(MultiMeshInstance2D node) : base(node) { _node = node; }
+  public MultiMeshInstance2DAdapter(Node node) : base(node) {
+    if (node is not MultiMeshInstance2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MultiMeshInstance2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The <see cref="MultiMesh" /> that will be drawn by the <see cref="MultiMeshInstance2D" />.</para>

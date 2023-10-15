@@ -13,7 +13,14 @@ using System;
 public class LightmapGIAdapter : VisualInstance3DAdapter, ILightmapGI {
   private readonly LightmapGI _node;
 
-  public LightmapGIAdapter(LightmapGI node) : base(node) { _node = node; }
+  public LightmapGIAdapter(Node node) : base(node) {
+    if (node is not LightmapGI typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a LightmapGI"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The bias to use when computing shadows. Increasing <see cref="LightmapGI.Bias" /> can fix shadow acne on the resulting baked lightmap, but can introduce peter-panning (shadows not connecting to their casters). Real-time <see cref="Light3D" /> shadows are not affected by this <see cref="LightmapGI.Bias" /> property.</para>

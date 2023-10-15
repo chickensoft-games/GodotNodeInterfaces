@@ -12,7 +12,14 @@ using System;
 public class MultiplayerSynchronizerAdapter : NodeAdapter, IMultiplayerSynchronizer {
   private readonly MultiplayerSynchronizer _node;
 
-  public MultiplayerSynchronizerAdapter(MultiplayerSynchronizer node) : base(node) { _node = node; }
+  public MultiplayerSynchronizerAdapter(Node node) : base(node) {
+    if (node is not MultiplayerSynchronizer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MultiplayerSynchronizer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a peer visibility filter for this synchronizer.</para>

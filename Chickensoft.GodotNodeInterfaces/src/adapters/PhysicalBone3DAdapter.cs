@@ -8,7 +8,14 @@ using System;
 public class PhysicalBone3DAdapter : PhysicsBody3DAdapter, IPhysicalBone3D {
   private readonly PhysicalBone3D _node;
 
-  public PhysicalBone3DAdapter(PhysicalBone3D node) : base(node) { _node = node; }
+  public PhysicalBone3DAdapter(Node node) : base(node) {
+    if (node is not PhysicalBone3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PhysicalBone3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Called during physics processing, allowing you to read and safely modify the simulation state for the object. By default, it works in addition to the usual physics behavior, but the <see cref="PhysicalBone3D.CustomIntegrator" /> property allows you to disable the default behavior and do fully custom force integration for a body.</para>

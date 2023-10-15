@@ -8,7 +8,14 @@ using System;
 public class Marker2DAdapter : Node2DAdapter, IMarker2D {
   private readonly Marker2D _node;
 
-  public Marker2DAdapter(Marker2D node) : base(node) { _node = node; }
+  public Marker2DAdapter(Node node) : base(node) {
+    if (node is not Marker2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Marker2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Size of the gizmo cross that appears in the editor.</para>

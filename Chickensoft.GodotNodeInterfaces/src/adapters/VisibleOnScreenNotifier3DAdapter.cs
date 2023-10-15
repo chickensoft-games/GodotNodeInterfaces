@@ -10,7 +10,14 @@ using System;
 public class VisibleOnScreenNotifier3DAdapter : VisualInstance3DAdapter, IVisibleOnScreenNotifier3D {
   private readonly VisibleOnScreenNotifier3D _node;
 
-  public VisibleOnScreenNotifier3DAdapter(VisibleOnScreenNotifier3D node) : base(node) { _node = node; }
+  public VisibleOnScreenNotifier3DAdapter(Node node) : base(node) {
+    if (node is not VisibleOnScreenNotifier3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VisibleOnScreenNotifier3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The VisibleOnScreenNotifier3D's bounding box.</para>

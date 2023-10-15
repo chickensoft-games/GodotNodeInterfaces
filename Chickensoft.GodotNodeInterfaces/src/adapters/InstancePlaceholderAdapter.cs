@@ -10,7 +10,14 @@ using Godot.Collections;
 public class InstancePlaceholderAdapter : NodeAdapter, IInstancePlaceholder {
   private readonly InstancePlaceholder _node;
 
-  public InstancePlaceholderAdapter(InstancePlaceholder node) : base(node) { _node = node; }
+  public InstancePlaceholderAdapter(Node node) : base(node) {
+    if (node is not InstancePlaceholder typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a InstancePlaceholder"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Call this method to actually load in the node. The created node will be placed as a sibling <i>above</i> the <see cref="InstancePlaceholder" /> in the scene tree. The <see cref="Node" />'s reference is also returned for convenience.</para>

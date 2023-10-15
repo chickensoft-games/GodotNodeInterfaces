@@ -11,7 +11,14 @@ using System;
 public class RayCast3DAdapter : Node3DAdapter, IRayCast3D {
   private readonly RayCast3D _node;
 
-  public RayCast3DAdapter(RayCast3D node) : base(node) { _node = node; }
+  public RayCast3DAdapter(Node node) : base(node) {
+    if (node is not RayCast3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RayCast3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a collision exception so the ray does not report collisions with the specified <see cref="CollisionObject3D" /> node.</para>

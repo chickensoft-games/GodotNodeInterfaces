@@ -9,7 +9,14 @@ using System;
 public class CpuParticles3DAdapter : GeometryInstance3DAdapter, ICpuParticles3D {
   private readonly CpuParticles3D _node;
 
-  public CpuParticles3DAdapter(CpuParticles3D node) : base(node) { _node = node; }
+  public CpuParticles3DAdapter(Node node) : base(node) {
+    if (node is not CpuParticles3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CpuParticles3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Number of particles emitted in one emission cycle.</para>

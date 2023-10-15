@@ -13,7 +13,14 @@ using Godot.Collections;
 public class RigidBody3DAdapter : PhysicsBody3DAdapter, IRigidBody3D {
   private readonly RigidBody3D _node;
 
-  public RigidBody3DAdapter(RigidBody3D node) : base(node) { _node = node; }
+  public RigidBody3DAdapter(Node node) : base(node) {
+    if (node is not RigidBody3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RigidBody3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Called during physics processing, allowing you to read and safely modify the simulation state for the object. By default, it works in addition to the usual physics behavior, but the <see cref="RigidBody3D.CustomIntegrator" /> property allows you to disable the default behavior and do fully custom force integration for a body.</para>

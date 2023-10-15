@@ -7,7 +7,14 @@ using Godot;
 public class HSliderAdapter : SliderAdapter, IHSlider {
   private readonly HSlider _node;
 
-  public HSliderAdapter(HSlider node) : base(node) { _node = node; }
+  public HSliderAdapter(Node node) : base(node) {
+    if (node is not HSlider typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a HSlider"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

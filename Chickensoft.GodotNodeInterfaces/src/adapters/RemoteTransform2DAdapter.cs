@@ -9,7 +9,14 @@ using System;
 public class RemoteTransform2DAdapter : Node2DAdapter, IRemoteTransform2D {
   private readonly RemoteTransform2D _node;
 
-  public RemoteTransform2DAdapter(RemoteTransform2D node) : base(node) { _node = node; }
+  public RemoteTransform2DAdapter(Node node) : base(node) {
+    if (node is not RemoteTransform2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RemoteTransform2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para><see cref="RemoteTransform2D" /> caches the remote node. It may not notice if the remote node disappears; <see cref="RemoteTransform2D.ForceUpdateCache" /> forces it to update the cache again.</para>

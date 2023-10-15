@@ -11,7 +11,14 @@ using System;
 public class GraphNodeAdapter : GraphElementAdapter, IGraphNode {
   private readonly GraphNode _node;
 
-  public GraphNodeAdapter(GraphNode node) : base(node) { _node = node; }
+  public GraphNodeAdapter(Node node) : base(node) {
+    if (node is not GraphNode typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GraphNode"
+      );
+    }
+    _node = typedNode;
+  }
 
 
     public void _DrawPort(int slotIndex, Vector2I position, bool left, Color color) => _node._DrawPort(slotIndex, position, left, color);

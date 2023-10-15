@@ -9,7 +9,14 @@ using System;
 public class Skeleton2DAdapter : Node2DAdapter, ISkeleton2D {
   private readonly Skeleton2D _node;
 
-  public Skeleton2DAdapter(Skeleton2D node) : base(node) { _node = node; }
+  public Skeleton2DAdapter(Node node) : base(node) {
+    if (node is not Skeleton2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Skeleton2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Executes all the modifications on the <see cref="SkeletonModificationStack2D" />, if the Skeleton2D has one assigned.</para>

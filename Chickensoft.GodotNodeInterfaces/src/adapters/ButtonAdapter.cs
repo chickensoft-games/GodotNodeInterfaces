@@ -24,7 +24,14 @@ using System;
 public class ButtonAdapter : BaseButtonAdapter, IButton {
   private readonly Button _node;
 
-  public ButtonAdapter(Button node) : base(node) { _node = node; }
+  public ButtonAdapter(Node node) : base(node) {
+    if (node is not Button typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Button"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Text alignment policy for the button's text, use one of the <see cref="HorizontalAlignment" /> constants.</para>

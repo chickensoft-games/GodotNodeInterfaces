@@ -9,7 +9,14 @@ using System;
 public class AudioListener2DAdapter : Node2DAdapter, IAudioListener2D {
   private readonly AudioListener2D _node;
 
-  public AudioListener2DAdapter(AudioListener2D node) : base(node) { _node = node; }
+  public AudioListener2DAdapter(Node node) : base(node) {
+    if (node is not AudioListener2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AudioListener2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Disables the <see cref="AudioListener2D" />. If it's not set as current, this method will have no effect.</para>

@@ -11,7 +11,14 @@ using System;
 public class GpuParticlesCollisionSphere3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionSphere3D {
   private readonly GpuParticlesCollisionSphere3D _node;
 
-  public GpuParticlesCollisionSphere3DAdapter(GpuParticlesCollisionSphere3D node) : base(node) { _node = node; }
+  public GpuParticlesCollisionSphere3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesCollisionSphere3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesCollisionSphere3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The collision sphere's radius in 3D units.</para>

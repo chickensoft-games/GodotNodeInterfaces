@@ -9,7 +9,14 @@ using System;
 public class CsgPolygon3DAdapter : CsgPrimitive3DAdapter, ICsgPolygon3D {
   private readonly CsgPolygon3D _node;
 
-  public CsgPolygon3DAdapter(CsgPolygon3D node) : base(node) { _node = node; }
+  public CsgPolygon3DAdapter(Node node) : base(node) {
+    if (node is not CsgPolygon3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgPolygon3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>When <see cref="CsgPolygon3D.Mode" /> is <see cref="CsgPolygon3D.ModeEnum.Depth" />, the depth of the extrusion.</para>

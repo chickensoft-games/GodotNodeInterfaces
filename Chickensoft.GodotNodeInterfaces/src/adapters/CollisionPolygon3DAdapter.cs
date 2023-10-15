@@ -9,7 +9,14 @@ using System;
 public class CollisionPolygon3DAdapter : Node3DAdapter, ICollisionPolygon3D {
   private readonly CollisionPolygon3D _node;
 
-  public CollisionPolygon3DAdapter(CollisionPolygon3D node) : base(node) { _node = node; }
+  public CollisionPolygon3DAdapter(Node node) : base(node) {
+    if (node is not CollisionPolygon3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CollisionPolygon3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Length that the resulting collision extends in either direction perpendicular to its 2D polygon.</para>

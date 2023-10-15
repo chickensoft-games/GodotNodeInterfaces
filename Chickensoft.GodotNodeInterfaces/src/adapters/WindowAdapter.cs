@@ -9,7 +9,14 @@ using System;
 public class WindowAdapter : ViewportAdapter, IWindow {
   private readonly Window _node;
 
-  public WindowAdapter(Window node) : base(node) { _node = node; }
+  public WindowAdapter(Node node) : base(node) {
+    if (node is not Window typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Window"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Virtual method to be implemented by the user. Overrides the value returned by <see cref="Window.GetContentsMinimumSize" />.</para>

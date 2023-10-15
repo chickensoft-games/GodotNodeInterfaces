@@ -9,7 +9,14 @@ using System;
 public class CollisionShape3DAdapter : Node3DAdapter, ICollisionShape3D {
   private readonly CollisionShape3D _node;
 
-  public CollisionShape3DAdapter(CollisionShape3D node) : base(node) { _node = node; }
+  public CollisionShape3DAdapter(Node node) : base(node) {
+    if (node is not CollisionShape3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CollisionShape3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>A disabled collision shape has no effect in the world.</para>

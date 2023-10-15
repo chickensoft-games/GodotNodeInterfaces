@@ -9,7 +9,14 @@ using System;
 public class PathFollow2DAdapter : Node2DAdapter, IPathFollow2D {
   private readonly PathFollow2D _node;
 
-  public PathFollow2DAdapter(PathFollow2D node) : base(node) { _node = node; }
+  public PathFollow2DAdapter(Node node) : base(node) {
+    if (node is not PathFollow2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PathFollow2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the position between two cached points is interpolated cubically, and linearly otherwise.</para>

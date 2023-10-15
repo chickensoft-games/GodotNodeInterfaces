@@ -12,7 +12,14 @@ using System;
 public class GpuParticlesCollisionHeightField3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionHeightField3D {
   private readonly GpuParticlesCollisionHeightField3D _node;
 
-  public GpuParticlesCollisionHeightField3DAdapter(GpuParticlesCollisionHeightField3D node) : base(node) { _node = node; }
+  public GpuParticlesCollisionHeightField3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesCollisionHeightField3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesCollisionHeightField3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the <see cref="GpuParticlesCollisionHeightField3D" /> will follow the current camera in global space. The <see cref="GpuParticlesCollisionHeightField3D" /> does not need to be a child of the <see cref="Camera3D" /> node for this to work.</para>

@@ -10,7 +10,14 @@ using System;
 public class SpotLight3DAdapter : Light3DAdapter, ISpotLight3D {
   private readonly SpotLight3D _node;
 
-  public SpotLight3DAdapter(SpotLight3D node) : base(node) { _node = node; }
+  public SpotLight3DAdapter(Node node) : base(node) {
+    if (node is not SpotLight3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SpotLight3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The spotlight's angle in degrees.</para>

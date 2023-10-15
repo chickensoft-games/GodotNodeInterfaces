@@ -8,7 +8,14 @@ using System;
 public class Light3DAdapter : VisualInstance3DAdapter, ILight3D {
   private readonly Light3D _node;
 
-  public Light3DAdapter(Light3D node) : base(node) { _node = node; }
+  public Light3DAdapter(Node node) : base(node) {
+    if (node is not Light3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Light3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The distance from the camera at which the light begins to fade away (in 3D units).</para>

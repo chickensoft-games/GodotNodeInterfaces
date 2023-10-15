@@ -9,7 +9,14 @@ using Godot;
 public class StaticBody3DAdapter : PhysicsBody3DAdapter, IStaticBody3D {
   private readonly StaticBody3D _node;
 
-  public StaticBody3DAdapter(StaticBody3D node) : base(node) { _node = node; }
+  public StaticBody3DAdapter(Node node) : base(node) {
+    if (node is not StaticBody3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a StaticBody3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The body's constant angular velocity. This does not rotate the body, but affects touching bodies, as if it were rotating.</para>

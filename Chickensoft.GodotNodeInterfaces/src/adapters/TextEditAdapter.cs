@@ -11,7 +11,14 @@ using Godot.Collections;
 public class TextEditAdapter : ControlAdapter, ITextEdit {
   private readonly TextEdit _node;
 
-  public TextEditAdapter(TextEdit node) : base(node) { _node = node; }
+  public TextEditAdapter(Node node) : base(node) {
+    if (node is not TextEdit typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TextEdit"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Override this method to define what happens when the user presses the backspace key.</para>

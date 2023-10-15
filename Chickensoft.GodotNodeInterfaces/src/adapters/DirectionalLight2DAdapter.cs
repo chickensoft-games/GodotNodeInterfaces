@@ -9,7 +9,14 @@ using System;
 public class DirectionalLight2DAdapter : Light2DAdapter, IDirectionalLight2D {
   private readonly DirectionalLight2D _node;
 
-  public DirectionalLight2DAdapter(DirectionalLight2D node) : base(node) { _node = node; }
+  public DirectionalLight2DAdapter(Node node) : base(node) {
+    if (node is not DirectionalLight2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a DirectionalLight2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The height of the light. Used with 2D normal mapping. Ranges from 0 (parallel to the plane) to 1 (perpendicular to the plane).</para>

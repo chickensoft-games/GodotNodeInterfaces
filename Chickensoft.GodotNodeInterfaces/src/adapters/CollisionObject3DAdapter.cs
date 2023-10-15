@@ -9,7 +9,14 @@ using System;
 public class CollisionObject3DAdapter : Node3DAdapter, ICollisionObject3D {
   private readonly CollisionObject3D _node;
 
-  public CollisionObject3DAdapter(CollisionObject3D node) : base(node) { _node = node; }
+  public CollisionObject3DAdapter(Node node) : base(node) {
+    if (node is not CollisionObject3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CollisionObject3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Receives unhandled <see cref="InputEvent" />s. <paramref name="position" /> is the location in world space of the mouse pointer on the surface of the shape with index <paramref name="shapeIdx" /> and <paramref name="normal" /> is the normal vector of the surface at that point. Connect to the <see cref="CollisionObject3D.InputEvent" /> signal to easily pick up these events.</para>

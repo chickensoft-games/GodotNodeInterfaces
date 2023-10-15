@@ -8,7 +8,14 @@ using System;
 public class Node2DAdapter : CanvasItemAdapter, INode2D {
   private readonly Node2D _node;
 
-  public Node2DAdapter(Node2D node) : base(node) { _node = node; }
+  public Node2DAdapter(Node node) : base(node) {
+    if (node is not Node2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Node2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Multiplies the current scale by the <paramref name="ratio" /> vector.</para>

@@ -13,7 +13,14 @@ using Godot.Collections;
 public class RigidBody2DAdapter : PhysicsBody2DAdapter, IRigidBody2D {
   private readonly RigidBody2D _node;
 
-  public RigidBody2DAdapter(RigidBody2D node) : base(node) { _node = node; }
+  public RigidBody2DAdapter(Node node) : base(node) {
+    if (node is not RigidBody2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RigidBody2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Allows you to read and safely modify the simulation state for the object. Use this instead of <see cref="Node._PhysicsProcess(System.Double)" /> if you need to directly change the body's <c>position</c> or other physics properties. By default, it works in addition to the usual physics behavior, but <see cref="RigidBody2D.CustomIntegrator" /> allows you to disable the default behavior and write custom force integration for a body.</para>

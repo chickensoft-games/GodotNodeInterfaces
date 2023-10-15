@@ -9,7 +9,14 @@ using System;
 public class ParallaxBackgroundAdapter : CanvasLayerAdapter, IParallaxBackground {
   private readonly ParallaxBackground _node;
 
-  public ParallaxBackgroundAdapter(ParallaxBackground node) : base(node) { _node = node; }
+  public ParallaxBackgroundAdapter(Node node) : base(node) {
+    if (node is not ParallaxBackground typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ParallaxBackground"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The base position offset for all <see cref="ParallaxLayer" /> children.</para>

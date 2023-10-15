@@ -8,7 +8,14 @@ using Godot;
 public class CsgBox3DAdapter : CsgPrimitive3DAdapter, ICsgBox3D {
   private readonly CsgBox3D _node;
 
-  public CsgBox3DAdapter(CsgBox3D node) : base(node) { _node = node; }
+  public CsgBox3DAdapter(Node node) : base(node) {
+    if (node is not CsgBox3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgBox3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The material used to render the box.</para>

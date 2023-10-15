@@ -10,7 +10,14 @@ using Godot.Collections;
 public class AnimationMixerAdapter : NodeAdapter, IAnimationMixer {
   private readonly AnimationMixer _node;
 
-  public AnimationMixerAdapter(AnimationMixer node) : base(node) { _node = node; }
+  public AnimationMixerAdapter(Node node) : base(node) {
+    if (node is not AnimationMixer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AnimationMixer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>A virtual function for processing after key getting during playback.</para>

@@ -8,7 +8,14 @@ using System;
 public class NavigationLink3DAdapter : Node3DAdapter, INavigationLink3D {
   private readonly NavigationLink3D _node;
 
-  public NavigationLink3DAdapter(NavigationLink3D node) : base(node) { _node = node; }
+  public NavigationLink3DAdapter(Node node) : base(node) {
+    if (node is not NavigationLink3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NavigationLink3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Whether this link can be traveled in both directions or only from <see cref="NavigationLink3D.StartPosition" /> to <see cref="NavigationLink3D.EndPosition" />.</para>

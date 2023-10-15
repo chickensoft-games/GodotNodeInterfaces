@@ -8,7 +8,14 @@ using System;
 public class CenterContainerAdapter : ContainerAdapter, ICenterContainer {
   private readonly CenterContainer _node;
 
-  public CenterContainerAdapter(CenterContainer node) : base(node) { _node = node; }
+  public CenterContainerAdapter(Node node) : base(node) {
+    if (node is not CenterContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CenterContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, centers children relative to the <see cref="CenterContainer" />'s top left corner.</para>

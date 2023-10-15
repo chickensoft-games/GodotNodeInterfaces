@@ -10,7 +10,14 @@ using Godot.Collections;
 public class SoftBody3DAdapter : MeshInstance3DAdapter, ISoftBody3D {
   private readonly SoftBody3D _node;
 
-  public SoftBody3DAdapter(SoftBody3D node) : base(node) { _node = node; }
+  public SoftBody3DAdapter(Node node) : base(node) {
+    if (node is not SoftBody3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SoftBody3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a body to the list of bodies that this body can't collide with.</para>

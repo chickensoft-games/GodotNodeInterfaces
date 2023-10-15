@@ -11,7 +11,14 @@ using Godot.Collections;
 public class ShapeCast3DAdapter : Node3DAdapter, IShapeCast3D {
   private readonly ShapeCast3D _node;
 
-  public ShapeCast3DAdapter(ShapeCast3D node) : base(node) { _node = node; }
+  public ShapeCast3DAdapter(Node node) : base(node) {
+    if (node is not ShapeCast3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ShapeCast3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a collision exception so the shape does not report collisions with the specified <see cref="CollisionObject3D" /> node.</para>

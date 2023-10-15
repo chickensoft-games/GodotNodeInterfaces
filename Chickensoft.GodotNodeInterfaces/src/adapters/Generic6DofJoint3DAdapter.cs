@@ -9,7 +9,14 @@ using System;
 public class Generic6DofJoint3DAdapter : Joint3DAdapter, IGeneric6DofJoint3D {
   private readonly Generic6DofJoint3D _node;
 
-  public Generic6DofJoint3DAdapter(Generic6DofJoint3D node) : base(node) { _node = node; }
+  public Generic6DofJoint3DAdapter(Node node) : base(node) {
+    if (node is not Generic6DofJoint3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Generic6DofJoint3D"
+      );
+    }
+    _node = typedNode;
+  }
 
 
     public bool GetFlagX(Generic6DofJoint3D.Flag flag) => _node.GetFlagX(flag);

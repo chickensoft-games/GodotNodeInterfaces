@@ -8,7 +8,14 @@ using System;
 public class AnimatedSprite3DAdapter : SpriteBase3DAdapter, IAnimatedSprite3D {
   private readonly AnimatedSprite3D _node;
 
-  public AnimatedSprite3DAdapter(AnimatedSprite3D node) : base(node) { _node = node; }
+  public AnimatedSprite3DAdapter(Node node) : base(node) {
+    if (node is not AnimatedSprite3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AnimatedSprite3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The current animation from the <see cref="AnimatedSprite3D.SpriteFrames" /> resource. If this value is changed, the <see cref="AnimatedSprite3D.Frame" /> counter and the <see cref="AnimatedSprite3D.FrameProgress" /> are reset.</para>

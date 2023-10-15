@@ -8,7 +8,14 @@ using System;
 public class ConeTwistJoint3DAdapter : Joint3DAdapter, IConeTwistJoint3D {
   private readonly ConeTwistJoint3D _node;
 
-  public ConeTwistJoint3DAdapter(ConeTwistJoint3D node) : base(node) { _node = node; }
+  public ConeTwistJoint3DAdapter(Node node) : base(node) {
+    if (node is not ConeTwistJoint3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ConeTwistJoint3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The speed with which the swing or twist will take place.</para>

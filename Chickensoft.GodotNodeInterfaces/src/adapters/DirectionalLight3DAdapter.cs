@@ -8,7 +8,14 @@ using System;
 public class DirectionalLight3DAdapter : Light3DAdapter, IDirectionalLight3D {
   private readonly DirectionalLight3D _node;
 
-  public DirectionalLight3DAdapter(DirectionalLight3D node) : base(node) { _node = node; }
+  public DirectionalLight3DAdapter(Node node) : base(node) {
+    if (node is not DirectionalLight3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a DirectionalLight3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when <see cref="DirectionalLight3D.DirectionalShadowMode" /> is <see cref="DirectionalLight3D.ShadowMode.Orthogonal" />.</para>

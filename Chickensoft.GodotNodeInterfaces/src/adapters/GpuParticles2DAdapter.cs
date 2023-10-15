@@ -10,7 +10,14 @@ using System;
 public class GpuParticles2DAdapter : Node2DAdapter, IGpuParticles2D {
   private readonly GpuParticles2D _node;
 
-  public GpuParticles2DAdapter(GpuParticles2D node) : base(node) { _node = node; }
+  public GpuParticles2DAdapter(Node node) : base(node) {
+    if (node is not GpuParticles2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticles2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Number of particles emitted in one emission cycle.</para>

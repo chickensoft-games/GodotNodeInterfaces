@@ -11,7 +11,14 @@ using Godot.Collections;
 public class Area3DAdapter : CollisionObject3DAdapter, IArea3D {
   private readonly Area3D _node;
 
-  public Area3DAdapter(Area3D node) : base(node) { _node = node; }
+  public Area3DAdapter(Node node) : base(node) {
+    if (node is not Area3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Area3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.</para>

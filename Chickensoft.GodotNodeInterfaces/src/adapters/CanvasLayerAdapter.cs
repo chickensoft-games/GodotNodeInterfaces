@@ -11,7 +11,14 @@ using System;
 public class CanvasLayerAdapter : NodeAdapter, ICanvasLayer {
   private readonly CanvasLayer _node;
 
-  public CanvasLayerAdapter(CanvasLayer node) : base(node) { _node = node; }
+  public CanvasLayerAdapter(Node node) : base(node) {
+    if (node is not CanvasLayer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CanvasLayer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The custom <see cref="Viewport" /> node assigned to the <see cref="CanvasLayer" />. If <c>null</c>, uses the default viewport instead.</para>

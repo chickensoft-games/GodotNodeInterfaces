@@ -9,7 +9,14 @@ using Godot;
 public class FogVolumeAdapter : VisualInstance3DAdapter, IFogVolume {
   private readonly FogVolume _node;
 
-  public FogVolumeAdapter(FogVolume node) : base(node) { _node = node; }
+  public FogVolumeAdapter(Node node) : base(node) {
+    if (node is not FogVolume typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a FogVolume"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The <see cref="Material" /> used by the <see cref="FogVolume" />. Can be either a built-in <see cref="FogMaterial" /> or a custom <see cref="ShaderMaterial" />.</para>

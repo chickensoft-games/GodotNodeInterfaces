@@ -8,7 +8,14 @@ using System;
 public class RangeAdapter : ControlAdapter, IRange {
   private readonly Godot.Range _node;
 
-  public RangeAdapter(Godot.Range node) : base(node) { _node = node; }
+  public RangeAdapter(Node node) : base(node) {
+    if (node is not Godot.Range typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Godot.Range"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Called when the <see cref="Range" />'s value is changed (following the same conditions as <see cref="Range.ValueChanged" />).</para>

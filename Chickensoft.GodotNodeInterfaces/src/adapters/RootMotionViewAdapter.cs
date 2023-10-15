@@ -9,7 +9,14 @@ using System;
 public class RootMotionViewAdapter : VisualInstance3DAdapter, IRootMotionView {
   private readonly RootMotionView _node;
 
-  public RootMotionViewAdapter(RootMotionView node) : base(node) { _node = node; }
+  public RootMotionViewAdapter(Node node) : base(node) {
+    if (node is not RootMotionView typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RootMotionView"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Path to an <see cref="AnimationMixer" /> node to use as a basis for root motion.</para>

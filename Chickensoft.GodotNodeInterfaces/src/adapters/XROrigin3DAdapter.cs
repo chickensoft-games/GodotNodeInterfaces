@@ -11,7 +11,14 @@ using System;
 public class XROrigin3DAdapter : Node3DAdapter, IXROrigin3D {
   private readonly XROrigin3D _node;
 
-  public XROrigin3DAdapter(XROrigin3D node) : base(node) { _node = node; }
+  public XROrigin3DAdapter(Node node) : base(node) {
+    if (node is not XROrigin3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a XROrigin3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Is this XROrigin3D node the current origin used by the <see cref="XRServer" />?</para>

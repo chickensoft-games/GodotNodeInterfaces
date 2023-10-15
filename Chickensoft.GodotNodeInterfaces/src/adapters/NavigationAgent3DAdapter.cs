@@ -10,7 +10,14 @@ using System;
 public class NavigationAgent3DAdapter : NodeAdapter, INavigationAgent3D {
   private readonly NavigationAgent3D _node;
 
-  public NavigationAgent3DAdapter(NavigationAgent3D node) : base(node) { _node = node; }
+  public NavigationAgent3DAdapter(Node node) : base(node) {
+    if (node is not NavigationAgent3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NavigationAgent3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c> the agent is registered for an RVO avoidance callback on the <see cref="NavigationServer3D" />. When <see cref="NavigationAgent3D.Velocity" /> is set and the processing is completed a <c>safe_velocity</c> Vector3 is received with a signal connection to <see cref="NavigationAgent3D.VelocityComputed" />. Avoidance processing with many registered agents has a significant performance cost and should only be enabled on agents that currently require it.</para>

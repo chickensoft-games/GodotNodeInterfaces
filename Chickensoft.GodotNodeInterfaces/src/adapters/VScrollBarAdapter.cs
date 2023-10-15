@@ -7,7 +7,14 @@ using Godot;
 public class VScrollBarAdapter : ScrollBarAdapter, IVScrollBar {
   private readonly VScrollBar _node;
 
-  public VScrollBarAdapter(VScrollBar node) : base(node) { _node = node; }
+  public VScrollBarAdapter(Node node) : base(node) {
+    if (node is not VScrollBar typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VScrollBar"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

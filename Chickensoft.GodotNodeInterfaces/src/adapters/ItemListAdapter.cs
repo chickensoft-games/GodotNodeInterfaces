@@ -12,7 +12,14 @@ using System;
 public class ItemListAdapter : ControlAdapter, IItemList {
   private readonly ItemList _node;
 
-  public ItemListAdapter(ItemList node) : base(node) { _node = node; }
+  public ItemListAdapter(Node node) : base(node) {
+    if (node is not ItemList typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ItemList"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds an item to the item list with no text, only an icon. Returns the index of an added item.</para>

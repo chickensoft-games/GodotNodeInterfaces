@@ -7,7 +7,14 @@ using Godot;
 public class HFlowContainerAdapter : FlowContainerAdapter, IHFlowContainer {
   private readonly HFlowContainer _node;
 
-  public HFlowContainerAdapter(HFlowContainer node) : base(node) { _node = node; }
+  public HFlowContainerAdapter(Node node) : base(node) {
+    if (node is not HFlowContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a HFlowContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

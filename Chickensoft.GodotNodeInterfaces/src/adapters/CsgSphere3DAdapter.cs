@@ -9,7 +9,14 @@ using System;
 public class CsgSphere3DAdapter : CsgPrimitive3DAdapter, ICsgSphere3D {
   private readonly CsgSphere3D _node;
 
-  public CsgSphere3DAdapter(CsgSphere3D node) : base(node) { _node = node; }
+  public CsgSphere3DAdapter(Node node) : base(node) {
+    if (node is not CsgSphere3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgSphere3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The material used to render the sphere.</para>

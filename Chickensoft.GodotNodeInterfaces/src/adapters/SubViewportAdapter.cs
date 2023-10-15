@@ -9,7 +9,14 @@ using System;
 public class SubViewportAdapter : ViewportAdapter, ISubViewport {
   private readonly SubViewport _node;
 
-  public SubViewportAdapter(SubViewport node) : base(node) { _node = node; }
+  public SubViewportAdapter(Node node) : base(node) {
+    if (node is not SubViewport typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SubViewport"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The clear mode when the sub-viewport is used as a render target.</para>

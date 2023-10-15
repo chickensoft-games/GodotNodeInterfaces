@@ -7,7 +7,14 @@ using Godot;
 public class OpenXRHandAdapter : Node3DAdapter, IOpenXRHand {
   private readonly OpenXRHand _node;
 
-  public OpenXRHandAdapter(OpenXRHand node) : base(node) { _node = node; }
+  public OpenXRHandAdapter(Node node) : base(node) {
+    if (node is not OpenXRHand typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a OpenXRHand"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Specifies whether this node tracks the left or right hand of the player.</para>

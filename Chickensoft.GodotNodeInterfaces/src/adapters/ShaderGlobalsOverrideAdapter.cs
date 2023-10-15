@@ -9,7 +9,14 @@ using Godot;
 public class ShaderGlobalsOverrideAdapter : NodeAdapter, IShaderGlobalsOverride {
   private readonly ShaderGlobalsOverride _node;
 
-  public ShaderGlobalsOverrideAdapter(ShaderGlobalsOverride node) : base(node) { _node = node; }
+  public ShaderGlobalsOverrideAdapter(Node node) : base(node) {
+    if (node is not ShaderGlobalsOverride typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ShaderGlobalsOverride"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

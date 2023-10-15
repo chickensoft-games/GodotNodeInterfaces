@@ -7,7 +7,14 @@ using Godot;
 public class HBoxContainerAdapter : BoxContainerAdapter, IHBoxContainer {
   private readonly HBoxContainer _node;
 
-  public HBoxContainerAdapter(HBoxContainer node) : base(node) { _node = node; }
+  public HBoxContainerAdapter(Node node) : base(node) {
+    if (node is not HBoxContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a HBoxContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

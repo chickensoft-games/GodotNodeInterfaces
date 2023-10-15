@@ -8,7 +8,14 @@ using Godot;
 public class CheckButtonAdapter : ButtonAdapter, ICheckButton {
   private readonly CheckButton _node;
 
-  public CheckButtonAdapter(CheckButton node) : base(node) { _node = node; }
+  public CheckButtonAdapter(Node node) : base(node) {
+    if (node is not CheckButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CheckButton"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

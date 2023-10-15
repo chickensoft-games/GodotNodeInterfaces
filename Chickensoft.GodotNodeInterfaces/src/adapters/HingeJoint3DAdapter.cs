@@ -8,7 +8,14 @@ using System;
 public class HingeJoint3DAdapter : Joint3DAdapter, IHingeJoint3D {
   private readonly HingeJoint3D _node;
 
-  public HingeJoint3DAdapter(HingeJoint3D node) : base(node) { _node = node; }
+  public HingeJoint3DAdapter(Node node) : base(node) {
+    if (node is not HingeJoint3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a HingeJoint3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns the value of the specified flag.</para>

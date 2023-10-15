@@ -10,7 +10,14 @@ using Godot;
 public class VisibleOnScreenEnabler3DAdapter : VisibleOnScreenNotifier3DAdapter, IVisibleOnScreenEnabler3D {
   private readonly VisibleOnScreenEnabler3D _node;
 
-  public VisibleOnScreenEnabler3DAdapter(VisibleOnScreenEnabler3D node) : base(node) { _node = node; }
+  public VisibleOnScreenEnabler3DAdapter(Node node) : base(node) {
+    if (node is not VisibleOnScreenEnabler3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VisibleOnScreenEnabler3D"
+      );
+    }
+    _node = typedNode;
+  }
 
 
     public VisibleOnScreenEnabler3D.EnableModeEnum EnableMode { get => _node.EnableMode; set => _node.EnableMode = value; }

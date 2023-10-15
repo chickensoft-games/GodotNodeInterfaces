@@ -7,7 +7,14 @@ using Godot;
 public class HSeparatorAdapter : SeparatorAdapter, IHSeparator {
   private readonly HSeparator _node;
 
-  public HSeparatorAdapter(HSeparator node) : base(node) { _node = node; }
+  public HSeparatorAdapter(Node node) : base(node) {
+    if (node is not HSeparator typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a HSeparator"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

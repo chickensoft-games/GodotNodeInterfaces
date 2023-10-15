@@ -8,7 +8,14 @@ using System;
 public class SpringArm3DAdapter : Node3DAdapter, ISpringArm3D {
   private readonly SpringArm3D _node;
 
-  public SpringArm3DAdapter(SpringArm3D node) : base(node) { _node = node; }
+  public SpringArm3DAdapter(Node node) : base(node) {
+    if (node is not SpringArm3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SpringArm3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds the <see cref="PhysicsBody3D" /> object with the given <see cref="Rid" /> to the list of <see cref="PhysicsBody3D" /> objects excluded from the collision check.</para>

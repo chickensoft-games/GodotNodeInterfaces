@@ -9,7 +9,14 @@ using System;
 public class CsgTorus3DAdapter : CsgPrimitive3DAdapter, ICsgTorus3D {
   private readonly CsgTorus3D _node;
 
-  public CsgTorus3DAdapter(CsgTorus3D node) : base(node) { _node = node; }
+  public CsgTorus3DAdapter(Node node) : base(node) {
+    if (node is not CsgTorus3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgTorus3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The inner radius of the torus.</para>

@@ -12,7 +12,14 @@ using System;
 public class ReflectionProbeAdapter : VisualInstance3DAdapter, IReflectionProbe {
   private readonly ReflectionProbe _node;
 
-  public ReflectionProbeAdapter(ReflectionProbe node) : base(node) { _node = node; }
+  public ReflectionProbeAdapter(Node node) : base(node) {
+    if (node is not ReflectionProbe typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ReflectionProbe"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The custom ambient color to use within the <see cref="ReflectionProbe" />'s box defined by its <see cref="ReflectionProbe.Size" />. Only effective if <see cref="ReflectionProbe.AmbientMode" /> is <see cref="ReflectionProbe.AmbientModeEnum.Color" />.</para>

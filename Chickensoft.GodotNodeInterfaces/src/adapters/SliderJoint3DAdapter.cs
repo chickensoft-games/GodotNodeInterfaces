@@ -8,7 +8,14 @@ using System;
 public class SliderJoint3DAdapter : Joint3DAdapter, ISliderJoint3D {
   private readonly SliderJoint3D _node;
 
-  public SliderJoint3DAdapter(SliderJoint3D node) : base(node) { _node = node; }
+  public SliderJoint3DAdapter(Node node) : base(node) {
+    if (node is not SliderJoint3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SliderJoint3D"
+      );
+    }
+    _node = typedNode;
+  }
 
 
     public float GetParam(SliderJoint3D.Param @param) => _node.GetParam(@param);

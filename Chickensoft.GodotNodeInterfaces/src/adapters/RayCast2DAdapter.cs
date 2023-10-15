@@ -11,7 +11,14 @@ using System;
 public class RayCast2DAdapter : Node2DAdapter, IRayCast2D {
   private readonly RayCast2D _node;
 
-  public RayCast2DAdapter(RayCast2D node) : base(node) { _node = node; }
+  public RayCast2DAdapter(Node node) : base(node) {
+    if (node is not RayCast2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RayCast2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a collision exception so the ray does not report collisions with the specified <see cref="CollisionObject2D" /> node.</para>

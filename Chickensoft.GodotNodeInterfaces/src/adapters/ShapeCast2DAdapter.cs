@@ -11,7 +11,14 @@ using Godot.Collections;
 public class ShapeCast2DAdapter : Node2DAdapter, IShapeCast2D {
   private readonly ShapeCast2D _node;
 
-  public ShapeCast2DAdapter(ShapeCast2D node) : base(node) { _node = node; }
+  public ShapeCast2DAdapter(Node node) : base(node) {
+    if (node is not ShapeCast2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ShapeCast2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a collision exception so the shape does not report collisions with the specified <see cref="CollisionObject2D" /> node.</para>

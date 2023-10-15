@@ -12,7 +12,14 @@ using System;
 public class ConfirmationDialogAdapter : AcceptDialogAdapter, IConfirmationDialog {
   private readonly ConfirmationDialog _node;
 
-  public ConfirmationDialogAdapter(ConfirmationDialog node) : base(node) { _node = node; }
+  public ConfirmationDialogAdapter(Node node) : base(node) {
+    if (node is not ConfirmationDialog typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ConfirmationDialog"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The text displayed by the cancel button (see <see cref="ConfirmationDialog.GetCancelButton" />).</para>

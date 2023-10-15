@@ -8,7 +8,14 @@ using System;
 public class MenuBarAdapter : ControlAdapter, IMenuBar {
   private readonly MenuBar _node;
 
-  public MenuBarAdapter(MenuBar node) : base(node) { _node = node; }
+  public MenuBarAdapter(Node node) : base(node) {
+    if (node is not MenuBar typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MenuBar"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Flat <see cref="MenuBar" /> don't display item decoration.</para>

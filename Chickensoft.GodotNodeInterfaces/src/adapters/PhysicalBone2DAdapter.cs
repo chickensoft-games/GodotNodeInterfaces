@@ -10,7 +10,14 @@ using System;
 public class PhysicalBone2DAdapter : RigidBody2DAdapter, IPhysicalBone2D {
   private readonly PhysicalBone2D _node;
 
-  public PhysicalBone2DAdapter(PhysicalBone2D node) : base(node) { _node = node; }
+  public PhysicalBone2DAdapter(Node node) : base(node) {
+    if (node is not PhysicalBone2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PhysicalBone2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the <see cref="PhysicalBone2D" /> will automatically configure the first <see cref="Joint2D" /> child node. The automatic configuration is limited to setting up the node properties and positioning the <see cref="Joint2D" />.</para>

@@ -10,7 +10,14 @@ using System;
 public class VisibleOnScreenNotifier2DAdapter : Node2DAdapter, IVisibleOnScreenNotifier2D {
   private readonly VisibleOnScreenNotifier2D _node;
 
-  public VisibleOnScreenNotifier2DAdapter(VisibleOnScreenNotifier2D node) : base(node) { _node = node; }
+  public VisibleOnScreenNotifier2DAdapter(Node node) : base(node) {
+    if (node is not VisibleOnScreenNotifier2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VisibleOnScreenNotifier2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the bounding rectangle is on the screen.</para>

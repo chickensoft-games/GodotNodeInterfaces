@@ -11,7 +11,14 @@ using System;
 public class XRController3DAdapter : XRNode3DAdapter, IXRController3D {
   private readonly XRController3D _node;
 
-  public XRController3DAdapter(XRController3D node) : base(node) { _node = node; }
+  public XRController3DAdapter(Node node) : base(node) {
+    if (node is not XRController3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a XRController3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns a numeric value for the input with the given <paramref name="name" />. This is used for triggers and grip sensors.</para>

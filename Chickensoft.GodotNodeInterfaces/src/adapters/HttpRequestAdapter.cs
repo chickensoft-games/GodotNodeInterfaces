@@ -84,7 +84,14 @@ using System;
 public class HttpRequestAdapter : NodeAdapter, IHttpRequest {
   private readonly HttpRequest _node;
 
-  public HttpRequestAdapter(HttpRequest node) : base(node) { _node = node; }
+  public HttpRequestAdapter(Node node) : base(node) {
+    if (node is not HttpRequest typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a HttpRequest"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, this header will be added to each request: <c>Accept-Encoding: gzip, deflate</c> telling servers that it's okay to compress response bodies.</para>

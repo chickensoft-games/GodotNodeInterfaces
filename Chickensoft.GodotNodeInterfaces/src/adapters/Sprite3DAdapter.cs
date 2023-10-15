@@ -8,7 +8,14 @@ using System;
 public class Sprite3DAdapter : SpriteBase3DAdapter, ISprite3D {
   private readonly Sprite3D _node;
 
-  public Sprite3DAdapter(Sprite3D node) : base(node) { _node = node; }
+  public Sprite3DAdapter(Node node) : base(node) {
+    if (node is not Sprite3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Sprite3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Current frame to display from sprite sheet. <see cref="Sprite3D.Hframes" /> or <see cref="Sprite3D.Vframes" /> must be greater than 1.</para>

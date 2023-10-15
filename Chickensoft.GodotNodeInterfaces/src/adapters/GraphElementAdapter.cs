@@ -8,7 +8,14 @@ using System;
 public class GraphElementAdapter : ContainerAdapter, IGraphElement {
   private readonly GraphElement _node;
 
-  public GraphElementAdapter(GraphElement node) : base(node) { _node = node; }
+  public GraphElementAdapter(Node node) : base(node) {
+    if (node is not GraphElement typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GraphElement"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the user can drag the GraphElement.</para>

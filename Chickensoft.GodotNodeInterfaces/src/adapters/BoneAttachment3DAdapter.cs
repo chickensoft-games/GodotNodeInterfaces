@@ -8,7 +8,14 @@ using System;
 public class BoneAttachment3DAdapter : Node3DAdapter, IBoneAttachment3D {
   private readonly BoneAttachment3D _node;
 
-  public BoneAttachment3DAdapter(BoneAttachment3D node) : base(node) { _node = node; }
+  public BoneAttachment3DAdapter(Node node) : base(node) {
+    if (node is not BoneAttachment3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a BoneAttachment3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The index of the attached bone.</para>

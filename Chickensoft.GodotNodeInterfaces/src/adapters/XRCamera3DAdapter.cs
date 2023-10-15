@@ -8,7 +8,14 @@ using Godot;
 public class XRCamera3DAdapter : Camera3DAdapter, IXRCamera3D {
   private readonly XRCamera3D _node;
 
-  public XRCamera3DAdapter(XRCamera3D node) : base(node) { _node = node; }
+  public XRCamera3DAdapter(Node node) : base(node) {
+    if (node is not XRCamera3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a XRCamera3D"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

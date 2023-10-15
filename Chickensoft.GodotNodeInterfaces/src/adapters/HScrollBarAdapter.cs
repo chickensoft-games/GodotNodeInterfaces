@@ -7,7 +7,14 @@ using Godot;
 public class HScrollBarAdapter : ScrollBarAdapter, IHScrollBar {
   private readonly HScrollBar _node;
 
-  public HScrollBarAdapter(HScrollBar node) : base(node) { _node = node; }
+  public HScrollBarAdapter(Node node) : base(node) {
+    if (node is not HScrollBar typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a HScrollBar"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

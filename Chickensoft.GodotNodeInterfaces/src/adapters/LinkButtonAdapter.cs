@@ -10,7 +10,14 @@ using Godot.Collections;
 public class LinkButtonAdapter : BaseButtonAdapter, ILinkButton {
   private readonly LinkButton _node;
 
-  public LinkButtonAdapter(LinkButton node) : base(node) { _node = node; }
+  public LinkButtonAdapter(Node node) : base(node) {
+    if (node is not LinkButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a LinkButton"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Language code used for line-breaking and text shaping algorithms, if left empty current locale is used instead.</para>

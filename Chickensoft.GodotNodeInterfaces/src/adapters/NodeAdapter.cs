@@ -20,7 +20,14 @@ using Godot.Collections;
 public class NodeAdapter : INode, IAdapter {
   private readonly Node _node;
 
-  public NodeAdapter(Node node) { _node = node; }
+  public NodeAdapter(Node node) {
+    if (node is not Node typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Node"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Called when the node enters the <see cref="SceneTree" /> (e.g. upon instancing, scene changing, or after calling <see cref="Node.AddChild(Godot.Node,System.Boolean,Godot.Node.InternalMode)" /> in a script). If the node has children, its <see cref="Node._EnterTree" /> callback will be called first, and then that of the children.</para>

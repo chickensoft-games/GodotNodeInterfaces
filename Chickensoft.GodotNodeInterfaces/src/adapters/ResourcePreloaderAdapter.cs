@@ -10,7 +10,14 @@ using Godot.Collections;
 public class ResourcePreloaderAdapter : NodeAdapter, IResourcePreloader {
   private readonly ResourcePreloader _node;
 
-  public ResourcePreloaderAdapter(ResourcePreloader node) : base(node) { _node = node; }
+  public ResourcePreloaderAdapter(Node node) : base(node) {
+    if (node is not ResourcePreloader typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ResourcePreloader"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a resource to the preloader with the given <paramref name="name" />. If a resource with the given <paramref name="name" /> already exists, the new resource will be renamed to "<paramref name="name" /> N" where N is an incrementing number starting from 2.</para>

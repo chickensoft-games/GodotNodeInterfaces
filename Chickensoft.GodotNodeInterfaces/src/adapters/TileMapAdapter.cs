@@ -11,7 +11,14 @@ using Godot.Collections;
 public class TileMapAdapter : Node2DAdapter, ITileMap {
   private readonly TileMap _node;
 
-  public TileMapAdapter(TileMap node) : base(node) { _node = node; }
+  public TileMapAdapter(Node node) : base(node) {
+    if (node is not TileMap typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TileMap"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Called with a TileData object about to be used internally by the TileMap, allowing its modification at runtime.</para>

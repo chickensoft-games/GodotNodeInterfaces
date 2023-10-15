@@ -12,7 +12,14 @@ using System;
 public class VoxelGIAdapter : VisualInstance3DAdapter, IVoxelGI {
   private readonly VoxelGI _node;
 
-  public VoxelGIAdapter(VoxelGI node) : base(node) { _node = node; }
+  public VoxelGIAdapter(Node node) : base(node) {
+    if (node is not VoxelGI typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VoxelGI"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Bakes the effect from all <see cref="GeometryInstance3D" />s marked with <see cref="GeometryInstance3D.GIModeEnum.Static" /> and <see cref="Light3D" />s marked with either <see cref="Light3D.BakeMode.Static" /> or <see cref="Light3D.BakeMode.Dynamic" />. If <paramref name="createVisualDebug" /> is <c>true</c>, after baking the light, this will generate a <see cref="MultiMesh" /> that has a cube representing each solid cell with each cube colored to the cell's albedo color. This can be used to visualize the <see cref="VoxelGI" />'s data and debug any issues that may be occurring.</para>

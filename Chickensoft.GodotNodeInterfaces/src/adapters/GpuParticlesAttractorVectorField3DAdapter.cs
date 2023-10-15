@@ -10,7 +10,14 @@ using Godot;
 public class GpuParticlesAttractorVectorField3DAdapter : GpuParticlesAttractor3DAdapter, IGpuParticlesAttractorVectorField3D {
   private readonly GpuParticlesAttractorVectorField3D _node;
 
-  public GpuParticlesAttractorVectorField3DAdapter(GpuParticlesAttractorVectorField3D node) : base(node) { _node = node; }
+  public GpuParticlesAttractorVectorField3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesAttractorVectorField3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesAttractorVectorField3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The size of the vector field box in 3D units.</para>

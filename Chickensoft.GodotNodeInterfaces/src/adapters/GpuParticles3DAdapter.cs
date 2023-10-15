@@ -9,7 +9,14 @@ using System;
 public class GpuParticles3DAdapter : GeometryInstance3DAdapter, IGpuParticles3D {
   private readonly GpuParticles3D _node;
 
-  public GpuParticles3DAdapter(GpuParticles3D node) : base(node) { _node = node; }
+  public GpuParticles3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticles3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticles3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Number of particles to emit.</para>

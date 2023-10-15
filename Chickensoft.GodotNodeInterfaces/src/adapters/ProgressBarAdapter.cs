@@ -8,7 +8,14 @@ using System;
 public class ProgressBarAdapter : RangeAdapter, IProgressBar {
   private readonly ProgressBar _node;
 
-  public ProgressBarAdapter(ProgressBar node) : base(node) { _node = node; }
+  public ProgressBarAdapter(Node node) : base(node) {
+    if (node is not ProgressBar typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ProgressBar"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The fill direction. See <see cref="ProgressBar.FillModeEnum" /> for possible values.</para>

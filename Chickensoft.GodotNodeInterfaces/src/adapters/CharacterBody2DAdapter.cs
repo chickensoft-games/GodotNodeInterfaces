@@ -9,7 +9,14 @@ using System;
 public class CharacterBody2DAdapter : PhysicsBody2DAdapter, ICharacterBody2D {
   private readonly CharacterBody2D _node;
 
-  public CharacterBody2DAdapter(CharacterBody2D node) : base(node) { _node = node; }
+  public CharacterBody2DAdapter(Node node) : base(node) {
+    if (node is not CharacterBody2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CharacterBody2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Allows to manually apply a snap to the floor regardless of the body's velocity. This function does nothing when <see cref="CharacterBody2D.IsOnFloor" /> returns <c>true</c>.</para>

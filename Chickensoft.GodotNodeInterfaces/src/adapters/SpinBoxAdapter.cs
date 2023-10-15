@@ -20,7 +20,14 @@ using System;
 public class SpinBoxAdapter : RangeAdapter, ISpinBox {
   private readonly SpinBox _node;
 
-  public SpinBoxAdapter(SpinBox node) : base(node) { _node = node; }
+  public SpinBoxAdapter(Node node) : base(node) {
+    if (node is not SpinBox typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SpinBox"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Changes the alignment of the underlying <see cref="LineEdit" />.</para>

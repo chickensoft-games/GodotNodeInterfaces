@@ -16,7 +16,14 @@ using Godot;
 public class MarginContainerAdapter : ContainerAdapter, IMarginContainer {
   private readonly MarginContainer _node;
 
-  public MarginContainerAdapter(MarginContainer node) : base(node) { _node = node; }
+  public MarginContainerAdapter(Node node) : base(node) {
+    if (node is not MarginContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MarginContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

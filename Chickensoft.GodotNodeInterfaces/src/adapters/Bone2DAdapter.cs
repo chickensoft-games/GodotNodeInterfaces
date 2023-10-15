@@ -11,7 +11,14 @@ using System;
 public class Bone2DAdapter : Node2DAdapter, IBone2D {
   private readonly Bone2D _node;
 
-  public Bone2DAdapter(Bone2D node) : base(node) { _node = node; }
+  public Bone2DAdapter(Node node) : base(node) {
+    if (node is not Bone2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Bone2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Stores the node's current transforms in <see cref="Bone2D.Rest" />.</para>

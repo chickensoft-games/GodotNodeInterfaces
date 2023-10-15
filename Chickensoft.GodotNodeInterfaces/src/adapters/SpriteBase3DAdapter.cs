@@ -8,7 +8,14 @@ using System;
 public class SpriteBase3DAdapter : GeometryInstance3DAdapter, ISpriteBase3D {
   private readonly SpriteBase3D _node;
 
-  public SpriteBase3DAdapter(SpriteBase3D node) : base(node) { _node = node; }
+  public SpriteBase3DAdapter(Node node) : base(node) {
+    if (node is not SpriteBase3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SpriteBase3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Threshold at which antialiasing will be applied on the alpha channel.</para>

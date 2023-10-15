@@ -8,7 +8,14 @@ using System;
 public class SplitContainerAdapter : ContainerAdapter, ISplitContainer {
   private readonly SplitContainer _node;
 
-  public SplitContainerAdapter(SplitContainer node) : base(node) { _node = node; }
+  public SplitContainerAdapter(Node node) : base(node) {
+    if (node is not SplitContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SplitContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Clamps the <see cref="SplitContainer.SplitOffset" /> value to not go outside the currently possible minimal and maximum values.</para>

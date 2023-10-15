@@ -12,7 +12,14 @@ using System;
 public class PopupMenuAdapter : PopupAdapter, IPopupMenu {
   private readonly PopupMenu _node;
 
-  public PopupMenuAdapter(PopupMenu node) : base(node) { _node = node; }
+  public PopupMenuAdapter(Node node) : base(node) {
+    if (node is not PopupMenu typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PopupMenu"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Checks the provided <paramref name="event" /> against the <see cref="PopupMenu" />'s shortcuts and accelerators, and activates the first item with matching events. If <paramref name="forGlobalOnly" /> is <c>true</c>, only shortcuts and accelerators with <c>global</c> set to <c>true</c> will be called.</para>

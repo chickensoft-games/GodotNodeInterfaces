@@ -9,7 +9,14 @@ using Godot.Collections;
 public class Polygon2DAdapter : Node2DAdapter, IPolygon2D {
   private readonly Polygon2D _node;
 
-  public Polygon2DAdapter(Polygon2D node) : base(node) { _node = node; }
+  public Polygon2DAdapter(Node node) : base(node) {
+    if (node is not Polygon2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Polygon2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a bone with the specified <paramref name="path" /> and <paramref name="weights" />.</para>

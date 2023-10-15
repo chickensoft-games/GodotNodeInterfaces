@@ -10,7 +10,14 @@ using Godot;
 public class GpuParticlesCollisionBox3DAdapter : GpuParticlesCollision3DAdapter, IGpuParticlesCollisionBox3D {
   private readonly GpuParticlesCollisionBox3D _node;
 
-  public GpuParticlesCollisionBox3DAdapter(GpuParticlesCollisionBox3D node) : base(node) { _node = node; }
+  public GpuParticlesCollisionBox3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesCollisionBox3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesCollisionBox3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The collision box's size in 3D units.</para>

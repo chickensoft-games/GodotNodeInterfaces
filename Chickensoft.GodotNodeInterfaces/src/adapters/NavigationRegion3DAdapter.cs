@@ -14,7 +14,14 @@ using System;
 public class NavigationRegion3DAdapter : Node3DAdapter, INavigationRegion3D {
   private readonly NavigationRegion3D _node;
 
-  public NavigationRegion3DAdapter(NavigationRegion3D node) : base(node) { _node = node; }
+  public NavigationRegion3DAdapter(Node node) : base(node) {
+    if (node is not NavigationRegion3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NavigationRegion3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Bakes the <see cref="NavigationMesh" />. If <paramref name="onThread" /> is set to <c>true</c> (default), the baking is done on a separate thread. Baking on separate thread is useful because navigation baking is not a cheap operation. When it is completed, it automatically sets the new <see cref="NavigationMesh" />. Please note that baking on separate thread may be very slow if geometry is parsed from meshes as async access to each mesh involves heavy synchronization. Also, please note that baking on a separate thread is automatically disabled on operating systems that cannot use threads (such as Web with threads disabled).</para>

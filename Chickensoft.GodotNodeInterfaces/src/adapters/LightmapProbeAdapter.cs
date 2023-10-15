@@ -8,7 +8,14 @@ using Godot;
 public class LightmapProbeAdapter : Node3DAdapter, ILightmapProbe {
   private readonly LightmapProbe _node;
 
-  public LightmapProbeAdapter(LightmapProbe node) : base(node) { _node = node; }
+  public LightmapProbeAdapter(Node node) : base(node) {
+    if (node is not LightmapProbe typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a LightmapProbe"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

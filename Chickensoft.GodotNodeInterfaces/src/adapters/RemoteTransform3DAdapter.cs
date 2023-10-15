@@ -9,7 +9,14 @@ using System;
 public class RemoteTransform3DAdapter : Node3DAdapter, IRemoteTransform3D {
   private readonly RemoteTransform3D _node;
 
-  public RemoteTransform3DAdapter(RemoteTransform3D node) : base(node) { _node = node; }
+  public RemoteTransform3DAdapter(Node node) : base(node) {
+    if (node is not RemoteTransform3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a RemoteTransform3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para><see cref="RemoteTransform3D" /> caches the remote node. It may not notice if the remote node disappears; <see cref="RemoteTransform3D.ForceUpdateCache" /> forces it to update the cache again.</para>

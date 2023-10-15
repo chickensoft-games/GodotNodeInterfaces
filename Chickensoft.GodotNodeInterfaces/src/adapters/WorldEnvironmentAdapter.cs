@@ -9,7 +9,14 @@ using Godot;
 public class WorldEnvironmentAdapter : NodeAdapter, IWorldEnvironment {
   private readonly WorldEnvironment _node;
 
-  public WorldEnvironmentAdapter(WorldEnvironment node) : base(node) { _node = node; }
+  public WorldEnvironmentAdapter(Node node) : base(node) {
+    if (node is not WorldEnvironment typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a WorldEnvironment"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The default <see cref="CameraAttributes" /> resource to use if none set on the <see cref="Camera3D" />.</para>

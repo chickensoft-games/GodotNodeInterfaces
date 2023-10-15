@@ -8,7 +8,14 @@ using System;
 public class VisualInstance3DAdapter : Node3DAdapter, IVisualInstance3D {
   private readonly VisualInstance3D _node;
 
-  public VisualInstance3DAdapter(VisualInstance3D node) : base(node) { _node = node; }
+  public VisualInstance3DAdapter(Node node) : base(node) {
+    if (node is not VisualInstance3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VisualInstance3D"
+      );
+    }
+    _node = typedNode;
+  }
 
 
     public Aabb _GetAabb() => _node._GetAabb();

@@ -7,7 +7,14 @@ using Godot;
 public class VSplitContainerAdapter : SplitContainerAdapter, IVSplitContainer {
   private readonly VSplitContainer _node;
 
-  public VSplitContainerAdapter(VSplitContainer node) : base(node) { _node = node; }
+  public VSplitContainerAdapter(Node node) : base(node) {
+    if (node is not VSplitContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VSplitContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

@@ -8,7 +8,14 @@ using Godot;
 public class CsgCombiner3DAdapter : CsgShape3DAdapter, ICsgCombiner3D {
   private readonly CsgCombiner3D _node;
 
-  public CsgCombiner3DAdapter(CsgCombiner3D node) : base(node) { _node = node; }
+  public CsgCombiner3DAdapter(Node node) : base(node) {
+    if (node is not CsgCombiner3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgCombiner3D"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

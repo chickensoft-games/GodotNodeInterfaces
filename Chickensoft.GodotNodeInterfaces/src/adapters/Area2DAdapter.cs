@@ -10,7 +10,14 @@ using Godot.Collections;
 public class Area2DAdapter : CollisionObject2DAdapter, IArea2D {
   private readonly Area2D _node;
 
-  public Area2DAdapter(Area2D node) : base(node) { _node = node; }
+  public Area2DAdapter(Node node) : base(node) {
+    if (node is not Area2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Area2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.</para>

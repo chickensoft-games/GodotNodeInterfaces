@@ -9,7 +9,14 @@ using Godot.Collections;
 public class Label3DAdapter : GeometryInstance3DAdapter, ILabel3D {
   private readonly Label3D _node;
 
-  public Label3DAdapter(Label3D node) : base(node) { _node = node; }
+  public Label3DAdapter(Node node) : base(node) {
+    if (node is not Label3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Label3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Threshold at which antialiasing will be applied on the alpha channel.</para>

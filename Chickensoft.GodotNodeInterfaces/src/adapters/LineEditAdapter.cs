@@ -30,7 +30,14 @@ using Godot.Collections;
 public class LineEditAdapter : ControlAdapter, ILineEdit {
   private readonly LineEdit _node;
 
-  public LineEditAdapter(LineEdit node) : base(node) { _node = node; }
+  public LineEditAdapter(Node node) : base(node) {
+    if (node is not LineEdit typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a LineEdit"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Text alignment as defined in the <see cref="HorizontalAlignment" /> enum.</para>

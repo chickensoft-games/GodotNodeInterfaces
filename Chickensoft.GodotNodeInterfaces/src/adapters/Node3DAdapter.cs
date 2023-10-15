@@ -12,7 +12,14 @@ using Godot.Collections;
 public class Node3DAdapter : NodeAdapter, INode3D {
   private readonly Node3D _node;
 
-  public Node3DAdapter(Node3D node) : base(node) { _node = node; }
+  public Node3DAdapter(Node node) : base(node) {
+    if (node is not Node3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Node3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Attach an editor gizmo to this <see cref="Node3D" />.</para>

@@ -9,7 +9,14 @@ using System;
 public class TabContainerAdapter : ContainerAdapter, ITabContainer {
   private readonly TabContainer _node;
 
-  public TabContainerAdapter(TabContainer node) : base(node) { _node = node; }
+  public TabContainerAdapter(Node node) : base(node) {
+    if (node is not TabContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TabContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, all tabs are drawn in front of the panel. If <c>false</c>, inactive tabs are drawn behind the panel.</para>

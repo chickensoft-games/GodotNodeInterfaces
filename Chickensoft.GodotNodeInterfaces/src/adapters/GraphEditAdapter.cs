@@ -11,7 +11,14 @@ using Godot.Collections;
 public class GraphEditAdapter : ControlAdapter, IGraphEdit {
   private readonly GraphEdit _node;
 
-  public GraphEditAdapter(GraphEdit node) : base(node) { _node = node; }
+  public GraphEditAdapter(Node node) : base(node) {
+    if (node is not GraphEdit typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GraphEdit"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Virtual method which can be overridden to customize how connections are drawn.</para>

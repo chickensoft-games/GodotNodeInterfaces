@@ -9,7 +9,14 @@ using System;
 public class AnimationTreeAdapter : AnimationMixerAdapter, IAnimationTree {
   private readonly AnimationTree _node;
 
-  public AnimationTreeAdapter(AnimationTree node) : base(node) { _node = node; }
+  public AnimationTreeAdapter(Node node) : base(node) {
+    if (node is not AnimationTree typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AnimationTree"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The path to the <see cref="Node" /> used to evaluate the <see cref="AnimationNode" /> <see cref="Expression" /> if one is not explicitly specified internally.</para>

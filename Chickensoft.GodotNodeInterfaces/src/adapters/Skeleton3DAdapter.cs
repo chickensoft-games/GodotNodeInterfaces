@@ -12,7 +12,14 @@ using Godot.Collections;
 public class Skeleton3DAdapter : Node3DAdapter, ISkeleton3D {
   private readonly Skeleton3D _node;
 
-  public Skeleton3DAdapter(Skeleton3D node) : base(node) { _node = node; }
+  public Skeleton3DAdapter(Node node) : base(node) {
+    if (node is not Skeleton3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Skeleton3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a bone, with name <paramref name="name" />. <see cref="Skeleton3D.GetBoneCount" /> will become the bone index.</para>

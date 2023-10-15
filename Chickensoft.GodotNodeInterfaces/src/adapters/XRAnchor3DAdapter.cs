@@ -9,7 +9,14 @@ using Godot;
 public class XRAnchor3DAdapter : XRNode3DAdapter, IXRAnchor3D {
   private readonly XRAnchor3D _node;
 
-  public XRAnchor3DAdapter(XRAnchor3D node) : base(node) { _node = node; }
+  public XRAnchor3DAdapter(Node node) : base(node) {
+    if (node is not XRAnchor3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a XRAnchor3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns a plane aligned with our anchor; handy for intersection testing.</para>

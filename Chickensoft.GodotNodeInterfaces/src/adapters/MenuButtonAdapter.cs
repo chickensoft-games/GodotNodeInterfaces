@@ -9,7 +9,14 @@ using System;
 public class MenuButtonAdapter : ButtonAdapter, IMenuButton {
   private readonly MenuButton _node;
 
-  public MenuButtonAdapter(MenuButton node) : base(node) { _node = node; }
+  public MenuButtonAdapter(Node node) : base(node) {
+    if (node is not MenuButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MenuButton"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns the <see cref="PopupMenu" /> contained in this button.</para>

@@ -9,7 +9,14 @@ using System;
 public class GridContainerAdapter : ContainerAdapter, IGridContainer {
   private readonly GridContainer _node;
 
-  public GridContainerAdapter(GridContainer node) : base(node) { _node = node; }
+  public GridContainerAdapter(Node node) : base(node) {
+    if (node is not GridContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GridContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The number of columns in the <see cref="GridContainer" />. If modified, <see cref="GridContainer" /> reorders its Control-derived children to accommodate the new layout.</para>

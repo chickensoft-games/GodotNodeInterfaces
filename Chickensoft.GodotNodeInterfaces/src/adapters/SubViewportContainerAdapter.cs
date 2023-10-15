@@ -10,7 +10,14 @@ using System;
 public class SubViewportContainerAdapter : ContainerAdapter, ISubViewportContainer {
   private readonly SubViewportContainer _node;
 
-  public SubViewportContainerAdapter(SubViewportContainer node) : base(node) { _node = node; }
+  public SubViewportContainerAdapter(Node node) : base(node) {
+    if (node is not SubViewportContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a SubViewportContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Virtual method to be implemented by the user. If it returns <c>true</c>, the <paramref name="event" /> is propagated to <see cref="SubViewport" /> children. Propagation doesn't happen if it returns <c>false</c>. If the function is not implemented, all events are propagated to SubViewports.</para>

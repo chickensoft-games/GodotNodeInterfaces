@@ -10,7 +10,14 @@ using System;
 public class TouchScreenButtonAdapter : Node2DAdapter, ITouchScreenButton {
   private readonly TouchScreenButton _node;
 
-  public TouchScreenButtonAdapter(TouchScreenButton node) : base(node) { _node = node; }
+  public TouchScreenButtonAdapter(Node node) : base(node) {
+    if (node is not TouchScreenButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TouchScreenButton"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The button's action. Actions can be handled with <see cref="InputEventAction" />.</para>

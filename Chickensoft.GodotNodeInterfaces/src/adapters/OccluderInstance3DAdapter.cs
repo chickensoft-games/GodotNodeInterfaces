@@ -13,7 +13,14 @@ using System;
 public class OccluderInstance3DAdapter : Node3DAdapter, IOccluderInstance3D {
   private readonly OccluderInstance3D _node;
 
-  public OccluderInstance3DAdapter(OccluderInstance3D node) : base(node) { _node = node; }
+  public OccluderInstance3DAdapter(Node node) : base(node) {
+    if (node is not OccluderInstance3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a OccluderInstance3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The visual layers to account for when baking for occluders. Only <see cref="MeshInstance3D" />s whose <see cref="VisualInstance3D.Layers" /> match with this <see cref="OccluderInstance3D.BakeMask" /> will be included in the generated occluder mesh. By default, all objects with <i>opaque</i> materials are taken into account for the occluder baking.</para>

@@ -8,7 +8,14 @@ using Godot;
 public class CsgMesh3DAdapter : CsgPrimitive3DAdapter, ICsgMesh3D {
   private readonly CsgMesh3D _node;
 
-  public CsgMesh3DAdapter(CsgMesh3D node) : base(node) { _node = node; }
+  public CsgMesh3DAdapter(Node node) : base(node) {
+    if (node is not CsgMesh3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgMesh3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The <see cref="Material" /> used in drawing the CSG shape.</para>

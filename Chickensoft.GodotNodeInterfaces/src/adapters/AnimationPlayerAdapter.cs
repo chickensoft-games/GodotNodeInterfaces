@@ -11,7 +11,14 @@ using System;
 public class AnimationPlayerAdapter : AnimationMixerAdapter, IAnimationPlayer {
   private readonly AnimationPlayer _node;
 
-  public AnimationPlayerAdapter(AnimationPlayer node) : base(node) { _node = node; }
+  public AnimationPlayerAdapter(Node node) : base(node) {
+    if (node is not AnimationPlayer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AnimationPlayer"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns the key of the animation which is queued to play after the <paramref name="animationFrom" /> animation.</para>

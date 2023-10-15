@@ -9,7 +9,14 @@ using System;
 public class CsgPrimitive3DAdapter : CsgShape3DAdapter, ICsgPrimitive3D {
   private readonly CsgPrimitive3D _node;
 
-  public CsgPrimitive3DAdapter(CsgPrimitive3D node) : base(node) { _node = node; }
+  public CsgPrimitive3DAdapter(Node node) : base(node) {
+    if (node is not CsgPrimitive3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgPrimitive3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If set, the order of the vertices in each triangle are reversed resulting in the backside of the mesh being drawn.</para>

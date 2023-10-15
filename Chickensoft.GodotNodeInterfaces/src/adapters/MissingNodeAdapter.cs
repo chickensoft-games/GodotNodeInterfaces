@@ -8,7 +8,14 @@ using System;
 public class MissingNodeAdapter : NodeAdapter, IMissingNode {
   private readonly MissingNode _node;
 
-  public MissingNodeAdapter(MissingNode node) : base(node) { _node = node; }
+  public MissingNodeAdapter(Node node) : base(node) {
+    if (node is not MissingNode typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MissingNode"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns the name of the type this node was originally.</para>

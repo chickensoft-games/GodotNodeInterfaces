@@ -7,7 +7,14 @@ using Godot;
 public class VFlowContainerAdapter : FlowContainerAdapter, IVFlowContainer {
   private readonly VFlowContainer _node;
 
-  public VFlowContainerAdapter(VFlowContainer node) : base(node) { _node = node; }
+  public VFlowContainerAdapter(Node node) : base(node) {
+    if (node is not VFlowContainer typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VFlowContainer"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

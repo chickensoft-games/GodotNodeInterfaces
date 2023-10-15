@@ -9,7 +9,14 @@ using System;
 public class CsgCylinder3DAdapter : CsgPrimitive3DAdapter, ICsgCylinder3D {
   private readonly CsgCylinder3D _node;
 
-  public CsgCylinder3DAdapter(CsgCylinder3D node) : base(node) { _node = node; }
+  public CsgCylinder3DAdapter(Node node) : base(node) {
+    if (node is not CsgCylinder3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CsgCylinder3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c> a cone is created, the <see cref="CsgCylinder3D.Radius" /> will only apply to one side.</para>

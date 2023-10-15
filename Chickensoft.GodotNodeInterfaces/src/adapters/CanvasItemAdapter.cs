@@ -11,7 +11,14 @@ using System;
 public class CanvasItemAdapter : NodeAdapter, ICanvasItem {
   private readonly CanvasItem _node;
 
-  public CanvasItemAdapter(CanvasItem node) : base(node) { _node = node; }
+  public CanvasItemAdapter(Node node) : base(node) {
+    if (node is not CanvasItem typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CanvasItem"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Called when <see cref="CanvasItem" /> has been requested to redraw (after <see cref="CanvasItem.QueueRedraw" /> is called, either manually or by the engine).</para>

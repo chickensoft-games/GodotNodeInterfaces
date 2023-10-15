@@ -8,7 +8,14 @@ using System;
 public class TabBarAdapter : ControlAdapter, ITabBar {
   private readonly TabBar _node;
 
-  public TabBarAdapter(TabBar node) : base(node) { _node = node; }
+  public TabBarAdapter(Node node) : base(node) {
+    if (node is not TabBar typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TabBar"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Adds a new tab.</para>

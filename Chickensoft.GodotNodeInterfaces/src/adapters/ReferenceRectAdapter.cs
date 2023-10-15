@@ -8,7 +8,14 @@ using System;
 public class ReferenceRectAdapter : ControlAdapter, IReferenceRect {
   private readonly ReferenceRect _node;
 
-  public ReferenceRectAdapter(ReferenceRect node) : base(node) { _node = node; }
+  public ReferenceRectAdapter(Node node) : base(node) {
+    if (node is not ReferenceRect typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ReferenceRect"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Sets the border color of the <see cref="ReferenceRect" />.</para>

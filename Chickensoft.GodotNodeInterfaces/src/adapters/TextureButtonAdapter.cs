@@ -10,7 +10,14 @@ using System;
 public class TextureButtonAdapter : BaseButtonAdapter, ITextureButton {
   private readonly TextureButton _node;
 
-  public TextureButtonAdapter(TextureButton node) : base(node) { _node = node; }
+  public TextureButtonAdapter(Node node) : base(node) {
+    if (node is not TextureButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a TextureButton"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, texture is flipped horizontally.</para>

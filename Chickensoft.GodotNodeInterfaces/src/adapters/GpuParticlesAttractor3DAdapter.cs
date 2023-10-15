@@ -11,7 +11,14 @@ using System;
 public class GpuParticlesAttractor3DAdapter : VisualInstance3DAdapter, IGpuParticlesAttractor3D {
   private readonly GpuParticlesAttractor3D _node;
 
-  public GpuParticlesAttractor3DAdapter(GpuParticlesAttractor3D node) : base(node) { _node = node; }
+  public GpuParticlesAttractor3DAdapter(Node node) : base(node) {
+    if (node is not GpuParticlesAttractor3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a GpuParticlesAttractor3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The particle attractor's attenuation. Higher values result in more gradual pushing of particles as they come closer to the attractor's origin. Zero or negative values will cause particles to be pushed very fast as soon as the touch the attractor's edges.</para>

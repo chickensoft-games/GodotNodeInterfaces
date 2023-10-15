@@ -10,7 +10,14 @@ using System;
 public class MultiplayerSpawnerAdapter : NodeAdapter, IMultiplayerSpawner {
   private readonly MultiplayerSpawner _node;
 
-  public MultiplayerSpawnerAdapter(MultiplayerSpawner node) : base(node) { _node = node; }
+  public MultiplayerSpawnerAdapter(Node node) : base(node) {
+    if (node is not MultiplayerSpawner typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MultiplayerSpawner"
+      );
+    }
+    _node = typedNode;
+  }
 
 
     public string[] _SpawnableScenes { get => _node._SpawnableScenes; set => _node._SpawnableScenes = value; }

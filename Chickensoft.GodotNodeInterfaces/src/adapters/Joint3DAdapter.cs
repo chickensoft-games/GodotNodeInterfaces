@@ -8,7 +8,14 @@ using System;
 public class Joint3DAdapter : Node3DAdapter, IJoint3D {
   private readonly Joint3D _node;
 
-  public Joint3DAdapter(Joint3D node) : base(node) { _node = node; }
+  public Joint3DAdapter(Node node) : base(node) {
+    if (node is not Joint3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Joint3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, the two bodies of the nodes are not able to collide with each other.</para>

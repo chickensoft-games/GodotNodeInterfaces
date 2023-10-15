@@ -8,7 +8,14 @@ using System;
 public class PointLight2DAdapter : Light2DAdapter, IPointLight2D {
   private readonly PointLight2D _node;
 
-  public PointLight2DAdapter(PointLight2D node) : base(node) { _node = node; }
+  public PointLight2DAdapter(Node node) : base(node) {
+    if (node is not PointLight2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PointLight2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The height of the light. Used with 2D normal mapping. The units are in pixels, e.g. if the height is 100, then it will illuminate an object 100 pixels away at a 45° angle to the plane.</para>

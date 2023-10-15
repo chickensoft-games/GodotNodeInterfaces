@@ -10,7 +10,14 @@ using System;
 public class StaticBody2DAdapter : PhysicsBody2DAdapter, IStaticBody2D {
   private readonly StaticBody2D _node;
 
-  public StaticBody2DAdapter(StaticBody2D node) : base(node) { _node = node; }
+  public StaticBody2DAdapter(Node node) : base(node) {
+    if (node is not StaticBody2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a StaticBody2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The body's constant angular velocity. This does not rotate the body, but affects touching bodies, as if it were rotating.</para>

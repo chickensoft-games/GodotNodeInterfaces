@@ -8,7 +8,14 @@ using System;
 public class Sprite2DAdapter : Node2DAdapter, ISprite2D {
   private readonly Sprite2D _node;
 
-  public Sprite2DAdapter(Sprite2D node) : base(node) { _node = node; }
+  public Sprite2DAdapter(Node node) : base(node) {
+    if (node is not Sprite2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Sprite2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>If <c>true</c>, texture is centered.</para>

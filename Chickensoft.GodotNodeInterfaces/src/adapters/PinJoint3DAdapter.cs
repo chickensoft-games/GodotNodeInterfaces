@@ -8,7 +8,14 @@ using System;
 public class PinJoint3DAdapter : Joint3DAdapter, IPinJoint3D {
   private readonly PinJoint3D _node;
 
-  public PinJoint3DAdapter(PinJoint3D node) : base(node) { _node = node; }
+  public PinJoint3DAdapter(Node node) : base(node) {
+    if (node is not PinJoint3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PinJoint3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Returns the value of the specified parameter.</para>

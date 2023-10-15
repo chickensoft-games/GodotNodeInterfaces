@@ -10,7 +10,14 @@ using System;
 public class VehicleBody3DAdapter : RigidBody3DAdapter, IVehicleBody3D {
   private readonly VehicleBody3D _node;
 
-  public VehicleBody3DAdapter(VehicleBody3D node) : base(node) { _node = node; }
+  public VehicleBody3DAdapter(Node node) : base(node) {
+    if (node is not VehicleBody3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VehicleBody3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Slows down the vehicle by applying a braking force. The vehicle is only slowed down if the wheels are in contact with a surface. The force you need to apply to adequately slow down your vehicle depends on the <see cref="RigidBody3D.Mass" /> of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 30 range for hard braking.</para>

@@ -10,7 +10,14 @@ using System;
 public class OmniLight3DAdapter : Light3DAdapter, IOmniLight3D {
   private readonly OmniLight3D _node;
 
-  public OmniLight3DAdapter(OmniLight3D node) : base(node) { _node = node; }
+  public OmniLight3DAdapter(Node node) : base(node) {
+    if (node is not OmniLight3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a OmniLight3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The light's attenuation (drop-off) curve. A number of presets are available in the <b>Inspector</b> by right-clicking the curve. Zero and negative values are allowed but can produce unusual effects.</para>

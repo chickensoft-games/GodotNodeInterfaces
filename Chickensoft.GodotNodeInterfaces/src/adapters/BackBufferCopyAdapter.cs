@@ -8,7 +8,14 @@ using Godot;
 public class BackBufferCopyAdapter : Node2DAdapter, IBackBufferCopy {
   private readonly BackBufferCopy _node;
 
-  public BackBufferCopyAdapter(BackBufferCopy node) : base(node) { _node = node; }
+  public BackBufferCopyAdapter(Node node) : base(node) {
+    if (node is not BackBufferCopy typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a BackBufferCopy"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Buffer mode. See <see cref="BackBufferCopy.CopyModeEnum" /> constants.</para>

@@ -7,7 +7,14 @@ using Godot;
 public class MeshInstance2DAdapter : Node2DAdapter, IMeshInstance2D {
   private readonly MeshInstance2D _node;
 
-  public MeshInstance2DAdapter(MeshInstance2D node) : base(node) { _node = node; }
+  public MeshInstance2DAdapter(Node node) : base(node) {
+    if (node is not MeshInstance2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MeshInstance2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The <see cref="Mesh" /> that will be drawn by the <see cref="MeshInstance2D" />.</para>

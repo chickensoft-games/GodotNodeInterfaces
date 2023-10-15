@@ -7,7 +7,14 @@ using Godot;
 public class PopupPanelAdapter : PopupAdapter, IPopupPanel {
   private readonly PopupPanel _node;
 
-  public PopupPanelAdapter(PopupPanel node) : base(node) { _node = node; }
+  public PopupPanelAdapter(Node node) : base(node) {
+    if (node is not PopupPanel typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a PopupPanel"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

@@ -8,7 +8,14 @@ using System;
 public class FileDialogAdapter : ConfirmationDialogAdapter, IFileDialog {
   private readonly FileDialog _node;
 
-  public FileDialogAdapter(FileDialog node) : base(node) { _node = node; }
+  public FileDialogAdapter(Node node) : base(node) {
+    if (node is not FileDialog typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a FileDialog"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The file system access scope. See <see cref="FileDialog.AccessEnum" /> constants.</para>

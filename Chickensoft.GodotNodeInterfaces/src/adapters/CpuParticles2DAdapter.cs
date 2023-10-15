@@ -9,7 +9,14 @@ using System;
 public class CpuParticles2DAdapter : Node2DAdapter, ICpuParticles2D {
   private readonly CpuParticles2D _node;
 
-  public CpuParticles2DAdapter(CpuParticles2D node) : base(node) { _node = node; }
+  public CpuParticles2DAdapter(Node node) : base(node) {
+    if (node is not CpuParticles2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CpuParticles2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Number of particles emitted in one emission cycle.</para>

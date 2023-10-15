@@ -8,7 +8,14 @@ using Godot;
 public class MultiMeshInstance3DAdapter : GeometryInstance3DAdapter, IMultiMeshInstance3D {
   private readonly MultiMeshInstance3D _node;
 
-  public MultiMeshInstance3DAdapter(MultiMeshInstance3D node) : base(node) { _node = node; }
+  public MultiMeshInstance3DAdapter(Node node) : base(node) {
+    if (node is not MultiMeshInstance3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a MultiMeshInstance3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The <see cref="MultiMesh" /> resource that will be used and shared among all instances of the <see cref="MultiMeshInstance3D" />.</para>

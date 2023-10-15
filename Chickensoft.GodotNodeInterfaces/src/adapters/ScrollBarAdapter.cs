@@ -8,7 +8,14 @@ using System;
 public class ScrollBarAdapter : RangeAdapter, IScrollBar {
   private readonly ScrollBar _node;
 
-  public ScrollBarAdapter(ScrollBar node) : base(node) { _node = node; }
+  public ScrollBarAdapter(Node node) : base(node) {
+    if (node is not ScrollBar typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a ScrollBar"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Overrides the step used when clicking increment and decrement buttons or when using arrow keys when the <see cref="ScrollBar" /> is focused.</para>

@@ -8,7 +8,14 @@ using System;
 public class NavigationLink2DAdapter : Node2DAdapter, INavigationLink2D {
   private readonly NavigationLink2D _node;
 
-  public NavigationLink2DAdapter(NavigationLink2D node) : base(node) { _node = node; }
+  public NavigationLink2DAdapter(Node node) : base(node) {
+    if (node is not NavigationLink2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NavigationLink2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Whether this link can be traveled in both directions or only from <see cref="NavigationLink2D.StartPosition" /> to <see cref="NavigationLink2D.EndPosition" />.</para>

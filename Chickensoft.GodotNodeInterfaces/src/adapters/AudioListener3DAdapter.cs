@@ -8,7 +8,14 @@ using System;
 public class AudioListener3DAdapter : Node3DAdapter, IAudioListener3D {
   private readonly AudioListener3D _node;
 
-  public AudioListener3DAdapter(AudioListener3D node) : base(node) { _node = node; }
+  public AudioListener3DAdapter(Node node) : base(node) {
+    if (node is not AudioListener3D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a AudioListener3D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Disables the listener to use the current camera's listener instead.</para>

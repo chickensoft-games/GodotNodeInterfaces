@@ -7,7 +7,14 @@ using Godot;
 public class VisibleOnScreenEnabler2DAdapter : VisibleOnScreenNotifier2DAdapter, IVisibleOnScreenEnabler2D {
   private readonly VisibleOnScreenEnabler2D _node;
 
-  public VisibleOnScreenEnabler2DAdapter(VisibleOnScreenEnabler2D node) : base(node) { _node = node; }
+  public VisibleOnScreenEnabler2DAdapter(Node node) : base(node) {
+    if (node is not VisibleOnScreenEnabler2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a VisibleOnScreenEnabler2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Determines how the node is enabled. Corresponds to <see cref="Node.ProcessModeEnum" />. Disabled node uses <see cref="Node.ProcessModeEnum.Disabled" />.</para>

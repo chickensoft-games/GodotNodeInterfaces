@@ -7,7 +7,14 @@ using Godot;
 public class PopupAdapter : WindowAdapter, IPopup {
   private readonly Popup _node;
 
-  public PopupAdapter(Popup node) : base(node) { _node = node; }
+  public PopupAdapter(Node node) : base(node) {
+    if (node is not Popup typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Popup"
+      );
+    }
+    _node = typedNode;
+  }
 
 
 }

@@ -10,7 +10,14 @@ using Godot.Collections;
 public class CodeEditAdapter : TextEditAdapter, ICodeEdit {
   private readonly CodeEdit _node;
 
-  public CodeEditAdapter(CodeEdit node) : base(node) { _node = node; }
+  public CodeEditAdapter(Node node) : base(node) {
+    if (node is not CodeEdit typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CodeEdit"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Override this method to define how the selected entry should be inserted. If <paramref name="replace" /> is true, any existing text should be replaced.</para>

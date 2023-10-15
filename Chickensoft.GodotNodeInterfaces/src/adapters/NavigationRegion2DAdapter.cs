@@ -14,7 +14,14 @@ using System;
 public class NavigationRegion2DAdapter : Node2DAdapter, INavigationRegion2D {
   private readonly NavigationRegion2D _node;
 
-  public NavigationRegion2DAdapter(NavigationRegion2D node) : base(node) { _node = node; }
+  public NavigationRegion2DAdapter(Node node) : base(node) {
+    if (node is not NavigationRegion2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a NavigationRegion2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>A bitfield determining all avoidance layers for the avoidance constrain.</para>

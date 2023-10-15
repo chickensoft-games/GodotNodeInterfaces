@@ -8,7 +8,14 @@ using System;
 public class CollisionShape2DAdapter : Node2DAdapter, ICollisionShape2D {
   private readonly CollisionShape2D _node;
 
-  public CollisionShape2DAdapter(CollisionShape2D node) : base(node) { _node = node; }
+  public CollisionShape2DAdapter(Node node) : base(node) {
+    if (node is not CollisionShape2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a CollisionShape2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>The collision shape debug color.</para>

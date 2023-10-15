@@ -11,7 +11,14 @@ using System;
 public class Camera2DAdapter : Node2DAdapter, ICamera2D {
   private readonly Camera2D _node;
 
-  public Camera2DAdapter(Camera2D node) : base(node) { _node = node; }
+  public Camera2DAdapter(Node node) : base(node) {
+    if (node is not Camera2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Camera2D"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Aligns the camera to the tracked node.</para>

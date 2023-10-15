@@ -8,7 +8,14 @@ using System;
 public class BaseButtonAdapter : ControlAdapter, IBaseButton {
   private readonly BaseButton _node;
 
-  public BaseButtonAdapter(BaseButton node) : base(node) { _node = node; }
+  public BaseButtonAdapter(Node node) : base(node) {
+    if (node is not BaseButton typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a BaseButton"
+      );
+    }
+    _node = typedNode;
+  }
 
     /// <summary>
     /// <para>Called when the button is pressed. If you need to know the button's pressed state (and <see cref="BaseButton.ToggleMode" /> is active), use <see cref="BaseButton._Toggled(System.Boolean)" /> instead.</para>
