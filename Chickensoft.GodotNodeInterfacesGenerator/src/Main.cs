@@ -35,8 +35,13 @@ public static class GodotNodeInterfacesGenerator {
       """
       namespace Chickensoft.GodotNodeInterfaces;
 
+      using Godot;
+
       /// <summary>A Godot API adapter.</summary>
-      public interface IGodotNodeAdapter : INode { }
+      public interface IGodotNodeAdapter : INode {
+        /// <summary>Underlying Godot node this adapter uses.</summary>
+        public Node OriginalNode { get; }
+      }
       """
     );
 
@@ -280,6 +285,12 @@ public static class GodotNodeInterfacesGenerator {
       }
       """;
 
+      var adapterOriginalNode = !extendsAnotherNode
+        ? "\n  public Node OriginalNode => Node;\n"
+        : "";
+
+      var newKeyword = extendsAnotherNode ? "new" : "";
+
       var adapterContents = $$"""
       namespace Chickensoft.GodotNodeInterfaces;
 
@@ -287,8 +298,8 @@ public static class GodotNodeInterfacesGenerator {
       {{mainDocumentation}}
       public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
         /// <summary>Underlying Godot node this adapter uses.</summary>
-        public {{typeName}} Node { get; private set; }
-
+        public {{newKeyword}} {{typeName}} Node { get; private set; }
+      {{adapterOriginalNode}}
         /// <summary>Creates a new {{adapterName}} for {{typeName}}.</summary>
         /// <param name="node">Godot node.</param>
         public {{adapterName}}(Node node){{adapterBaseCall}}{
