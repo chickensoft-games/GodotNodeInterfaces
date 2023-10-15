@@ -73,9 +73,10 @@ jobs:
         run: |
           dotnet restore
 
-      - name: 🛠 Build All Projects
+      - name: 🛠 Build Generator
+        working-directory: Chickensoft.GodotNodeInterfacesGenerator
         run: |
-          dotnet build --configuration Release --no-restore
+          dotnet build --no-restore
 
       - name: 🧬 Run Generator
         working-directory: Chickensoft.GodotNodeInterfacesGenerator
@@ -104,8 +105,9 @@ jobs:
           fi
 
       - name: 👩‍🔬 Verify Generated Types Build
+        working-directory: Chickensoft.GodotNodeInterfaces
         run: |
-          dotnet build
+          dotnet build --configuration Release --property WarningLevel=0
 
       # - name: 📦 Publish
       #   run: |
