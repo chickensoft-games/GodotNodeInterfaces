@@ -63,33 +63,72 @@ jobs:
           file: "Chickensoft.GodotNodeInterfaces/Chickensoft.GodotNodeInterfaces.csproj"
           version:  ${{ steps.next-version.outputs.version }}
 
-      - name: ✍️ Commit Changes
-        run: |
-          git config user.name "action@github.com"
-          git config user.email "GitHub Action"
-          git commit -a -m "chore(version): update version to ${{ steps.next-version.outputs.version }}"
-          git push
-
-      - name: ✨ Create Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create --generate-notes "v${{ steps.next-version.outputs.version }}"
-
       - name: 💽 Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           # Use the .NET SDK from global.json in the root of the repository.
           global-json-file: global.json
 
-      - name: 📦 Publish
+      - name: 📦 Restore All Packages
         run: |
-          # build the package
-          dotnet build Chickensoft.GodotNodeInterfaces/Chickensoft.GodotNodeInterfaces.csproj -c Release
+          dotnet restore
 
-          # find the built nuget package
-          nuget_package=$(find . -name "Chickensoft.GodotNodeInterfaces.*.nupkg")
+      - name: 🛠 Build All Projects
+        run: |
+          dotnet build --configuration Release --no-restore
 
-          echo "📦 Publishing package: $nuget_package"
+      - name: 🧪 Verify Generated Files Exist
+        run: |
+          # We want to verify that at least 200 files exist in Chickensoft.GodotNodeInterfaces/src/adapters
+          # and in Chickensoft.GodotNodeInterfaces/src/interfaces
 
-          # publish the nuget package
-          dotnet nuget push "$nuget_package" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          # count the number of files in the adapters directory
+          adapter_count=$(find Chickensoft.GodotNodeInterfaces/src/adapters -type f | wc -l)
+
+          # count the number of files in the interfaces directory
+          interface_count=$(find Chickensoft.GodotNodeInterfaces/src/interfaces -type f | wc -l)
+
+          if [ "$adapter_count" -lt 200 ]; then
+            echo "❌ Adapter count is less than 200"
+
+            # exit with a non-zero exit code
+            exit 1
+
+          elif [ "$interface_count" -lt 200 ]; then
+            echo "❌ Interface count is less than 200"
+
+            # exit with a non-zero exit code
+            exit 1
+
+          else
+            echo "✅ Generated "$adapter_count" adapters and "$interface_count" interfaces!
+          fi
+
+      - name: 👩‍🔬 Verify Generated Types Build
+        run: |
+          dotnet build
+
+      # - name: 📦 Publish
+      #   run: |
+      #     # build the package
+      #     dotnet build Chickensoft.GodotNodeInterfaces/Chickensoft.GodotNodeInterfaces.csproj -c Release
+
+      #     # find the built nuget package
+      #     nuget_package=$(find . -name "Chickensoft.GodotNodeInterfaces.*.nupkg")
+
+      #     echo "📦 Publishing package: $nuget_package"
+
+      #     # publish the nuget package
+      #     dotnet nuget push "$nuget_package" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+
+      # - name: ✍️ Commit Changes
+      #   run: |
+      #     git config user.name "action@github.com"
+      #     git config user.email "GitHub Action"
+      #     git commit -a -m "chore(version): update version to ${{ steps.next-version.outputs.version }}"
+      #     git push
+
+      # - name: ✨ Create Release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: gh release create --generate-notes "v${{ steps.next-version.outputs.version }}"
