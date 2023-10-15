@@ -22,6 +22,75 @@ GodotSharp doesn't expose interfaces for Godot nodes, making it [very expensive 
 
 If you're still confused, this probably isn't for you. It's one of those "you'll know if you ever want/need this" type of things. This is really just for those completionists who like writing tests and getting 100% code coverage.
 
+## 🧐 I don't see anything here
+
+That's because the interfaces and adapters are generated at build-time based on the version of the GodotSharp API being referenced.
+
+Here's a sample of a generated interface:
+
+```csharp
+/// <summary>
+/// <para>Casts light in a 2D environment. A light is defined as a color, an energy value, a mode (see constants), and various other parameters (range and shadows-related).</para>
+/// </summary>
+public interface ILight2D : INode2D {
+    /// <summary>
+    /// <para>The Light2D's blend mode. See <see cref="Light2D.BlendModeEnum" /> constants for values.</para>
+    /// </summary>
+    Light2D.BlendModeEnum BlendMode { get; set; }
+    /// <summary>
+    /// <para>The Light2D's <see cref="Color" />.</para>
+    /// </summary>
+    Color Color { get; set; }
+    /// <summary>
+    /// <para>If <c>true</c>, Light2D will only appear when editing the scene.</para>
+    /// </summary>
+    bool EditorOnly { get; set; }
+
+    ...
+```
+
+And here's the corresponding adapter:
+
+```csharp
+/// <summary>
+/// <para>Casts light in a 2D environment. A light is defined as a color, an energy value, a mode (see constants), and various other parameters (range and shadows-related).</para>
+/// </summary>
+public class Light2DAdapter : Node2DAdapter, ILight2D {
+  private readonly Light2D _node;
+
+  /// <summary>Creates a new Light2DAdapter for Light2D.</summary>
+  /// <param name="node">Godot node.</param>
+  public Light2DAdapter(Node node) : base(node) {
+    if (node is not Light2D typedNode) {
+      throw new System.InvalidCastException(
+        $"{node.GetType().Name} is not a Light2D"
+      );
+    }
+    _node = typedNode;
+  }
+
+    /// <summary>
+    /// <para>The Light2D's blend mode. See <see cref="Light2D.BlendModeEnum" /> constants for values.</para>
+    /// </summary>
+    public Light2D.BlendModeEnum BlendMode { get => _node.BlendMode; set => _node.BlendMode = value; }
+
+    ...
+```
+
+And here's what the adapter factory looks like:
+
+```csharp
+public static class GodotNodes {
+  private static readonly Dictionary<Type, Func<Node, IAdapter>> _adapters = new() {
+      [typeof(INode)] = node => new NodeAdapter(node),
+      [typeof(IAnimationPlayer)] = node => new AnimationPlayerAdapter(node),
+      [typeof(IAnimationTree)] = node => new AnimationTreeAdapter(node),
+      [typeof(ICodeEdit)] = node => new CodeEditAdapter(node),
+      [typeof(IGraphEdit)] = node => new GraphEditAdapter(node),
+
+      ...
+```
+
 ## 📦 Installation
 
 Just install the package from nuget!
