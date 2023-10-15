@@ -100,7 +100,7 @@ jobs:
             echo "❌ Interface count is less than 200"
             exit 1
           else
-            echo "✅ Generated "$adapter_count" adapters and "$interface_count" interfaces!
+            echo "✅ Generated $adapter_count adapters and $interface_count" interfaces!
           fi
 
       - name: 👩‍🔬 Verify Generated Types Build
