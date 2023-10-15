@@ -53,7 +53,7 @@
     {
       "label": "clean_loose_source_files",
       "type": "shell",
-      "command": "rm ${workspaceFolder}/src/*.cs || exit 0",
+      "command": "rm ${workspaceFolder}/Chickensoft.GodotNodeInterfaces/src/*.cs || exit 0",
       "presentation": {
         "echo": true,
         "reveal": "silent",
