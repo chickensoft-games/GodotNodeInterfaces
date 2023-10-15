@@ -10,3 +10,7 @@ obj/
 .vs/
 .DS_Store
 .output/
+Chickensoft.GodotNodeInterfaces/src/adapters
+!Chickensoft.GodotNodeInterfaces/src/adapters/.gitkeep
+Chickensoft.GodotNodeInterfaces/src/interfaces
+!Chickensoft.GodotNodeInterfaces/src/interfaces/.gitkeep
