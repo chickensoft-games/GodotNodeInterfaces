@@ -109,15 +109,13 @@ jobs:
         run: |
           dotnet build --configuration Release --property WarningLevel=0
 
-      # - name: 📦 Publish
-      #   run: |
-      #     # build the package
-      #     dotnet build Chickensoft.GodotNodeInterfaces/Chickensoft.GodotNodeInterfaces.csproj -c Release
+      - name: 📦 Publish
+        working-directory: Chickensoft.GodotNodeInterfaces
+        run: |
+          # find the built nuget package
+          nuget_package=$(find . -name "./nupkg/.*.nupkg")
 
-      #     # find the built nuget package
-      #     nuget_package=$(find . -name "Chickensoft.GodotNodeInterfaces.*.nupkg")
-
-      #     echo "📦 Publishing package: $nuget_package"
+          echo "📦 Publishing package: $nuget_package"
 
       #     # publish the nuget package
       #     dotnet nuget push "$nuget_package" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
