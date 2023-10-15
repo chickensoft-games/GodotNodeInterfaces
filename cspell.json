@@ -21,6 +21,7 @@
     "chickenpackage",
     "Chickensoft",
     "classfilters",
+    "completionists",
     "CYGWIN",
     "endregion",
     "globaltool",
@@ -54,6 +55,7 @@
     "typeparam",
     "typeparamref",
     "ulong",
+    "Xmls",
     "Xunit"
   ]
 }
