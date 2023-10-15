@@ -22,6 +22,50 @@ GodotSharp doesn't expose interfaces for Godot nodes, making it [very expensive 
 
 If you're still confused, this probably isn't for you. It's one of those "you'll know if you ever want/need this" type of things. This is really just for those completionists who like writing tests and getting 100% code coverage.
 
+## 📦 Installation
+
+Just install the package from nuget!
+
+```sh
+dotnet add package Chickensoft.GodotNodeInterfaces 
+```
+
+## 📖 Usage
+
+All you have to do is implement your own extension method and use it in in place of `GetNode<T>(string)` that actually gets the godot node by the path and creates an adapter for it (or looks up the path in a cache of mocked nodes).
+
+```csharp
+public static class FakeSceneTree {
+  public static T GetNodeEx<T>(this Node node, string path) where T : class, INode {
+    var child = node.GetNode(path);
+    if (child == null) {
+      // TODO: lookup a mock node in your fake scene tree or something
+      return (T)FakeSceneTree.Mocks[path];
+    }
+
+    return GodotNodes.Adapt<T>(child);
+  }
+
+  // When running tests, put your fake scene tree stuff here
+  // (or come up with your own system for storing mock nodes temporarily)
+  public static Dictionary<string, INode> Mocks = new();
+}
+```
+
+Or you can use the `[AutoNode]` functionality from [PowerUps] with [SuperNodes].
+
+Once you have that setup, you can use it in your node scripts.
+
+```csharp
+public partial class MyNode : Node2D {
+  public ISprite2D Sprite { get; set; } = default!;
+
+  public override void _Ready() {
+    Sprite = this.GetNodeEx<ISprite2D>("Sprite");
+  }
+}
+```
+
 ## 💁 Getting Help
 
 *Is this package broken? Encountering obscure C# build problems?* We'll be happy to help you in the [Chickensoft Discord server][discord].
@@ -71,3 +115,6 @@ If your project is setup to require approvals before pull requests can be merged
 [about-renovate-approvals]: https://stackoverflow.com/a/66575885
 
 [expensive-toys]: https://stackoverflow.com/questions/5556115/open-source-free-alternative-of-typemock-isolator
+
+[PowerUps]: https://github.com/chickensoft-games/PowerUps
+[SuperNodes]: https://github.com/chickensoft-games/SuperNodes
