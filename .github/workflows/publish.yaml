@@ -77,6 +77,11 @@ jobs:
         run: |
           dotnet build --configuration Release --no-restore
 
+      - name: 🧬 Run Generator
+        working-directory: Chickensoft.GodotNodeInterfacesGenerator
+        run: |
+          dotnet run
+
       - name: 🧪 Verify Generated Files Exist
         run: |
           # We want to verify that at least 200 files exist in Chickensoft.GodotNodeInterfaces/src/adapters
@@ -90,16 +95,10 @@ jobs:
 
           if [ "$adapter_count" -lt 200 ]; then
             echo "❌ Adapter count is less than 200"
-
-            # exit with a non-zero exit code
             exit 1
-
           elif [ "$interface_count" -lt 200 ]; then
             echo "❌ Interface count is less than 200"
-
-            # exit with a non-zero exit code
             exit 1
-
           else
             echo "✅ Generated "$adapter_count" adapters and "$interface_count" interfaces!
           fi
