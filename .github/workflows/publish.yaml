@@ -113,7 +113,7 @@ jobs:
         working-directory: Chickensoft.GodotNodeInterfaces
         run: |
           # find the built nuget package
-          nuget_package=$(find . -name "./nupkg/.*.nupkg")
+          nuget_package=$(find . -name "nupkg.*.nupkg")
 
           echo "📦 Publishing package: $nuget_package"
 
