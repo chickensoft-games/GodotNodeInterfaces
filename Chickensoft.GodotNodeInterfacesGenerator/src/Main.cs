@@ -36,7 +36,7 @@ public static class GodotNodeInterfacesGenerator {
       namespace Chickensoft.GodotNodeInterfaces;
 
       /// <summary>A Godot API adapter.</summary>
-      public interface IGodotNodeAdapter { }
+      public interface IGodotNodeAdapter : INode { }
       """
     );
 
