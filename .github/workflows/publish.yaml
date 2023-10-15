@@ -110,9 +110,13 @@ jobs:
           dotnet build --configuration Release --property WarningLevel=0
 
       - name: 📦 Publish
+        id: publish
         run: |
           # find the built nuget package
           nuget_package=$(find . -name "Chickensoft.GodotNodeInterfaces.*.nupkg")
+
+          # save package name to an output
+          echo "nuget_package=$nuget_package" >> $GITHUB_OUTPUT
 
           echo "📦 Publishing package: $nuget_package"
 
@@ -126,7 +130,9 @@ jobs:
       #     git commit -a -m "chore(version): update version to ${{ steps.next-version.outputs.version }}"
       #     git push
 
-      # - name: ✨ Create Release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: gh release create --generate-notes "v${{ steps.next-version.outputs.version }}"
+      - name: ✨ Create Release
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # run: gh release create --generate-notes "v${{ steps.next-version.outputs.version }}" ${{ steps.publish.outputs.nuget_package }}
+        run: |
+          echo "📦 Releasing package: ${{ steps.publish.outputs.nuget_package }}"
