@@ -16,6 +16,8 @@ public static class GodotNodeInterfacesGenerator {
   public const string INTERFACES_PATH = "../Chickensoft.GodotNodeInterfaces/src/interfaces";
   public const string ADAPTERS_PATH = "../Chickensoft.GodotNodeInterfaces/src/adapters";
 
+  public const string SRC_PATH = "../Chickensoft.GodotNodeInterfaces/src";
+
   public static readonly string CrefTagRegex = new(
     @"(<see cref="")([A-Z]:Godot\.)([^""]*"" />)"
   );
@@ -29,7 +31,7 @@ public static class GodotNodeInterfacesGenerator {
   public static void Main(string[] args) {
     // First, inject an interface all adapters will inherit from.
     File.WriteAllText(
-      Path.Join(ADAPTERS_PATH, "IAdapter.cs"),
+      Path.Join(SRC_PATH, "IAdapter.cs"),
       """
       namespace Chickensoft.GodotNodeInterfaces;
 
@@ -37,6 +39,8 @@ public static class GodotNodeInterfacesGenerator {
       public interface IAdapter { }
       """
     );
+
+    Console.WriteLine("Generated IAdapter.");
 
     var godotAssembly = typeof(Node).Assembly;
 
@@ -198,15 +202,7 @@ public static class GodotNodeInterfacesGenerator {
         }
       }
 
-      var allBaseClasses = new List<Type>();
       var baseType = type.BaseType!;
-
-      var currentBaseType = baseType;
-      do {
-        allBaseClasses.Add(currentBaseType!);
-        currentBaseType = currentBaseType.BaseType;
-        if (currentBaseType == null) { break; }
-      } while (currentBaseType != typeof(Node));
 
       // see if base type also extends Godot.Node
       var extendsAnotherNode = baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node);
@@ -272,6 +268,8 @@ public static class GodotNodeInterfacesGenerator {
       public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
         private readonly {{typeName}} _node;
 
+        /// <summary>Creates a new {{adapterName}} for {{typeName}}.</summary>
+        /// <param name="node">Godot node.</param>
         public {{adapterName}}(Node node){{adapterBaseCall}}{
           if (node is not {{typeName}} typedNode) {
             throw new System.InvalidCastException(
@@ -290,9 +288,11 @@ public static class GodotNodeInterfacesGenerator {
 
       var adapterFilePath = Path.Join(ADAPTERS_PATH, adapterFilename);
       File.WriteAllText(adapterFilePath, adapterContents);
+
+      Console.WriteLine($"Generated {interfaceName} and {adapterName}.");
     }
 
-    var adapterFactoryFilename = ADAPTERS_PATH + "/GodotNodes.cs";
+    var adapterFactoryFilename = SRC_PATH + "/GodotNodes.cs";
 
     var adapterFactoryCaseCode =
       string.Join(",\n  ", adapterFactoryCases).TrimEnd();
@@ -319,6 +319,8 @@ public static class GodotNodeInterfacesGenerator {
     """;
 
     File.WriteAllText(adapterFactoryFilename, adapterFactoryContents);
+
+    Console.WriteLine("Generated GodotNodes.");
   }
 
   private static string GetId(MemberInfo type) =>
