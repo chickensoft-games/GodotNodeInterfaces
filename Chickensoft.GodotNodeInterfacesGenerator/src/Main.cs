@@ -344,11 +344,10 @@ public static class GodotNodeInterfacesGenerator {
 
       var interfaceMemberCode = interfaceMembers.ToString();
       var adapterMemberCode = adapterMembers.ToString();
-      var iAdapterImpl = !extendsAnotherObj
-        ? baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node)
+      var iAdapterImpl =
+        baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node)
           ? ", INodeAdapter"
-          : ", IGodotObjectAdapter"
-        : "";
+          : ", IGodotObjectAdapter";
 
       var usings = string.Join("\n", _usings.Select(u => $"using {u};"));
 
