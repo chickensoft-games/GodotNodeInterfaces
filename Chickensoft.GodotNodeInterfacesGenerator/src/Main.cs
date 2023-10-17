@@ -19,7 +19,7 @@ public static class GodotNodeInterfacesGenerator {
   public const string SRC_PATH = "../Chickensoft.GodotNodeInterfaces/src";
 
   public static readonly string CrefTagRegex = new(
-    @"(<see cref="")([A-Z]:Godot\.)([^""]*"" />)"
+    @"(<see cref="")([A-Z]:)([^""]*"" />)"
   );
 
   private static readonly HashSet<string> _usings = new() { "Godot" };
@@ -27,6 +27,16 @@ public static class GodotNodeInterfacesGenerator {
   private static readonly HashSet<string> _ambiguousGodotTypes = new() {
     "Range", "Environment"
   };
+
+  private record ParameterData(
+    string Name,
+    string Type,
+    string? DefaultValue,
+    string? Modifier
+  ) {
+    public override string ToString() =>
+      $"{Modifier}{Type} {Name}{DefaultValue}";
+  }
 
   public static void Main(string[] args) {
     // First, inject an interface all adapters will inherit from.
@@ -152,16 +162,98 @@ public static class GodotNodeInterfacesGenerator {
             }
           }
 
+          // we need to compute parameter types, names, modifiers, and default values
+
+          var parametersData = parameters.Select(parameter => {
+            var parameterType = TypeName(parameter.ParameterType);
+            var parameterName = GetId(parameter);
+            var parameterDefaultValue = "";
+            object? defaultValue = null;
+            if (parameter.HasDefaultValue) {
+              defaultValue = parameter.DefaultValue;
+              if (defaultValue is null) {
+                if (parameter.ParameterType.IsValueType) {
+                  parameterDefaultValue = $" = default({parameterType})";
+                }
+                else {
+                  parameterDefaultValue = " = null";
+                }
+              }
+              else if (parameter.ParameterType == typeof(bool)) {
+                parameterDefaultValue = $" = {defaultValue.ToString()!.ToLower()}";
+              }
+              else if (parameter.ParameterType == typeof(double)) {
+                parameterDefaultValue = $" = {defaultValue}d";
+              }
+              else if (parameter.ParameterType == typeof(float)) {
+                parameterDefaultValue = $" = {defaultValue}f";
+              }
+              else if (parameter.ParameterType == typeof(char)) {
+                parameterDefaultValue = $" = '{Escape(defaultValue.ToString()!)}'";
+              }
+              else if (parameter.ParameterType == typeof(string)) {
+                parameterDefaultValue = $" = \"{Escape((string)defaultValue)}\"";
+              }
+              else if (parameter.ParameterType.IsPrimitive) {
+                parameterDefaultValue = $" = {defaultValue}";
+              }
+              else if (parameter.ParameterType.IsEnum) {
+                var enumMemberName = Enum.GetName(parameter.ParameterType, defaultValue);
+                if (string.IsNullOrEmpty(enumMemberName)) {
+                  // see if it's a multi-flag enum
+                  var enumValues = defaultValue.ToString()!.Split(",").Select(v => v.Trim());
+
+                  parameterDefaultValue = " = " + string.Join(" | ", enumValues.Select(v => $"{parameterType}.{v}"));
+                }
+                else {
+                  parameterDefaultValue = string.IsNullOrEmpty(enumMemberName)
+                    ? $" = ({parameterType}){(int)defaultValue}"
+                    : $" = {parameterType}." + enumMemberName;
+                }
+              }
+              else if (parameter.ParameterType.IsValueType) {
+                parameterDefaultValue = $" = default({parameterType})";
+              }
+              else {
+                parameterDefaultValue = $" = {defaultValue}";
+              }
+
+              if (
+                defaultValue is null &&
+                !parameterType.StartsWith("Nullable<") &&
+                parameter.ParameterType != typeof(Variant)
+              ) {
+                parameterType += "?";
+              }
+            }
+            var modifier = "";
+            if (parameter.IsOut) {
+              modifier = "out ";
+            }
+            else if (parameter.IsIn) {
+              modifier = "in ";
+            }
+            else if (parameter.ParameterType.IsByRef) {
+              modifier = "ref ";
+            }
+            return new ParameterData(
+              parameterName,
+              parameterType,
+              parameterDefaultValue,
+              modifier
+            );
+          });
+
           var parameterList = string.Join(
             ", ",
-            parameters.Select(p => $"{TypeName(p.ParameterType)} {GetId(p)}")
+            parametersData.Select(p => p.ToString())
           );
 
           var signature = $"{returnType} {methodName}({parameterList}){typeParameterConstraints}";
           var interfaceSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}{signature};";
           var adapterSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}public {signature}";
           interfaceMembers.AppendLine(interfaceSignature);
-          var adapterCode = adapterSignature + " => Node." + methodName + "(" + string.Join(", ", parameters.Select(GetId)) + ");";
+          var adapterCode = adapterSignature + " => Node." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
           adapterMembers.AppendLine(adapterCode);
         }
         else if (member is PropertyInfo propertyInfo) {
@@ -384,6 +476,9 @@ public static class GodotNodeInterfacesGenerator {
     return validId && !isReserved && !isContextualReserved;
   }
 
+  private static string Escape(string str) =>
+    SymbolDisplay.FormatLiteral(str, false);
+
   // This is the set of types from the C# keyword list.
   private static readonly Dictionary<Type, string> _typeAlias =
     new() {
@@ -466,7 +561,7 @@ public static class GodotNodeInterfacesGenerator {
       .Split("\n")
       .Select(l => l.Trim())
       .Where(l => l != "")
-      // Remove unneeded prefixes like `T:Godot.` and `E:Godot.`, etc,
+      // Remove unneeded prefixes like `T:` and `E:`, etc,
       // leaving the rest of the cref contents alone
       .Select(l => Regex.Replace(
         l, CrefTagRegex, m => m.Groups[1].Value + m.Groups[3].Value))

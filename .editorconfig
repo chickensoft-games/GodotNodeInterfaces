@@ -460,3 +460,4 @@ dotnet_diagnostic.CA1716.severity = none
 dotnet_diagnostic.RCS1181.severity = none
 # I like dumb if statements.
 dotnet_diagnostic.IDE0046.severity = none
+dotnet_diagnostic.IDE0045.severity = none
