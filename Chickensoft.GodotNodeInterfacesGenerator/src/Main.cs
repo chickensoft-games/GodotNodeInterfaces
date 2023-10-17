@@ -421,7 +421,7 @@ public static class GodotNodeInterfacesGenerator {
       Console.WriteLine($"Generated {interfaceName} and {adapterName}.");
     }
 
-    var adapterFactoryFilename = SRC_PATH + "/GodotNodes.cs";
+    var adapterFactoryFilename = SRC_PATH + "/GodotInterfaces.cs";
 
     var adapterFactoryCaseCode =
       string.Join(",\n  ", adapterFactoryCases).TrimEnd();
@@ -436,7 +436,7 @@ public static class GodotNodeInterfacesGenerator {
     using System.Collections.Generic;
     using Godot;
 
-    public static class GodotNodes {
+    public static class GodotInterfaces {
       private static readonly Dictionary<Type, Func<GodotObject, IGodotAdapter>> _adapters = new() {
       {{adapterFactoryCaseCode}}
       };
@@ -464,7 +464,7 @@ public static class GodotNodeInterfacesGenerator {
 
     File.WriteAllText(adapterFactoryFilename, adapterFactoryContents);
 
-    Console.WriteLine("Generated GodotNodes.");
+    Console.WriteLine("Generated GodotInterfaces.");
   }
 
   private static string GetId(MemberInfo type) =>
