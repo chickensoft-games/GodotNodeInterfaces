@@ -41,26 +41,33 @@ public static class GodotNodeInterfacesGenerator {
   public static void Main(string[] args) {
     // First, inject an interface all adapters will inherit from.
     File.WriteAllText(
-      Path.Join(SRC_PATH, "IGodotNodeAdapter.cs"),
+      Path.Join(SRC_PATH, "IGodotAdapters.cs"),
       """
       namespace Chickensoft.GodotNodeInterfaces;
 
       using Godot;
 
-      /// <summary>A Godot API adapter.</summary>
-      public interface IGodotNodeAdapter : INode {
+      /// <summary>A Godot objet API adapter.</summary>
+      public interface IGodotAdapter : IGodotObject {
+        /// <summary>Underlying Godot object this adapter uses.</summary>
+        public GodotObject Object { get; }
+      }
+
+      /// <summary>A Godot node API adapter.</summary>
+      public interface IGodotNodeAdapter : IGodotAdapter {
         /// <summary>Underlying Godot node this adapter uses.</summary>
-        public Node OriginalNode { get; }
+        public new Node Object { get; }
       }
       """
     );
 
-    Console.WriteLine("Generated IGodotNodeAdapter.");
+    Console.WriteLine("Generated IGodotAdapter");
 
     var godotAssembly = typeof(Node).Assembly;
 
     var typesThatExtendGodotNode = godotAssembly.GetTypes()
-      .Where(t => t.IsSubclassOf(typeof(Node)) || t == typeof(Node));
+      .Where(t => t.IsSubclassOf(typeof(Node)) || t == typeof(Node))
+      .Append(typeof(GodotObject));
 
     // map of types to the code that constructs an adapter of that type.
     var adapterFactoryCases = new List<string>();
@@ -253,7 +260,7 @@ public static class GodotNodeInterfacesGenerator {
           var interfaceSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}{signature};";
           var adapterSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}public {signature}";
           interfaceMembers.AppendLine(interfaceSignature);
-          var adapterCode = adapterSignature + " => Node." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
+          var adapterCode = adapterSignature + " => Object." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
           adapterMembers.AppendLine(adapterCode);
         }
         else if (member is PropertyInfo propertyInfo) {
@@ -286,13 +293,13 @@ public static class GodotNodeInterfacesGenerator {
 
           var adapterCode = $"{propertyDocumentation}\n{"  ".Repeat(2)}public {propertyType} {propertyName}";
           if (isSettable && isGettable) {
-            adapterCode += $" {{ get => Node.{propertyName}; set => Node.{propertyName} = value; }}";
+            adapterCode += $" {{ get => Object.{propertyName}; set => Object.{propertyName} = value; }}";
           }
           else if (isGettable) {
-            adapterCode += $" {{ get => Node.{propertyName}; }}";
+            adapterCode += $" {{ get => Object.{propertyName}; }}";
           }
           else if (isSettable) {
-            adapterCode += $" {{ set => Node.{propertyName} = value; }}";
+            adapterCode += $" {{ set => Object.{propertyName} = value; }}";
           }
 
           interfaceMembers.AppendLine(propertySignature);
@@ -309,7 +316,7 @@ public static class GodotNodeInterfacesGenerator {
 
           var eventSignature = $"{eventDocumentation}\n{"  ".Repeat(2)}event {eventHandlerType} {eventId};";
 
-          var adapterCode = $"{eventDocumentation}\n{"  ".Repeat(2)}public event {eventHandlerType} {eventId} {{ add => Node.{eventId} += value; remove => Node.{eventId} -= value; }}";
+          var adapterCode = $"{eventDocumentation}\n{"  ".Repeat(2)}public event {eventHandlerType} {eventId} {{ add => Object.{eventId} += value; remove => Object.{eventId} -= value; }}";
 
           interfaceMembers.AppendLine(eventSignature);
           adapterMembers.AppendLine(adapterCode);
@@ -319,26 +326,28 @@ public static class GodotNodeInterfacesGenerator {
       var baseType = type.BaseType!;
 
       // see if base type also extends Godot.Node
-      var extendsAnotherNode = baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node);
+      var extendsAnotherObj = baseType.IsSubclassOf(typeof(GodotObject)) || baseType == typeof(GodotObject);
 
-      var interfaceParent = extendsAnotherNode
+      var interfaceParent = extendsAnotherObj
         ? $" : I{baseType.Name}"
         : "";
 
-      var adapterParent = extendsAnotherNode
+      var adapterParent = extendsAnotherObj
         ? $"{baseType.Name}Adapter, "
         : "";
 
-      var adapterBaseCall = extendsAnotherNode
-        ? " : base(node) "
+      var adapterBaseCall = extendsAnotherObj
+        ? " : base(@object) "
         : " ";
 
       var adapterAbstract = type.IsAbstract ? " abstract " : " ";
 
       var interfaceMemberCode = interfaceMembers.ToString();
       var adapterMemberCode = adapterMembers.ToString();
-      var iAdapterImpl = !extendsAnotherNode
-        ? ", IGodotNodeAdapter"
+      var iAdapterImpl = !extendsAnotherObj
+        ? baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node)
+          ? ", IGodotNodeAdapter"
+          : ", IGodotAdapter"
         : "";
 
       var usings = string.Join("\n", _usings.Select(u => $"using {u};"));
@@ -377,11 +386,7 @@ public static class GodotNodeInterfacesGenerator {
       }
       """;
 
-      var adapterOriginalNode = !extendsAnotherNode
-        ? "\n  public Node OriginalNode => Node;\n"
-        : "";
-
-      var newKeyword = extendsAnotherNode ? "new" : "";
+      var newKeyword = extendsAnotherObj ? "new" : "";
 
       var adapterContents = $$"""
       namespace Chickensoft.GodotNodeInterfaces;
@@ -389,18 +394,18 @@ public static class GodotNodeInterfacesGenerator {
       {{usings}}
       {{mainDocumentation}}
       public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
-        /// <summary>Underlying Godot node this adapter uses.</summary>
-        public {{newKeyword}} {{typeName}} Node { get; private set; }
-      {{adapterOriginalNode}}
+        /// <summary>Underlying Godot object this adapter uses.</summary>
+        public {{newKeyword}} {{typeName}} Object { get; private set; }
+
         /// <summary>Creates a new {{adapterName}} for {{typeName}}.</summary>
-        /// <param name="node">Godot node.</param>
-        public {{adapterName}}(Node node){{adapterBaseCall}}{
-          if (node is not {{typeName}} typedNode) {
+        /// <param name="object">Godot object.</param>
+        public {{adapterName}}(GodotObject @object){{adapterBaseCall}}{
+          if (@object is not {{typeName}} typedObj) {
             throw new System.InvalidCastException(
-              $"{node.GetType().Name} is not a {{typeName}}"
+              $"{@object.GetType().Name} is not a {{typeName}}"
             );
           }
-          Node = typedNode;
+          Object = typedObj;
         }
 
       {{adapterMemberCode}}
@@ -432,28 +437,28 @@ public static class GodotNodeInterfacesGenerator {
     using Godot;
 
     public static class GodotNodes {
-      private static readonly Dictionary<Type, Func<Node, IGodotNodeAdapter>> _adapters = new() {
+      private static readonly Dictionary<Type, Func<GodotObject, IGodotAdapter>> _adapters = new() {
       {{adapterFactoryCaseCode}}
       };
 
-      private static readonly Dictionary<Type, Func<Node, IGodotNodeAdapter>> _adaptersByGodotNode = new() {
+      private static readonly Dictionary<Type, Func<GodotObject, IGodotAdapter>> _adaptersByGodotType = new() {
         {{adapterFactoryCaseCodeByGodotNode}}
       };
 
       /// <summary>
-      /// Creates an adapter for the given Godot node. This will throw if the
-      /// incorrect adapter type was specified for the node.
+      /// Creates an adapter for the given Godot object. This will throw if the
+      /// incorrect adapter type was specified for the object.
       /// </summary>
       /// <typeparam name="T">Adapter type.</typeparam>
-      /// <param name="node">Godot node.</param>
-      public static T Adapt<T>(Node node) where T : class, INode => (T)_adapters[typeof(T)](node);
+      /// <param name="object">Godot object.</param>
+      public static T Adapt<T>(GodotObject @object) where T : class, IGodotObject => (T)_adapters[typeof(T)](@object);
 
       /// <summary>
-      /// Creates an adapter for the given Godot node. This will throw if the
-      /// incorrect adapter type was specified for the node.
+      /// Creates an adapter for the given Godot object. This will throw if the
+      /// incorrect adapter type was specified for the object.
       /// </summary>
-      /// <param name="node">Godot node.</param>
-      public static IGodotNodeAdapter Adapt(Node node) => _adaptersByGodotNode[node.GetType()](node);
+      /// <param name="object">Godot object.</param>
+      public static IGodotObject Adapt(GodotObject @object) => _adaptersByGodotType[@object.GetType()](@object);
     }
     """;
 
