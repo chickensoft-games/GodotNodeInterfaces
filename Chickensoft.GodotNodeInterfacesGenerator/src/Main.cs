@@ -41,27 +41,27 @@ public static class GodotNodeInterfacesGenerator {
   public static void Main(string[] args) {
     // First, inject an interface all adapters will inherit from.
     File.WriteAllText(
-      Path.Join(SRC_PATH, "IGodotAdapters.cs"),
+      Path.Join(SRC_PATH, "Adapters.cs"),
       """
       namespace Chickensoft.GodotNodeInterfaces;
 
       using Godot;
 
       /// <summary>A Godot objet API adapter.</summary>
-      public interface IGodotAdapter : IGodotObject {
+      public interface IGodotObjectAdapter : IGodotObject {
         /// <summary>Underlying Godot object this adapter uses.</summary>
         public GodotObject Object { get; }
       }
 
       /// <summary>A Godot node API adapter.</summary>
-      public interface IGodotNodeAdapter : IGodotAdapter, INode {
+      public interface INodeAdapter : IGodotObjectAdapter, INode {
         /// <summary>Underlying Godot node this adapter uses.</summary>
         public new Node Object { get; }
       }
       """
     );
 
-    Console.WriteLine("Generated IGodotAdapter");
+    Console.WriteLine("Generated basic adapters");
 
     var godotAssembly = typeof(Node).Assembly;
 
@@ -346,8 +346,8 @@ public static class GodotNodeInterfacesGenerator {
       var adapterMemberCode = adapterMembers.ToString();
       var iAdapterImpl = !extendsAnotherObj
         ? baseType.IsSubclassOf(typeof(Node)) || baseType == typeof(Node)
-          ? ", IGodotNodeAdapter"
-          : ", IGodotAdapter"
+          ? ", INodeAdapter"
+          : ", IGodotObjectAdapter"
         : "";
 
       var usings = string.Join("\n", _usings.Select(u => $"using {u};"));
@@ -437,11 +437,11 @@ public static class GodotNodeInterfacesGenerator {
     using Godot;
 
     public static class GodotInterfaces {
-      private static readonly Dictionary<Type, Func<GodotObject, IGodotAdapter>> _adapters = new() {
+      private static readonly Dictionary<Type, Func<GodotObject, IGodotObjectAdapter>> _adapters = new() {
       {{adapterFactoryCaseCode}}
       };
 
-      private static readonly Dictionary<Type, Func<GodotObject, IGodotAdapter>> _adaptersByGodotType = new() {
+      private static readonly Dictionary<Type, Func<GodotObject, IGodotObjectAdapter>> _adaptersByGodotType = new() {
         {{adapterFactoryCaseCodeByGodotNode}}
       };
 
@@ -458,7 +458,14 @@ public static class GodotNodeInterfacesGenerator {
       /// incorrect adapter type was specified for the object.
       /// </summary>
       /// <param name="object">Godot object.</param>
-      public static IGodotObject Adapt(GodotObject @object) => _adaptersByGodotType[@object.GetType()](@object);
+      public static IGodotObject AdaptObject(GodotObject @object) => _adaptersByGodotType[@object.GetType()](@object);
+
+      /// <summary>
+      /// Creates an adapter for the given Godot node. This will throw if the
+      /// incorrect adapter type was specified for the object.
+      /// </summary>
+      /// <param name="node">Godot node.</param>
+      public static INodeAdapter AdaptNode(Node node) => (INodeAdapter)AdaptObject(node);
     }
     """;
 
