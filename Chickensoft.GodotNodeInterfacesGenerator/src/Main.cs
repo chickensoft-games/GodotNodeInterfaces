@@ -54,7 +54,7 @@ public static class GodotNodeInterfacesGenerator {
       }
 
       /// <summary>A Godot node API adapter.</summary>
-      public interface IGodotNodeAdapter : IGodotAdapter {
+      public interface IGodotNodeAdapter : IGodotAdapter, INode {
         /// <summary>Underlying Godot node this adapter uses.</summary>
         public new Node Object { get; }
       }
