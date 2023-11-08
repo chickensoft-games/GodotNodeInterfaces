@@ -47,16 +47,16 @@ public static class GodotNodeInterfacesGenerator {
 
       using Godot;
 
-      /// <summary>A Godot objet API adapter.</summary>
+      /// <summary>A Godot object API adapter.</summary>
       public interface IGodotObjectAdapter : IGodotObject {
         /// <summary>Underlying Godot object this adapter uses.</summary>
-        public GodotObject Object { get; }
+        public GodotObject TargetObj { get; }
       }
 
       /// <summary>A Godot node API adapter.</summary>
-      public interface INodeAdapter : IGodotObjectAdapter, INode {
+      public partial  interface INodeAdapter : IGodotObjectAdapter, INode {
         /// <summary>Underlying Godot node this adapter uses.</summary>
-        public new Node Object { get; }
+        public new Node TargetObj { get; }
       }
       """
     );
@@ -65,15 +65,17 @@ public static class GodotNodeInterfacesGenerator {
 
     var godotAssembly = typeof(Node).Assembly;
 
-    var typesThatExtendGodotNode = godotAssembly.GetTypes()
-      .Where(t => t.IsSubclassOf(typeof(Node)) || t == typeof(Node))
-      .Append(typeof(GodotObject));
+    var typesThatExtendGodotObject = godotAssembly
+      .GetTypes()
+      .Where(
+        t => t.IsSubclassOf(typeof(GodotObject)) || t == typeof(GodotObject)
+      );
 
     // map of types to the code that constructs an adapter of that type.
     var adapterFactoryCases = new List<string>();
     var adapterFactoryCasesByGodotNode = new List<string>();
 
-    foreach (var type in typesThatExtendGodotNode) {
+    foreach (var type in typesThatExtendGodotObject) {
       // Look at each type of Godot node.
 
       var typeName = TypeName(type);
@@ -175,11 +177,15 @@ public static class GodotNodeInterfacesGenerator {
             var parameterType = TypeName(parameter.ParameterType);
             var parameterName = GetId(parameter);
             var parameterDefaultValue = "";
+
             object? defaultValue = null;
             if (parameter.HasDefaultValue) {
               defaultValue = parameter.DefaultValue;
+
+              var canUseDefault = CanUseDefault(parameter.ParameterType);
+
               if (defaultValue is null) {
-                if (parameter.ParameterType.IsValueType) {
+                if (canUseDefault) {
                   parameterDefaultValue = $" = default({parameterType})";
                 }
                 else {
@@ -206,15 +212,16 @@ public static class GodotNodeInterfacesGenerator {
               }
               else if (parameter.ParameterType.IsEnum) {
                 var enumMemberName = Enum.GetName(parameter.ParameterType, defaultValue);
-                if (string.IsNullOrEmpty(enumMemberName)) {
-                  // see if it's a multi-flag enum
-                  var enumValues = defaultValue.ToString()!.Split(",").Select(v => v.Trim());
-
+                // see if it's a multi-flag enum
+                var enumValues = defaultValue.ToString()?.Split(",").Select(v => v.Trim()).ToList();
+                if (
+                  string.IsNullOrEmpty(enumMemberName) && enumValues?.Count > 1
+                ) {
                   parameterDefaultValue = " = " + string.Join(" | ", enumValues.Select(v => $"{parameterType}.{v}"));
                 }
                 else {
                   parameterDefaultValue = string.IsNullOrEmpty(enumMemberName)
-                    ? $" = ({parameterType}){(int)defaultValue}"
+                    ? $" = ({parameterType}){Convert.ToInt32(defaultValue)}"
                     : $" = {parameterType}." + enumMemberName;
                 }
               }
@@ -228,7 +235,7 @@ public static class GodotNodeInterfacesGenerator {
               if (
                 defaultValue is null &&
                 !parameterType.StartsWith("Nullable<") &&
-                parameter.ParameterType != typeof(Variant)
+                !parameter.ParameterType.IsValueType
               ) {
                 parameterType += "?";
               }
@@ -243,6 +250,16 @@ public static class GodotNodeInterfacesGenerator {
             else if (parameter.ParameterType.IsByRef) {
               modifier = "ref ";
             }
+
+            // nullability
+            if (
+              IsMarkedAsNullable(parameter) &&
+              !parameterType.StartsWith("Nullable<") &&
+              !parameterType.EndsWith("?")
+            ) {
+              parameterType += "?";
+            }
+
             return new ParameterData(
               parameterName,
               parameterType,
@@ -260,7 +277,7 @@ public static class GodotNodeInterfacesGenerator {
           var interfaceSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}{signature};";
           var adapterSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}public {signature}";
           interfaceMembers.AppendLine(interfaceSignature);
-          var adapterCode = adapterSignature + " => Object." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
+          var adapterCode = adapterSignature + " => TargetObj." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
           adapterMembers.AppendLine(adapterCode);
         }
         else if (member is PropertyInfo propertyInfo) {
@@ -293,13 +310,13 @@ public static class GodotNodeInterfacesGenerator {
 
           var adapterCode = $"{propertyDocumentation}\n{"  ".Repeat(2)}public {propertyType} {propertyName}";
           if (isSettable && isGettable) {
-            adapterCode += $" {{ get => Object.{propertyName}; set => Object.{propertyName} = value; }}";
+            adapterCode += $" {{ get => TargetObj.{propertyName}; set => TargetObj.{propertyName} = value; }}";
           }
           else if (isGettable) {
-            adapterCode += $" {{ get => Object.{propertyName}; }}";
+            adapterCode += $" {{ get => TargetObj.{propertyName}; }}";
           }
           else if (isSettable) {
-            adapterCode += $" {{ set => Object.{propertyName} = value; }}";
+            adapterCode += $" {{ set => TargetObj.{propertyName} = value; }}";
           }
 
           interfaceMembers.AppendLine(propertySignature);
@@ -316,7 +333,7 @@ public static class GodotNodeInterfacesGenerator {
 
           var eventSignature = $"{eventDocumentation}\n{"  ".Repeat(2)}event {eventHandlerType} {eventId};";
 
-          var adapterCode = $"{eventDocumentation}\n{"  ".Repeat(2)}public event {eventHandlerType} {eventId} {{ add => Object.{eventId} += value; remove => Object.{eventId} -= value; }}";
+          var adapterCode = $"{eventDocumentation}\n{"  ".Repeat(2)}public event {eventHandlerType} {eventId} {{ add => TargetObj.{eventId} += value; remove => TargetObj.{eventId} -= value; }}";
 
           interfaceMembers.AppendLine(eventSignature);
           adapterMembers.AppendLine(adapterCode);
@@ -366,11 +383,13 @@ public static class GodotNodeInterfacesGenerator {
         );
       }
 
+      var partialKeyword = type == typeof(Node) ? "partial " : "";
+
       var partialClassForVerification = $$"""
 
       // Apply interface to a Godot node implementation to make sure the
       // generated interface is correct.
-      internal partial class {{type.Name}}Node : {{typeName}}, {{interfaceName}} { }
+      internal partial class {{type.Name}}ObjImpl : {{typeName}}, {{interfaceName}} { }
 
       """;
 
@@ -380,7 +399,7 @@ public static class GodotNodeInterfacesGenerator {
       {{usings}}
       {{(canBeInstantiated ? partialClassForVerification : "\n")}}
       {{mainDocumentation}}
-      public interface {{interfaceName}}{{interfaceParent}} {
+      public {{partialKeyword}}interface {{interfaceName}}{{interfaceParent}} {
       {{interfaceMemberCode}}
       }
       """;
@@ -392,9 +411,9 @@ public static class GodotNodeInterfacesGenerator {
 
       {{usings}}
       {{mainDocumentation}}
-      public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
+      public{{adapterAbstract}}{{partialKeyword}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
         /// <summary>Underlying Godot object this adapter uses.</summary>
-        public {{newKeyword}} {{typeName}} Object { get; private set; }
+        public {{newKeyword}} {{typeName}} TargetObj { get; private set; }
 
         /// <summary>Creates a new {{adapterName}} for {{typeName}}.</summary>
         /// <param name="object">Godot object.</param>
@@ -404,7 +423,7 @@ public static class GodotNodeInterfacesGenerator {
               $"{@object.GetType().Name} is not a {{typeName}}"
             );
           }
-          Object = typedObj;
+          TargetObj = typedObj;
         }
 
       {{adapterMemberCode}}
@@ -473,6 +492,8 @@ public static class GodotNodeInterfacesGenerator {
     Console.WriteLine("Generated GodotInterfaces.");
   }
 
+  private static bool CanUseDefault(Type type) => type.IsValueType;
+
   private static string GetId(MemberInfo type) =>
     !IsValidId(type.Name) ? $"@{type.Name}" : type.Name;
 
@@ -510,6 +531,9 @@ public static class GodotNodeInterfacesGenerator {
     { typeof(void), "void" },
   };
 
+  private static bool IsMarkedAsNullable(ParameterInfo p) =>
+    new NullabilityInfoContext().Create(p).WriteState is NullabilityState.Nullable;
+
   private static string TypeName(Type type) {
     var name = TypeNameOrAlias(type);
     // see if type comes from a namespace
@@ -518,17 +542,9 @@ public static class GodotNodeInterfacesGenerator {
       _usings.Add(@namespace);
     }
 
-    // sometimes, Godot collection types are ambiguous between .net collections
-    var isAmbiguousCollectionType = type.Namespace == "Godot.Collections";
-    var prefix = isAmbiguousCollectionType ? "Godot.Collections." : "";
-
-    if (_ambiguousGodotTypes.Contains(type.Name)) {
-      return $"Godot.{name}";
-    }
-
     return type.IsGenericMethodParameter
       ? type.Name
-      : prefix + (
+      : (
         type.DeclaringType is Type dec
           ? $"{TypeName(dec)}.{name}"
           : name
@@ -536,6 +552,8 @@ public static class GodotNodeInterfacesGenerator {
   }
 
   private static string TypeNameOrAlias(Type type) {
+    var prefix = "";
+
     // Handle generic types
     if (type.IsGenericType) {
       var name = type.Name.Split('`').FirstOrDefault();
@@ -545,24 +563,34 @@ public static class GodotNodeInterfacesGenerator {
       return $"{name}<{string.Join(",", @params)}>";
     }
 
+    // sometimes, Godot collection types are ambiguous between .net collections
+    var isAmbiguousCollectionType = type.Namespace == "Godot.Collections";
+
+    if (isAmbiguousCollectionType) {
+      prefix = "Godot.Collections.";
+    }
+    else if (_ambiguousGodotTypes.Contains(type.Name)) {
+      prefix = "Godot.";
+    }
+
     // Handle nullable value types
     var nullableBase = Nullable.GetUnderlyingType(type);
     if (nullableBase != null) {
-      return TypeNameOrAlias(nullableBase) + "?";
+      return prefix + TypeNameOrAlias(nullableBase) + "?";
     }
 
     // Handle arrays
     if (type.BaseType == typeof(Array)) {
-      return TypeNameOrAlias(type.GetElementType()!) + "[]";
+      return prefix + TypeNameOrAlias(type.GetElementType()!) + "[]";
     }
 
     // Lookup alias for type
     if (_typeAlias.TryGetValue(type, out var alias)) {
-      return alias;
+      return prefix + alias;
     }
 
     // Default to CLR type name
-    return type.Name;
+    return prefix + type.Name;
   }
 
   private static string XmlDocToDocComment(string? xmlDocs, int indent) {
