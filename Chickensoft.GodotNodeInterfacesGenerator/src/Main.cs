@@ -50,13 +50,13 @@ public static class GodotNodeInterfacesGenerator {
       /// <summary>A Godot object API adapter.</summary>
       public interface IGodotObjectAdapter : IGodotObject {
         /// <summary>Underlying Godot object this adapter uses.</summary>
-        public GodotObject Object { get; }
+        public GodotObject TargetObj { get; }
       }
 
       /// <summary>A Godot node API adapter.</summary>
-      public interface INodeAdapter : IGodotObjectAdapter, INode {
+      public partial  interface INodeAdapter : IGodotObjectAdapter, INode {
         /// <summary>Underlying Godot node this adapter uses.</summary>
-        public new Node Object { get; }
+        public new Node TargetObj { get; }
       }
       """
     );
@@ -277,7 +277,7 @@ public static class GodotNodeInterfacesGenerator {
           var interfaceSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}{signature};";
           var adapterSignature = $"{methodDocumentation}\n{"  ".Repeat(2)}public {signature}";
           interfaceMembers.AppendLine(interfaceSignature);
-          var adapterCode = adapterSignature + " => Object." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
+          var adapterCode = adapterSignature + " => TargetObj." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
           adapterMembers.AppendLine(adapterCode);
         }
         else if (member is PropertyInfo propertyInfo) {
@@ -310,13 +310,13 @@ public static class GodotNodeInterfacesGenerator {
 
           var adapterCode = $"{propertyDocumentation}\n{"  ".Repeat(2)}public {propertyType} {propertyName}";
           if (isSettable && isGettable) {
-            adapterCode += $" {{ get => Object.{propertyName}; set => Object.{propertyName} = value; }}";
+            adapterCode += $" {{ get => TargetObj.{propertyName}; set => TargetObj.{propertyName} = value; }}";
           }
           else if (isGettable) {
-            adapterCode += $" {{ get => Object.{propertyName}; }}";
+            adapterCode += $" {{ get => TargetObj.{propertyName}; }}";
           }
           else if (isSettable) {
-            adapterCode += $" {{ set => Object.{propertyName} = value; }}";
+            adapterCode += $" {{ set => TargetObj.{propertyName} = value; }}";
           }
 
           interfaceMembers.AppendLine(propertySignature);
@@ -333,7 +333,7 @@ public static class GodotNodeInterfacesGenerator {
 
           var eventSignature = $"{eventDocumentation}\n{"  ".Repeat(2)}event {eventHandlerType} {eventId};";
 
-          var adapterCode = $"{eventDocumentation}\n{"  ".Repeat(2)}public event {eventHandlerType} {eventId} {{ add => Object.{eventId} += value; remove => Object.{eventId} -= value; }}";
+          var adapterCode = $"{eventDocumentation}\n{"  ".Repeat(2)}public event {eventHandlerType} {eventId} {{ add => TargetObj.{eventId} += value; remove => TargetObj.{eventId} -= value; }}";
 
           interfaceMembers.AppendLine(eventSignature);
           adapterMembers.AppendLine(adapterCode);
@@ -383,6 +383,8 @@ public static class GodotNodeInterfacesGenerator {
         );
       }
 
+      var partialKeyword = type == typeof(Node) ? "partial " : "";
+
       var partialClassForVerification = $$"""
 
       // Apply interface to a Godot node implementation to make sure the
@@ -397,7 +399,7 @@ public static class GodotNodeInterfacesGenerator {
       {{usings}}
       {{(canBeInstantiated ? partialClassForVerification : "\n")}}
       {{mainDocumentation}}
-      public interface {{interfaceName}}{{interfaceParent}} {
+      public {{partialKeyword}}interface {{interfaceName}}{{interfaceParent}} {
       {{interfaceMemberCode}}
       }
       """;
@@ -409,9 +411,9 @@ public static class GodotNodeInterfacesGenerator {
 
       {{usings}}
       {{mainDocumentation}}
-      public{{adapterAbstract}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
+      public{{adapterAbstract}}{{partialKeyword}}class {{adapterName}} : {{adapterParent}}{{interfaceName}}{{iAdapterImpl}} {
         /// <summary>Underlying Godot object this adapter uses.</summary>
-        public {{newKeyword}} {{typeName}} Object { get; private set; }
+        public {{newKeyword}} {{typeName}} TargetObj { get; private set; }
 
         /// <summary>Creates a new {{adapterName}} for {{typeName}}.</summary>
         /// <param name="object">Godot object.</param>
@@ -421,7 +423,7 @@ public static class GodotNodeInterfacesGenerator {
               $"{@object.GetType().Name} is not a {{typeName}}"
             );
           }
-          Object = typedObj;
+          TargetObj = typedObj;
         }
 
       {{adapterMemberCode}}
