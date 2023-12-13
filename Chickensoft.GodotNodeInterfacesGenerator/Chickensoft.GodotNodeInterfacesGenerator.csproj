@@ -18,7 +18,7 @@
     <!-- Dependencies go here. -->
     <PackageReference Include="GodotSharp" Version="4.2.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23525.2" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.0-1.final" PrivateAssets="all" />
     <!-- Lets us get XML documentation easily. -->
     <PackageReference Include="Towel" Version="1.0.40" />
   </ItemGroup>
