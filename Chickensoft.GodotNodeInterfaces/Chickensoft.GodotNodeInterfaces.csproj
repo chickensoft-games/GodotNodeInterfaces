@@ -43,7 +43,7 @@
     <PackageReference Include="GodotSharp" Version="4.2.2-rc.1" />
 
     <!-- Required for inheritdoc -->
-    <PackageReference Include="SauceControl.InheritDoc" Version="2.0.0">
+    <PackageReference Include="SauceControl.InheritDoc" Version="2.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
