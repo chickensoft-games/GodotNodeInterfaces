@@ -462,3 +462,7 @@ dotnet_diagnostic.RCS1181.severity = none
 dotnet_diagnostic.IDE0046.severity = none
 dotnet_diagnostic.IDE0045.severity = none
 dotnet_diagnostic.RCS1238.severity = none
+# Don't let a computer lecture me about culture
+dotnet_diagnostic.CA1311.severity = none
+# Don't use collection initializers in this project
+dotnet_diagnostic.IDE0028.severity = none

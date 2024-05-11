@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <LangVersion>preview</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -10,11 +10,11 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>./nupkg</OutputPath>
     <DebugType>portable</DebugType>
-    <NoWarn>CA1200;CA1720;CS1573;CS1574;CS1591;CS1734;CS0618;CS1584;CA1711;NETSDK1057</NoWarn>
+    <NoWarn>CA1200;CA1720;CS1573;CS1574;CS1591;CS1734;CS0618;CS1584;CA1711;NETSDK1057;CA1852</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <Title>Chickensoft.GodotNodeInterfaces</Title>
-    <Version>2.1.44</Version>
+    <Version>0.0.0-devbuild</Version>
     <Description />
     <Copyright>© 2023 Chickensoft</Copyright>
     <Authors>Chickensoft</Authors>
