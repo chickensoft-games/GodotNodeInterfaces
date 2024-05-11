@@ -1,20 +1,34 @@
 {
   "version": "0.2.0",
   "configurations": [
-    // For these launch configurations to work, you need to setup a GODOT4
-    // environment variable. On mac or linux, this can be done by adding
-    // the following to your .zshrc, .bashrc, or .bash_profile file:
-    // export GODOT4="/Applications/Godot.app/Contents/MacOS/Godot"
     {
       "name": "▶️ Debug Generator",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/Chickensoft.GodotNodeInterfacesGenerator/.output/net6.0/Chickensoft.GodotNodeInterfacesGenerator.dll",
+      "program": "${workspaceFolder}/Chickensoft.GodotNodeInterfacesGenerator/.output/net7.0/Chickensoft.GodotNodeInterfacesGenerator.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Chickensoft.GodotNodeInterfacesGenerator",
       "stopAtEntry": false,
       "internalConsoleOptions": "neverOpen"
+    },
+    // For these launch configurations to work, you need to setup a GODOT
+    // environment variable. On mac or linux, this can be done by adding
+    // the following to your .zshrc, .bashrc, or .bash_profile file:
+    // export GODOT="/Applications/Godot.app/Contents/MacOS/Godot"
+    {
+      "name": "🧪 Debug Tests",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build_and_generate",
+      "program": "${env:GODOT}",
+      "args": [
+        // These command line flags are used by GoDotTest to run tests.
+        "--run-tests",
+        "--quit-on-finish"
+      ],
+      "cwd": "${workspaceFolder}/Chickensoft.GodotNodeInterfaces.Tests",
+      "stopAtEntry": false,
     },
   ]
 }

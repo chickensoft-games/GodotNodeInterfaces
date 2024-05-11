@@ -2,6 +2,27 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "build_and_generate",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "--no-restore"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "dependsOn": [
+        "run_generator"
+      ]
+    },
+    {
       "label": "build",
       "command": "dotnet",
       "type": "process",
@@ -54,6 +75,22 @@
       "label": "clean_loose_source_files",
       "type": "shell",
       "command": "rm ${workspaceFolder}/Chickensoft.GodotNodeInterfaces/src/*.cs || exit 0",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "run_generator",
+      "type": "shell",
+      "command": "dotnet run",
+      "options": {
+        "cwd": "${workspaceFolder}/Chickensoft.GodotNodeInterfacesGenerator"
+      },
       "presentation": {
         "echo": true,
         "reveal": "silent",

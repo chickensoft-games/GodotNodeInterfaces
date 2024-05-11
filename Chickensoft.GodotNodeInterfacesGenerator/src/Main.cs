@@ -28,7 +28,7 @@ public static class GodotNodeInterfacesGenerator {
     "Range", "Environment"
   };
 
-  private record ParameterData(
+  private sealed record ParameterData(
     string Name,
     string Type,
     string? DefaultValue,
@@ -447,14 +447,32 @@ public static class GodotNodeInterfacesGenerator {
       /// </summary>
       /// <typeparam name="T">Adapter type.</typeparam>
       /// <param name="object">Godot object.</param>
-      public static T Adapt<T>(GodotObject @object) where T : class, IGodotObject => (T)_adapters[typeof(T)](@object);
+      /// <exception cref="ArgumentException" />
+      public static T Adapt<T>(object @object) where T : class, IGodotObject {
+        if (@object is T typed) { return typed; }
+        if (@object is not GodotObject godotObject) {
+          throw new ArgumentException(
+            $"Cannot adapt object of type {@object.GetType()} to {typeof(T)}."
+          );
+        }
+        return (T)_adapters[typeof(T)](godotObject);
+      }
 
       /// <summary>
       /// Creates an adapter for the given Godot object. This will throw if the
       /// incorrect adapter type was specified for the object.
       /// </summary>
       /// <param name="object">Godot object.</param>
-      public static IGodotObject AdaptObject(GodotObject @object) => _adaptersByGodotType[@object.GetType()](@object);
+      /// <exception cref="ArgumentException" />
+      public static IGodotObject AdaptObject(object @object) {
+        if (@object is IGodotObject typed) { return typed; }
+        if (@object is not GodotObject godotObject) {
+          throw new ArgumentException(
+            $"Cannot adapt object of type {@object.GetType()} to a Godot Interface."
+          );
+        }
+        return _adaptersByGodotType[@object.GetType()](godotObject);
+      }
 
       /// <summary>
       /// Creates an adapter for the given Godot node. This will throw if the
