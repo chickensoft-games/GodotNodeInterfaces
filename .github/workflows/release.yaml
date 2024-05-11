@@ -113,10 +113,6 @@ jobs:
         run: |
           dotnet build --configuration Release --property WarningLevel=0
 
-      - name: 📦 Build
-        run: dotnet build \
-          Chickensoft.GodotNodeInterfaces/Chickensoft.GodotNodeInterfaces.csproj -c Release
-
       - name: 🔎 Get Package Path
         id: package-path
         run: |
