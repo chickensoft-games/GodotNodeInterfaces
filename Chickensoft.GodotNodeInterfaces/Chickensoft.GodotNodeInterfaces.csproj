@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <!-- Dependencies go here. -->
-    <PackageReference Include="GodotSharp" Version="4.3.0-beta.2" />
+    <PackageReference Include="GodotSharp" Version="4.3.0-beta.3" />
 
     <!-- Required for inheritdoc -->
     <PackageReference Include="SauceControl.InheritDoc" Version="2.0.1">
