@@ -9,7 +9,7 @@ public interface IGodotObjectAdapter : IGodotObject {
 }
 
 /// <summary>A Godot node API adapter.</summary>
-public partial  interface INodeAdapter : IGodotObjectAdapter, INode {
+public partial interface INodeAdapter : IGodotObjectAdapter, INode {
   /// <summary>Underlying Godot node this adapter uses.</summary>
   public new Node TargetObj { get; }
 }
