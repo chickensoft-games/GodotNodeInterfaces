@@ -327,7 +327,7 @@ public static class GodotNodeInterfacesGenerator {
 
       var adapterParent = extendsAnotherObj
         ? $"{baseType.Name}Adapter, "
-        : "GodotObject, ";
+        : "RefCounted, ";
 
       var adapterBaseCall = extendsAnotherObj
         ? " : base(@object) "
