@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <!-- Dependencies go here. -->
-    <PackageReference Include="GodotSharp" Version="4.3.0" />
+    <PackageReference Include="GodotSharp" Version="4.4.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" PrivateAssets="all" />
     <!-- Lets us get XML documentation easily. -->
