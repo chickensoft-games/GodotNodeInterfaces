@@ -5,6 +5,7 @@
       "label": "build_and_generate",
       "command": "dotnet",
       "type": "process",
+      "group": "build",
       "args": [
         "build",
         "--no-restore"
@@ -26,6 +27,7 @@
       "label": "build",
       "command": "dotnet",
       "type": "process",
+      "group": "build",
       "args": [
         "build",
         "--no-restore"
