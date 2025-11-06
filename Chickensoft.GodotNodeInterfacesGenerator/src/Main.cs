@@ -2,6 +2,7 @@ namespace Chickensoft.GodotNodeInterfacesGenerator;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +12,8 @@ using Godot;
 using Microsoft.CodeAnalysis.CSharp;
 using Towel;
 
-public static class GodotNodeInterfacesGenerator {
+public static class GodotNodeInterfacesGenerator
+{
   // public const string GODOT_SHARP_XML_PATH = ".output/net6.0/GodotSharp.xml";
   public const string INTERFACES_PATH = "../Chickensoft.GodotNodeInterfaces/src/interfaces";
   public const string ADAPTERS_PATH = "../Chickensoft.GodotNodeInterfaces/src/adapters";
@@ -22,23 +24,26 @@ public static class GodotNodeInterfacesGenerator {
     @"(<see cref="")([A-Z]:)([^""]*"" />)"
   );
 
-  private static readonly HashSet<string> _usings = new() { "Godot" };
+  private static readonly HashSet<string> _usings = ["Godot"];
 
-  private static readonly HashSet<string> _ambiguousGodotTypes = new() {
+  private static readonly HashSet<string> _ambiguousGodotTypes =
+  [
     "Range", "Environment"
-  };
+  ];
 
   private sealed record ParameterData(
     string Name,
     string Type,
     string? DefaultValue,
     string? Modifier
-  ) {
+  )
+  {
     public override string ToString() =>
       $"{Modifier}{Type} {Name}{DefaultValue}";
   }
 
-  public static void Main(string[] args) {
+  public static void Main(string[] args)
+  {
     var godotAssembly = typeof(Node).Assembly;
 
     var typesThatExtendGodotObject = godotAssembly
@@ -51,7 +56,8 @@ public static class GodotNodeInterfacesGenerator {
     var adapterFactoryCases = new List<string>();
     var adapterFactoryCasesByGodotNode = new List<string>();
 
-    foreach (var type in typesThatExtendGodotObject) {
+    foreach (var type in typesThatExtendGodotObject)
+    {
       // Look at each type of Godot node.
 
       var typeName = TypeName(type);
@@ -76,11 +82,15 @@ public static class GodotNodeInterfacesGenerator {
       var interfaceMembers = new StringBuilder();
       var adapterMembers = new StringBuilder();
 
-      foreach (var member in members) {
-        if (member is MethodInfo methodInfo) {
+      foreach (var member in members)
+      {
+        if (member is MethodInfo methodInfo)
+        {
           // For methods
-          if (!methodInfo.IsPublic) { continue; }
-          if (methodInfo.IsSpecialName) { continue; }
+          if (!methodInfo.IsPublic)
+          { continue; }
+          if (methodInfo.IsSpecialName)
+          { continue; }
 
           var methodDocumentation = XmlDocToDocComment(methodInfo.GetDocumentation() ?? "", 2);
           var methodName = methodInfo.Name;
@@ -94,7 +104,8 @@ public static class GodotNodeInterfacesGenerator {
           );
 
           var typeParameterConstraints = "";
-          if (typeParameters.Length > 0) {
+          if (typeParameters.Length > 0)
+          {
             methodName += $"<{typeParameterList}>";
 
             var genericArgs = methodInfo
@@ -107,7 +118,8 @@ public static class GodotNodeInterfacesGenerator {
 
             // compute type constraints
             var typeConstraints = genericArgs
-              .Select(p => {
+              .Select(p =>
+              {
                 var constraints = p.GetGenericParameterConstraints();
                 hasClassConstraint = hasClassConstraint ||
                   p.GenericParameterAttributes.HasFlag(
@@ -121,7 +133,8 @@ public static class GodotNodeInterfacesGenerator {
                   p.GenericParameterAttributes.HasFlag(
                     GenericParameterAttributes.DefaultConstructorConstraint
                   );
-                if (constraints.Length == 0) { return ""; }
+                if (constraints.Length == 0)
+                { return ""; }
                 var constraintList = string.Join(
                   ", ",
                   constraints.Select(c => TypeName(c))
@@ -133,15 +146,18 @@ public static class GodotNodeInterfacesGenerator {
 
             typeParameterConstraints = string.Join("\n", typeConstraints);
 
-            if (hasClassConstraint) {
+            if (hasClassConstraint)
+            {
               typeParameterConstraints =
                 " where T : class" + typeParameterConstraints;
             }
-            if (hasNotNullConstraint) {
+            if (hasNotNullConstraint)
+            {
               typeParameterConstraints =
                 " where T : struct " + typeParameterConstraints;
             }
-            if (hasDefaultConstructorConstraint) {
+            if (hasDefaultConstructorConstraint)
+            {
               typeParameterConstraints =
                 " where T : new() " + typeParameterConstraints;
             }
@@ -149,90 +165,133 @@ public static class GodotNodeInterfacesGenerator {
 
           // we need to compute parameter types, names, modifiers, and default values
 
-          var parametersData = parameters.Select(parameter => {
+          var parametersData = parameters.Select(parameter =>
+          {
             var parameterType = TypeName(parameter.ParameterType);
             var parameterName = GetId(parameter);
             var parameterDefaultValue = "";
 
             object? defaultValue = null;
-            if (parameter.HasDefaultValue) {
+            if (parameter.HasDefaultValue)
+            {
               defaultValue = parameter.DefaultValue;
 
               var canUseDefault = CanUseDefault(parameter.ParameterType);
 
-              if (defaultValue is null) {
-                if (canUseDefault) {
+              if (defaultValue is null)
+              {
+                if (canUseDefault)
+                {
                   parameterDefaultValue = $" = default({parameterType})";
                 }
-                else {
+                else
+                {
                   parameterDefaultValue = " = null";
                 }
               }
-              else if (parameter.ParameterType == typeof(bool)) {
-                parameterDefaultValue = $" = {defaultValue.ToString()!.ToLower()}";
+              else if (parameter.ParameterType == typeof(bool))
+              {
+                parameterDefaultValue =
+                  $" = {defaultValue.ToString()!.ToLower(CultureInfo.InvariantCulture)}";
               }
-              else if (parameter.ParameterType == typeof(double)) {
+              else if (parameter.ParameterType == typeof(double))
+              {
                 parameterDefaultValue = $" = {defaultValue}d";
               }
-              else if (parameter.ParameterType == typeof(float)) {
+              else if (parameter.ParameterType == typeof(float))
+              {
                 parameterDefaultValue = $" = {defaultValue}f";
               }
-              else if (parameter.ParameterType == typeof(char)) {
-                parameterDefaultValue = $" = '{Escape(defaultValue.ToString()!)}'";
+              else if (parameter.ParameterType == typeof(char))
+              {
+                parameterDefaultValue =
+                  $" = '{Escape(defaultValue.ToString()!)}'";
               }
-              else if (parameter.ParameterType == typeof(string)) {
-                parameterDefaultValue = $" = \"{Escape((string)defaultValue)}\"";
+              else if (parameter.ParameterType == typeof(string))
+              {
+                parameterDefaultValue =
+                  $" = \"{Escape((string)defaultValue)}\"";
               }
-              else if (parameter.ParameterType.IsPrimitive) {
+              else if (parameter.ParameterType.IsPrimitive)
+              {
                 parameterDefaultValue = $" = {defaultValue}";
               }
-              else if (parameter.ParameterType.IsEnum) {
-                var enumMemberName = Enum.GetName(parameter.ParameterType, defaultValue);
+              else if (parameter.ParameterType.IsEnum)
+              {
+                var enumMemberName = Enum.GetName(
+                  parameter.ParameterType, defaultValue
+                );
                 // see if it's a multi-flag enum
-                var enumValues = defaultValue.ToString()?.Split(",").Select(v => v.Trim()).ToList();
-                if (
+                var enumValues =
+                  defaultValue
+                    .ToString()?
+                    .Split(",")
+                    .Select(v => v.Trim())
+                    .ToList();
+                if
+                (
                   string.IsNullOrEmpty(enumMemberName) && enumValues?.Count > 1
-                ) {
-                  parameterDefaultValue = " = " + string.Join(" | ", enumValues.Select(v => $"{parameterType}.{v}"));
+                )
+                {
+                  parameterDefaultValue =
+                    " = " +
+                    string.Join(
+                      " | ",
+                      enumValues.Select(v => $"{parameterType}.{v}")
+                    );
                 }
-                else {
+                else
+                {
                   parameterDefaultValue = string.IsNullOrEmpty(enumMemberName)
-                    ? $" = ({parameterType}){Convert.ToInt32(defaultValue)}"
+                    ? $" = ({parameterType}){Convert.ToInt32(defaultValue, CultureInfo.InvariantCulture)}"
                     : $" = {parameterType}." + enumMemberName;
                 }
               }
-              else if (parameter.ParameterType.IsValueType) {
+              else if (parameter.ParameterType.IsValueType)
+              {
                 parameterDefaultValue = $" = default({parameterType})";
               }
-              else {
+              else
+              {
                 parameterDefaultValue = $" = {defaultValue}";
               }
 
               if (
                 defaultValue is null &&
-                !parameterType.StartsWith("Nullable<") &&
+                !parameterType.StartsWith(
+                  "Nullable<",
+                  StringComparison.InvariantCulture
+                ) &&
                 !parameter.ParameterType.IsValueType
-              ) {
+              )
+              {
                 parameterType += "?";
               }
             }
             var modifier = "";
-            if (parameter.IsOut) {
+            if (parameter.IsOut)
+            {
               modifier = "out ";
             }
-            else if (parameter.IsIn) {
+            else if (parameter.IsIn)
+            {
               modifier = "in ";
             }
-            else if (parameter.ParameterType.IsByRef) {
+            else if (parameter.ParameterType.IsByRef)
+            {
               modifier = "ref ";
             }
 
             // nullability
             if (
               IsMarkedAsNullable(parameter) &&
-              !parameterType.StartsWith("Nullable<") &&
-              !parameterType.EndsWith("?")
-            ) {
+              !parameterType.StartsWith(
+                "Nullable<",
+                StringComparison.InvariantCulture
+              ) &&
+              !parameterType.EndsWith('?')
+            )
+            {
               parameterType += "?";
             }
 
@@ -256,16 +315,28 @@ public static class GodotNodeInterfacesGenerator {
           var adapterCode = adapterSignature + " => TargetObj." + methodName + "(" + string.Join(", ", parametersData.Select(p => p.Name)) + ");";
           adapterMembers.AppendLine(adapterCode);
         }
-        else if (member is PropertyInfo propertyInfo) {
+        else if (member is PropertyInfo propertyInfo)
+        {
           // Ignore set_ and get_ properties
-          if (propertyInfo.Name.StartsWith("set_") || propertyInfo.Name.StartsWith("get_")) { continue; }
+          if (
+            propertyInfo.Name.StartsWith(
+              "set_",
+              StringComparison.InvariantCulture
+            ) ||
+            propertyInfo.Name.StartsWith(
+              "get_",
+              StringComparison.InvariantCulture
+            )
+          )
+          { continue; }
 
           var getMethod = propertyInfo.GetMethod;
           var isGettable =
             getMethod is MethodInfo getMethodInfo && getMethodInfo.IsPublic;
 
           // Only show public properties.
-          if (!isGettable) { continue; }
+          if (!isGettable)
+          { continue; }
 
           var setMethod = propertyInfo.SetMethod;
           var isSettable =
@@ -285,20 +356,24 @@ public static class GodotNodeInterfacesGenerator {
           var propertySignature = $"{propertyPrefix} {{ {writeable} }}";
 
           var adapterCode = $"{propertyDocumentation}\n{"  ".Repeat(2)}public {propertyType} {propertyName}";
-          if (isSettable && isGettable) {
+          if (isSettable && isGettable)
+          {
             adapterCode += $" {{ get => TargetObj.{propertyName}; set => TargetObj.{propertyName} = value; }}";
           }
-          else if (isGettable) {
+          else if (isGettable)
+          {
             adapterCode += $" {{ get => TargetObj.{propertyName}; }}";
           }
-          else if (isSettable) {
+          else if (isSettable)
+          {
             adapterCode += $" {{ set => TargetObj.{propertyName} = value; }}";
           }
 
           interfaceMembers.AppendLine(propertySignature);
           adapterMembers.AppendLine(adapterCode);
         }
-        else if (member is EventInfo eventInfo) {
+        else if (member is EventInfo eventInfo)
+        {
           // For events
           var eventDocumentation = XmlDocToDocComment(
             eventInfo.GetDocumentation() ?? "", 2
@@ -350,7 +425,8 @@ public static class GodotNodeInterfacesGenerator {
       var canBeInstantiated =
         !type.IsAbstract && hasPublicParameterlessConstructor;
 
-      if (canBeInstantiated) {
+      if (canBeInstantiated)
+      {
         adapterFactoryCases.Add(
           $"    [typeof({interfaceName})] = node => new {adapterName}(node)"
         );
@@ -496,7 +572,8 @@ public static class GodotNodeInterfacesGenerator {
   private static string GetId(ParameterInfo type) =>
     !IsValidId(type.Name!) ? $"@{type.Name}" : type.Name!;
 
-  private static bool IsValidId(string id) {
+  private static bool IsValidId(string id)
+  {
     var validId = SyntaxFacts.IsValidIdentifier(id);
     var isReserved = SyntaxFacts.GetKeywordKind(id) != SyntaxKind.None;
     var isContextualReserved =
@@ -530,10 +607,12 @@ public static class GodotNodeInterfacesGenerator {
   private static bool IsMarkedAsNullable(ParameterInfo p) =>
     new NullabilityInfoContext().Create(p).WriteState is NullabilityState.Nullable;
 
-  private static string TypeName(Type type) {
+  private static string TypeName(Type type)
+  {
     var name = TypeNameOrAlias(type);
     // see if type comes from a namespace
-    if (type.Namespace is string @namespace) {
+    if (type.Namespace is string @namespace)
+    {
       // add namespace to using list
       _usings.Add(@namespace);
     }
@@ -547,11 +626,13 @@ public static class GodotNodeInterfacesGenerator {
         );
   }
 
-  private static string TypeNameOrAlias(Type type) {
+  private static string TypeNameOrAlias(Type type)
+  {
     var prefix = "";
 
     // Handle generic types
-    if (type.IsGenericType) {
+    if (type.IsGenericType)
+    {
       var name = type.Name.Split('`').FirstOrDefault();
       var @params =
           type.GetGenericArguments()
@@ -562,26 +643,31 @@ public static class GodotNodeInterfacesGenerator {
     // sometimes, Godot collection types are ambiguous between .net collections
     var isAmbiguousCollectionType = type.Namespace == "Godot.Collections";
 
-    if (isAmbiguousCollectionType) {
+    if (isAmbiguousCollectionType)
+    {
       prefix = "Godot.Collections.";
     }
-    else if (_ambiguousGodotTypes.Contains(type.Name)) {
+    else if (_ambiguousGodotTypes.Contains(type.Name))
+    {
       prefix = "Godot.";
     }
 
     // Handle nullable value types
     var nullableBase = Nullable.GetUnderlyingType(type);
-    if (nullableBase != null) {
+    if (nullableBase != null)
+    {
       return prefix + TypeNameOrAlias(nullableBase) + "?";
     }
 
     // Handle arrays
-    if (type.BaseType == typeof(Array)) {
+    if (type.BaseType == typeof(Array))
+    {
       return prefix + TypeNameOrAlias(type.GetElementType()!) + "[]";
     }
 
     // Lookup alias for type
-    if (_typeAlias.TryGetValue(type, out var alias)) {
+    if (_typeAlias.TryGetValue(type, out var alias))
+    {
       return prefix + alias;
     }
 
@@ -589,8 +675,10 @@ public static class GodotNodeInterfacesGenerator {
     return prefix + type.Name;
   }
 
-  private static string XmlDocToDocComment(string? xmlDocs, int indent) {
-    if (xmlDocs is not string xmlDoc) { return ""; }
+  private static string XmlDocToDocComment(string? xmlDocs, int indent)
+  {
+    if (xmlDocs is not string xmlDoc)
+    { return ""; }
 
     var lines = xmlDoc
       .Split("\n")

@@ -1,6 +1,7 @@
 namespace Chickensoft.GodotNodeInterfaces;
 
-public partial class NodeAdapter : INodeAdapter, IFakeNodeTreeEnabled {
+public partial class NodeAdapter : INodeAdapter, IFakeNodeTreeEnabled
+{
   /// <summary>
   /// Fake node tree used during unit testing. The fake node tree allows node
   /// paths to be associated with mock nodes using the various methods like

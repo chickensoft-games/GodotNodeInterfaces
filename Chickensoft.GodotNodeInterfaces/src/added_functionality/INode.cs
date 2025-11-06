@@ -9,7 +9,8 @@ using Godot;
 /// automatically create node adapters so that you can reference Godot nodes
 /// by interface.
 /// </summary>
-public partial interface INode {
+public partial interface INode
+{
   /// <summary>
   /// <para>Adds a child <paramref name="node" />. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node.</para>
   /// <para>If <paramref name="forceReadableName" /> is <c>true</c>, improves the readability of the added <paramref name="node" />. If not named, the <paramref name="node" /> is renamed to its type, and if it shares <see cref="Node.Name" /> with a sibling, a number is suffixed more appropriately. This operation is very slow. As such, it is recommended leaving this to <c>false</c>, which assigns a dummy name featuring <c>@</c> in both situations.</para>
