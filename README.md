@@ -32,7 +32,8 @@ Here's a sample of a generated interface:
 /// <summary>
 /// <para>Casts light in a 2D environment. A light is defined as a color, an energy value, a mode (see constants), and various other parameters (range and shadows-related).</para>
 /// </summary>
-public interface ILight2D : INode2D {
+public interface ILight2D : INode2D
+{
     /// <summary>
     /// <para>The Light2D's blend mode. See <see cref="Light2D.BlendModeEnum" /> constants for values.</para>
     /// </summary>
@@ -55,13 +56,15 @@ And here's the corresponding adapter:
 /// <summary>
 /// <para>Casts light in a 2D environment. A light is defined as a color, an energy value, a mode (see constants), and various other parameters (range and shadows-related).</para>
 /// </summary>
-public class Light2DAdapter : Node2DAdapter, ILight2D, INodeAdapter {
+public class Light2DAdapter : Node2DAdapter, ILight2D, INodeAdapter
+{
   /// <summary>Underlying Godot object this adapter uses.</summary>
   public new Light2D TargetObj { get; private set; }
 
   /// <summary>Creates a new Light2DAdapter for Light2D.</summary>
   /// <param name="object">Godot object.</param>
-  public Light2DAdapter(GodotObject @object) : base(@object) {
+  public Light2DAdapter(GodotObject @object) : base(@object)
+  {
     if (@object is not Light2D typedObj) {
       throw new System.InvalidCastException(
         $"{@object.GetType().Name} is not a Light2D"
@@ -81,8 +84,10 @@ public class Light2DAdapter : Node2DAdapter, ILight2D, INodeAdapter {
 And here's what the adapter factory looks like:
 
 ```csharp
-public static class GodotNodes {
-  private static readonly Dictionary<Type, Func<Node, IGodotNodeAdapter>> _adapters = new() {
+public static class GodotNodes
+{
+  private static readonly Dictionary<Type, Func<Node, IGodotNodeAdapter>> _adapters = new()
+  {
       [typeof(INode)] = node => new NodeAdapter(node),
       [typeof(IAnimationPlayer)] = node => new AnimationPlayerAdapter(node),
       [typeof(IAnimationTree)] = node => new AnimationTreeAdapter(node),
@@ -130,10 +135,12 @@ You can use interfaces in your Godot node scripts and use the various `Ex` metho
 Once you have that setup, you can use it in your node scripts.
 
 ```csharp
-public partial class MyNode : Node2D {
+public partial class MyNode : Node2D
+{
   public ISprite2D Sprite { get; set; } = default!;
 
-  public override void _Ready() {
+  public override void _Ready()
+  {
     Sprite = this.GetNodeEx<ISprite2D>("Sprite");
   }
 }
@@ -152,12 +159,14 @@ using Godot;
 using SuperNodes.Types;
 
 [SuperNode(typeof(AutoNode))]
-public partial class MyNode : Node2D {
+public partial class MyNode : Node2D
+{
   public override partial void _Notification(int what);
 
   public INode2D MyChild { get; set; } = default!;
 
-  public void OnReady() {
+  public void OnReady()
+  {
     // This automatically finds the node and creates a Godot node adapter
     // so that we can refer to it by its interface.
     MyChild = this.GetNodeEx<INode2D>("MyChild");
@@ -171,7 +180,8 @@ Since we're using interfaces to refer to the child node, we can mock it in our t
 
 ```csharp
 [Test]
-public void LoadsGame() {
+public void LoadsGame()
+{
   var node = new MyNode();
 
   var myChild = new Mock<INode2D>().Object;
@@ -180,7 +190,8 @@ public void LoadsGame() {
   // a dictionary of node paths that correspond to mock node objects.
   // Since we're referencing nodes by interfaces in our node script, this
   // works!
-  node.FakeNodeTree(new() {
+  node.FakeNodeTree(new()
+  {
     ["MyChild"] = myChild.Object
   });
 
