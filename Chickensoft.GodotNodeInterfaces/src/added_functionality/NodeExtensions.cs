@@ -3,7 +3,8 @@ namespace Chickensoft.GodotNodeInterfaces;
 using System;
 using Godot;
 
-public static class NodeExtensions {
+public static class NodeExtensions
+{
   /// <summary>
   /// <inheritdoc cref="INode.AddChildEx(object, bool, Node.InternalMode)" />
   /// </summary>
@@ -35,8 +36,10 @@ public static class NodeExtensions {
   ) => TreeOp(
     caller,
     "add child",
-    (fakeNodeTree) => {
-      if (node is INode iNode) {
+    (fakeNodeTree) =>
+    {
+      if (node is INode iNode)
+      {
         fakeNodeTree.AddChild(iNode);
         return true;
       }
@@ -45,14 +48,17 @@ public static class NodeExtensions {
         $"to {caller.GetType().Name}."
       );
     },
-    (parent) => {
-      if (node is INodeAdapter adapter) {
+    (parent) =>
+    {
+      if (node is INodeAdapter adapter)
+      {
         // If it's an adapter, we can add the underlying node directly.
         parent.AddChild(adapter.TargetObj, forceReadableName, @internal);
         return true;
       }
 
-      if (node is Node godotNode) {
+      if (node is Node godotNode)
+      {
         // If it's a Godot node, we can add it directly.
         parent.AddChild(godotNode, forceReadableName, @internal);
         return true;
@@ -95,7 +101,8 @@ public static class NodeExtensions {
     caller,
     "find child",
     fakeNodeTree => fakeNodeTree.FindChild(pattern),
-    node => {
+    node =>
+    {
       var child = node.FindChild(pattern, recursive, owned);
       return child is null ? null : GodotInterfaces.AdaptNode(child);
     }
@@ -135,12 +142,14 @@ public static class NodeExtensions {
     caller,
     "find children",
     (fakeNodeTree) => fakeNodeTree.FindChildren(pattern),
-    (node) => {
+    (node) =>
+    {
       var nodes = node.FindChildren(pattern, type, recursive, owned);
       var adaptedNodes = new System.Collections.Generic.List<INode>(
         nodes.Count
       );
-      foreach (var childNode in nodes) {
+      foreach (var childNode in nodes)
+      {
         adaptedNodes.Add(GodotInterfaces.AdaptNode(childNode));
       }
       return adaptedNodes.ToArray();
@@ -268,12 +277,14 @@ public static class NodeExtensions {
     caller: caller,
     "get children",
     fakeNodeTree => fakeNodeTree.GetChildren(),
-    parent => {
+    parent =>
+    {
       var nodes = parent.GetChildren(includeInternal);
       var adaptedNodes = new System.Collections.Generic.List<INode>(
         nodes.Count
       );
-      foreach (var childNode in nodes) {
+      foreach (var childNode in nodes)
+      {
         adaptedNodes.Add(GodotInterfaces.AdaptNode(childNode));
       }
       return adaptedNodes.ToArray();
@@ -336,9 +347,11 @@ public static class NodeExtensions {
     caller,
     "get node (or null)",
     fakeNodeTree => fakeNodeTree.GetNode<T>(path),
-    parent => {
+    parent =>
+    {
       var node = parent.GetNodeOrNull(path);
-      if (node is Node godotNode) {
+      if (node is Node godotNode)
+      {
         return GodotInterfaces.Adapt<T>(godotNode);
       }
       return null;
@@ -368,9 +381,11 @@ public static class NodeExtensions {
     caller: caller,
     "get node (or null)",
     fakeNodeTree => fakeNodeTree.GetNode(path),
-    parent => {
+    parent =>
+    {
       var node = parent.GetNodeOrNull(path);
-      if (node is Node godotNode) {
+      if (node is Node godotNode)
+      {
         return GodotInterfaces.AdaptNode(godotNode);
       }
       return null;
@@ -419,8 +434,10 @@ public static class NodeExtensions {
   public static void RemoveChildEx(object caller, object node) => TreeOp(
     caller,
     "remove child",
-    (fakeNodeTree) => {
-      if (node is INode iNode) {
+    (fakeNodeTree) =>
+    {
+      if (node is INode iNode)
+      {
         fakeNodeTree.RemoveChild(iNode);
         return true;
       }
@@ -429,14 +446,17 @@ public static class NodeExtensions {
         $"to {caller.GetType().Name}."
       );
     },
-    (parent) => {
-      if (node is INodeAdapter adapter) {
+    (parent) =>
+    {
+      if (node is INodeAdapter adapter)
+      {
         // If it's an adapter, we can remove the underlying node directly.
         parent.RemoveChild(adapter.TargetObj);
         return true;
       }
 
-      if (node is Node godotNode) {
+      if (node is Node godotNode)
+      {
         // If it's a Godot node, we can remove it directly.
         parent.RemoveChild(godotNode);
         return true;
@@ -454,20 +474,25 @@ public static class NodeExtensions {
     string operation,
     Func<FakeNodeTree, T> ifFakeNodeTree,
     Func<Node, T> ifNode
-  ) {
+  )
+  {
     if (
       caller is IFakeNodeTreeEnabled obj &&
       obj.FakeNodes is FakeNodeTree fakeNodeTree
-    ) {
+    )
+    {
       return ifFakeNodeTree(fakeNodeTree);
     }
     var node = UseNodeOrAdapterTarget(caller, operation);
     return ifNode(node);
   }
 
-  internal static Node UseNodeOrAdapterTarget(object obj, string reason) {
-    if (obj is INodeAdapter adapter) { return adapter.TargetObj; }
-    if (obj is Node node) { return node; }
+  internal static Node UseNodeOrAdapterTarget(object obj, string reason)
+  {
+    if (obj is INodeAdapter adapter)
+    { return adapter.TargetObj; }
+    if (obj is Node node)
+    { return node; }
 
     var typeName = obj.GetType().Name;
     throw new InvalidOperationException(

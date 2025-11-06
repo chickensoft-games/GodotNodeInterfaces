@@ -1,15 +1,17 @@
 namespace Chickensoft.GodotNodeInterfaces.Tests;
 
+using Chickensoft.GodotNodeInterfaces;
 using Godot;
 using GoDotTest;
-using Chickensoft.GodotNodeInterfaces;
 using Shouldly;
 
-public class PackageTest : TestClass {
+public class PackageTest : TestClass
+{
   public PackageTest(Node testScene) : base(testScene) { }
 
   [Test]
-  public void AdaptsAndForwardsProperty() {
+  public void AdaptsAndForwardsProperty()
+  {
     var node = new Node();
     var name = "TestNode";
     node.Name = name;
