@@ -14,7 +14,7 @@ using Towel;
 
 public static class GodotNodeInterfacesGenerator
 {
-  // public const string GODOT_SHARP_XML_PATH = ".output/net6.0/GodotSharp.xml";
+  // public const string GODOT_SHARP_XML_PATH = ".output/net8.0/GodotSharp.xml";
   public const string INTERFACES_PATH = "../Chickensoft.GodotNodeInterfaces/src/interfaces";
   public const string ADAPTERS_PATH = "../Chickensoft.GodotNodeInterfaces/src/adapters";
 
