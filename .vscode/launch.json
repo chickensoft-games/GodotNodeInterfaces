@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/Chickensoft.GodotNodeInterfacesGenerator/.output/net7.0/Chickensoft.GodotNodeInterfacesGenerator.dll",
+      "program": "${workspaceFolder}/Chickensoft.GodotNodeInterfacesGenerator/.output/net8.0/Chickensoft.GodotNodeInterfacesGenerator.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Chickensoft.GodotNodeInterfacesGenerator",
       "stopAtEntry": false,
