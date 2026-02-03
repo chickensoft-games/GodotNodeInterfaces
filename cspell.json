@@ -5,6 +5,7 @@
   "ignorePaths": [
     "**/*.tscn",
     "**/*.import",
+    "**/*.uid",
     "Chickensoft.GodotNodeInterfaces.Tests/badges/**/*.*",
     "Chickensoft.GodotNodeInterfaces.Tests/coverage/**/*.*",
     "Chickensoft.GodotNodeInterfaces.Tests/.godot/**/*.*",
