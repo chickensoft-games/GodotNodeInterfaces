@@ -30,6 +30,7 @@
     "CYGWIN",
     "devbuild",
     "endregion",
+    "gdignore",
     "globaltool",
     "godotengine",
     "godotpackage",
