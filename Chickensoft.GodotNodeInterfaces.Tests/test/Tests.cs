@@ -7,5 +7,8 @@ using GoDotTest;
 public partial class Tests : Node2D
 {
   public override void _Ready()
-    => _ = GoTest.RunTests(Assembly.GetExecutingAssembly(), this);
+  {
+    RuntimeContext.IsTesting = true;
+    _ = GoTest.RunTests(Assembly.GetExecutingAssembly(), this);
+  }
 }

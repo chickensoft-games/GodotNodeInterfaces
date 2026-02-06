@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://dsrehhry8iw3q"]
+
+[ext_resource type="Script" uid="uid://bhn0uqrnpfo7x" path="res://test/src/integration_test_scene/IntegrationTestScene.cs" id="1_ucww2"]
+[ext_resource type="Script" uid="uid://mxtg4y23bvxn" path="res://test/src/custom_node/CustomNode.cs" id="2_4ipc3"]
+
+[node name="IntegrationTestScene" type="Node2D" unique_id=1027269599]
+script = ExtResource("1_ucww2")
+
+[node name="AutoConnectedNode" type="Node" parent="." unique_id=784539553]
+unique_name_in_owner = true
+
+[node name="AutoConnectedCustomNode" type="Node" parent="." unique_id=1417473504]
+unique_name_in_owner = true
+script = ExtResource("2_4ipc3")
+
+[node name="ManuallyConnectedNode" type="Node" parent="." unique_id=917717530]
+
+[node name="ManuallyConnectedCustomNode" type="Node" parent="." unique_id=224539744]
+script = ExtResource("2_4ipc3")

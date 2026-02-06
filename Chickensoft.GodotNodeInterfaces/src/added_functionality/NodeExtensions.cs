@@ -104,7 +104,9 @@ public static class NodeExtensions
     node =>
     {
       var child = node.FindChild(pattern, recursive, owned);
-      return child is null ? null : GodotInterfaces.AdaptNode(child);
+      return child is null ? null
+        : child is INode iNode ? iNode
+          : GodotInterfaces.AdaptNode(child);
     }
   );
 
@@ -150,7 +152,9 @@ public static class NodeExtensions
       );
       foreach (var childNode in nodes)
       {
-        adaptedNodes.Add(GodotInterfaces.AdaptNode(childNode));
+        adaptedNodes.Add(childNode is INode iNode
+          ? iNode
+          : GodotInterfaces.AdaptNode(childNode));
       }
       return adaptedNodes.ToArray();
     }
@@ -188,7 +192,13 @@ public static class NodeExtensions
     caller,
     "get child",
     fakeNodeTree => fakeNodeTree.GetChild<T>(idx)!,
-    node => GodotInterfaces.Adapt<T>(node.GetChild(idx, includeInternal)!)
+    node =>
+    {
+      var child = node.GetChild(idx, includeInternal)!;
+      return child is T targetTypeChild
+        ? targetTypeChild
+        : GodotInterfaces.Adapt<T>(child);
+    }
   );
 
   /// <summary>
@@ -219,7 +229,13 @@ public static class NodeExtensions
     caller,
     "get child",
     fakeNodeTree => fakeNodeTree.GetChild(idx),
-    node => GodotInterfaces.AdaptNode(node.GetChild(idx, includeInternal))
+    node =>
+    {
+      var child = node.GetChild(idx, includeInternal);
+      return child is INode iNode
+        ? iNode
+        : GodotInterfaces.AdaptNode(child);
+    }
   );
 
   /// <summary>
@@ -285,7 +301,7 @@ public static class NodeExtensions
       );
       foreach (var childNode in nodes)
       {
-        adaptedNodes.Add(GodotInterfaces.AdaptNode(childNode));
+        adaptedNodes.Add(childNode is INode iNode ? iNode : GodotInterfaces.AdaptNode(childNode));
       }
       return adaptedNodes.ToArray();
     }
@@ -314,7 +330,13 @@ public static class NodeExtensions
     caller,
     "get node",
     fakeNodeTree => fakeNodeTree.GetNode(path)!,
-    parent => GodotInterfaces.AdaptNode(parent.GetNode(path))
+    parent =>
+    {
+      var node = parent.GetNode(path);
+      return node is INode iNode
+        ? iNode
+        : GodotInterfaces.AdaptNode(node);
+    }
   );
 
   /// <summary>
@@ -350,6 +372,10 @@ public static class NodeExtensions
     parent =>
     {
       var node = parent.GetNodeOrNull(path);
+      if (node is T targetTypeINode)
+      {
+        return targetTypeINode;
+      }
       if (node is Node godotNode)
       {
         return GodotInterfaces.Adapt<T>(godotNode);
@@ -384,6 +410,10 @@ public static class NodeExtensions
     parent =>
     {
       var node = parent.GetNodeOrNull(path);
+      if (node is INode iNode)
+      {
+        return iNode;
+      }
       if (node is Node godotNode)
       {
         return GodotInterfaces.AdaptNode(godotNode);
@@ -477,6 +507,7 @@ public static class NodeExtensions
   )
   {
     if (
+      RuntimeContext.IsTesting &&
       caller is IFakeNodeTreeEnabled obj &&
       obj.FakeNodes is FakeNodeTree fakeNodeTree
     )
