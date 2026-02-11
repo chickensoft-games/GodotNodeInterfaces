@@ -4,10 +4,10 @@ using AutoInject;
 using Godot;
 using Introspection;
 
-public interface IIntegrationTestScene : INode2D { }
+public interface ICustomActor : INode2D { }
 
 [Meta(typeof(IAutoNode))]
-public partial class IntegrationTestScene : Node2D, IIntegrationTestScene
+public partial class CustomActor : Node2D, ICustomActor
 {
   public override void _Notification(int what) => this.Notify(what);
 

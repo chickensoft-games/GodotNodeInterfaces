@@ -1,5 +1,6 @@
 namespace Chickensoft.GodotNodeInterfaces.Tests;
 
+using System.Threading.Tasks;
 using Chickensoft.AutoInject;
 using Chickensoft.GodotNodeInterfaces;
 using Godot;
@@ -7,382 +8,306 @@ using GoDotTest;
 using Moq;
 using Shouldly;
 
-public class NodeExtensionsTests(Node testScene) : TestClass(testScene)
+public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testScene)
 {
-  private const string FAKE_CHILD_NODE_NAME = "FakeChildNode";
-  private static readonly StringName _fakeChildNodeStringName = new(FAKE_CHILD_NODE_NAME);
-  private static readonly NodePath _fakeChildNodePath = new(FAKE_CHILD_NODE_NAME);
-  private Mock<INode> _fakeChildNode = default!;
-
-  private const string FAKE_CHILD_CUSTOM_NODE_NAME = "FakeChildCustomNode";
-  private static readonly StringName _fakeChildCustomNodeStringName = new(FAKE_CHILD_CUSTOM_NODE_NAME);
-  private static readonly NodePath _fakeChildCustomNodePath = new(FAKE_CHILD_CUSTOM_NODE_NAME);
-  private Mock<ICustomNode> _fakeChildCustomNode = default!;
-
-  private const string REAL_NODE_NAME = "RealNode";
-  private static readonly StringName _realNodeStringName = new(REAL_NODE_NAME);
-  private static readonly NodePath _realNodePath = new(REAL_NODE_NAME);
-  private INode _realNode = default!;
-
-  private const string REAL_CUSTOM_NODE_NAME = "RealCustomNode";
-  private static readonly StringName _realCustomNodeStringName = new(REAL_CUSTOM_NODE_NAME);
-  private static readonly NodePath _realCustomNodePath = new(REAL_CUSTOM_NODE_NAME);
-  private INode _realCustomNode = default!;
-
-  private CustomNode _node = default!;
-  private IFakeNodeTreeEnabled _fakeNodeTreeEnabled = default!;
+  private Mock<INode> _mockAutoConnectedNode = default!;
+  private Mock<ICustomNode> _mockAutoConnectedCustomNode = default!;
+  private Mock<INode> _mockManuallyConnectedNode = default!;
+  private Mock<ICustomNode> _mockManuallyConnectedCustomNode = default!;
 
   [Setup]
-  public void Setup()
+  public override async Task Setup()
   {
-    _fakeChildNode = new Mock<INode>();
-    _fakeChildNode.Setup(x => x.Name).Returns(_fakeChildNodeStringName);
+    await base.Setup();
 
-    _fakeChildCustomNode = new Mock<ICustomNode>();
-    _fakeChildCustomNode.Setup(x => x.Name).Returns(_fakeChildCustomNodeStringName);
+    _mockAutoConnectedNode = new();
+    _mockAutoConnectedNode.Setup(x => x.Name).Returns(_autoConnectedNodeStringName);
 
-    _realNode = GodotInterfaces.Adapt<INode>(new Node());
-    _realNode.Name = _realNodeStringName;
+    _mockAutoConnectedCustomNode = new();
+    _mockAutoConnectedCustomNode.Setup(x => x.Name).Returns(_autoConnectedCustomNodeStringName);
 
-    _realCustomNode = GodotInterfaces.Adapt<ICustomNode>(new CustomNode());
-    _realCustomNode.Name = _realCustomNodeStringName;
+    _mockManuallyConnectedNode = new();
+    _mockManuallyConnectedNode.Setup(x => x.Name).Returns(_manuallyConnectedNodeStringName);
 
-    _node = new CustomNode();
-    _fakeNodeTreeEnabled = _node;
+    _mockManuallyConnectedCustomNode = new();
+    _mockManuallyConnectedCustomNode.Setup(x => x.Name).Returns(_manuallyConnectedCustomNodeStringName);
 
-    _node.FakeNodeTree(new()
+    _actor = new();
+    _actor.FakeNodeTree(new()
     {
-      [FAKE_CHILD_NODE_NAME] = _fakeChildNode.Object,
-      [FAKE_CHILD_CUSTOM_NODE_NAME] = _fakeChildCustomNode.Object
+      [$"%{nameof(CustomActor.AutoConnectedNode)}"] = _mockAutoConnectedNode.Object,
+      [$"%{nameof(CustomActor.AutoConnectedCustomNode)}"] = _mockAutoConnectedCustomNode.Object,
+      [nameof(CustomActor.ManuallyConnectedNode)] = _mockManuallyConnectedNode.Object,
+      [nameof(CustomActor.ManuallyConnectedCustomNode)] = _mockManuallyConnectedCustomNode.Object
     });
+
+    var sceneTree = TestScene.GetTree();
+    sceneTree.Root.CallDeferred(Node.MethodName.AddChild, _actor);
+    await sceneTree.ToSignal(sceneTree, SceneTree.SignalName.ProcessFrame);
+
+    _builtInNodes = [
+      _actor.AutoConnectedNode,
+      _actor.ManuallyConnectedNode,
+      _runtimeNode
+    ];
+
+    _customNodes = [
+      _actor.AutoConnectedCustomNode,
+      _actor.ManuallyConnectedCustomNode,
+      _runtimeCustomNode
+    ];
   }
 
   [Cleanup]
-  public void Cleanup()
-  {
-    _realNode.QueueFree();
-    _realCustomNode.QueueFree();
-
-    _node.QueueFree();
-  }
+  public override void Cleanup() => base.Cleanup();
 
   [Test]
-  public void AddChildEx_ShouldUpdateFakeNodeTree_WithFakeINode()
+  public void AddChildEx_ShouldUpdateSceneTree_WithMockINode()
   {
     var otherFakeChildNode = new Mock<INode>();
 
-    _node.AddChildEx(otherFakeChildNode.Object);
+    _actor.AddChildEx(otherFakeChildNode.Object);
 
-    _node.GetChildrenEx().ShouldContain(otherFakeChildNode.Object);
+    _actor.GetChildrenEx().ShouldContain(otherFakeChildNode.Object);
   }
 
   [Test]
-  public void AddChildEx_ShouldUpdateFakeNodeTree_WithFakeCustomNode()
+  public void AddChildEx_ShouldUpdateSceneTree_WithMockCustomNode()
   {
     var otherFakeChildNode = new Mock<ICustomNode>();
 
-    _node.AddChildEx(otherFakeChildNode.Object);
+    _actor.AddChildEx(otherFakeChildNode.Object);
 
-    _node.GetChildrenEx().ShouldContain(otherFakeChildNode.Object);
+    _actor.GetChildrenEx().ShouldContain(otherFakeChildNode.Object);
   }
 
   [Test]
-  public void AddChildEx_ShouldUpdateFakeNodeTree_WithRealINode()
+  public void FindChildEx_ShouldReturnMatchingNode_WithExistingMockNode()
+    => _actor.FindChildEx(nameof(CustomActor.ManuallyConnectedNode))
+      .ShouldMatch(_mockManuallyConnectedNode.Object);
+
+  [Test]
+  public void FindChildEx_ShouldReturnMatchingNode_WithExistingMockCustomNode()
+    => _actor.FindChildEx(nameof(CustomActor.ManuallyConnectedCustomNode))
+      .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
+
+  [Test]
+  public void GetNodeEx_ShouldReturnNode_WithExistingMockNode()
+    => _actor.GetNodeEx(_manuallyConnectedNodePath)
+      .ShouldMatch(_mockManuallyConnectedNode.Object);
+
+  [Test]
+  public void GetNodeEx_ShouldReturnNode_WithExistingMockCustomNode()
+  => _actor.GetNodeEx(_manuallyConnectedCustomNodePath)
+    .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
+
+  [Test]
+  public void GetNodeOrNullEx_ShouldReturnNode_WithExistingMockNode()
+    => _actor.GetNodeOrNullEx(_manuallyConnectedNodePath)
+      .ShouldMatch(_mockManuallyConnectedNode.Object);
+
+  [Test]
+  public void GetNodeOrNullEx_ShouldReturnNode_WithExistingMockCustomNode()
+    => _actor.GetNodeOrNullEx(_manuallyConnectedCustomNodePath)
+      .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
+
+  [Test]
+  public void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingMockNode()
+    => _actor.GetNodeOrNullEx<INode>(_manuallyConnectedNodePath)
+      .ShouldMatch(_mockManuallyConnectedNode.Object);
+
+  [Test]
+  public void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingMockCustomNode()
+    => _actor.GetNodeOrNullEx<ICustomNode>(_manuallyConnectedCustomNodePath)
+      .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
+
+  [Test]
+  public void RemoveChildEx_ShouldUpdateSceneTree_WithExistingMockNode()
   {
-    _node.AddChildEx(_realNode);
+    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_mockManuallyConnectedNode.Object));
 
-    _node.GetChildrenEx().ShouldContain(_realNode);
+    _actor.RemoveChildEx(_mockManuallyConnectedNode.Object);
+
+    _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_mockManuallyConnectedNode.Object));
   }
 
   [Test]
-  public void AddChildEx_ShouldUpdateFakeNodeTree_WithRealCustomNode()
+  public void RemoveChildEx_ShouldUpdateSceneTree_WithExistingMockCustomNode()
   {
-    _node.AddChildEx(_realCustomNode);
+    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_mockManuallyConnectedCustomNode.Object));
 
-    _node.GetChildrenEx().ShouldContain(_realCustomNode);
+    _actor.RemoveChildEx(_mockManuallyConnectedCustomNode.Object);
+
+    _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_mockManuallyConnectedCustomNode.Object));
   }
 
-  [Test]
-  public void FindChildEx_ShouldReturnNull_WithNoMatch()
-    => _node.FindChildEx(REAL_NODE_NAME).ShouldBeNull();
+  // TODO: Add more Mock test cases to the unit tests that mirror the integration tests.
+
+  #region Base Class Tests
 
   [Test]
-  public void FindChildEx_ShouldReturnChildFromFakeNodeTree_WithFakeINode()
-    => _node.FindChildEx(FAKE_CHILD_NODE_NAME).ShouldBe(_fakeChildNode.Object);
+  public override void AddChildEx_ShouldUpdateSceneTree_WithNode()
+    => base.AddChildEx_ShouldUpdateSceneTree_WithNode();
 
   [Test]
-  public void FindChildEx_ShouldReturnChildFromFakeNodeTree_WithFakeCustomNode()
-  => _node.FindChildEx(FAKE_CHILD_CUSTOM_NODE_NAME).ShouldBe(_fakeChildCustomNode.Object);
+  public override void AddChildEx_ShouldUpdateSceneTree_WithCustomNode()
+    => base.AddChildEx_ShouldUpdateSceneTree_WithCustomNode();
 
   [Test]
-  public void FindChildEx_ShouldReturnChildFromFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.FindChildEx(REAL_NODE_NAME).ShouldBe(_realNode);
-  }
+  public override void FindChildEx_ShouldReturnNull_WithNoMatch()
+    => base.FindChildEx_ShouldReturnNull_WithNoMatch();
 
   [Test]
-  public void FindChildEx_ShouldReturnChildFromFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.FindChildEx(REAL_CUSTOM_NODE_NAME).ShouldBe(_realCustomNode);
-  }
+  public override void FindChildEx_ShouldReturnMatchingNode_WithExistingNode()
+    => base.FindChildEx_ShouldReturnMatchingNode_WithExistingNode();
 
   [Test]
-  public void FindChildrenEx_ShouldReturnChildFromFakeNodeTree_WithFakeINode()
-    => _node.FindChildrenEx(FAKE_CHILD_NODE_NAME).ShouldContain(_fakeChildNode.Object);
+  public override void FindChildEx_ShouldReturnMatchingNode_WithExistingCustomNode()
+    => base.FindChildEx_ShouldReturnMatchingNode_WithExistingCustomNode();
 
   [Test]
-  public void FindChildrenEx_ShouldReturnChildFromFakeNodeTree_WithFakeCustomNode()
-  => _node.FindChildrenEx(FAKE_CHILD_CUSTOM_NODE_NAME).ShouldContain(_fakeChildCustomNode.Object);
+  public override void FindChildEx_ShouldReturnMatchingNode_WithRuntimeNode()
+    => base.FindChildEx_ShouldReturnMatchingNode_WithRuntimeNode();
 
   [Test]
-  public void FindChildrenEx_ShouldReturnChildFromFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.FindChildrenEx(REAL_NODE_NAME).ShouldContain(_realNode);
-  }
+  public override void FindChildEx_ShouldReturnMatchingNode_WithRuntimeCustomNode()
+    => base.FindChildEx_ShouldReturnMatchingNode_WithRuntimeCustomNode();
 
   [Test]
-  public void FindChildrenEx_ShouldReturnChildFromFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.FindChildrenEx(REAL_CUSTOM_NODE_NAME).ShouldContain(_realCustomNode);
-  }
+  public override void FindChildrenEx_ShouldReturnEmptyArray_WithNoMatch()
+    => base.FindChildrenEx_ShouldReturnEmptyArray_WithNoMatch();
 
   [Test]
-  public void GetChildEx_ShouldReturnChildFromFakeNodeTree_WithFakeINode()
-    => _node.GetChildEx(0).ShouldBe(_fakeChildNode.Object);
+  public override void FindChildrenEx_ShouldReturnMatchingNodes_WithExistingNodes()
+    => base.FindChildrenEx_ShouldReturnMatchingNodes_WithExistingNodes();
 
   [Test]
-  public void GetChildEx_ShouldReturnChildFromFakeNodeTree_WithFakeCustomNode()
-  => _node.GetChildEx(1).ShouldBe(_fakeChildCustomNode.Object);
+  public override void FindChildrenEx_ShouldReturnMatchingNodes_WithNodesAddedAtRuntime()
+    => base.FindChildrenEx_ShouldReturnMatchingNodes_WithNodesAddedAtRuntime();
 
   [Test]
-  public void GetChildEx_ShouldReturnChildFromFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.GetChildEx(2).ShouldBe(_realNode);
-  }
+  public override void FindChildrenEx_ShouldReturnAllNodes_WithWildcard()
+    => base.FindChildrenEx_ShouldReturnAllNodes_WithWildcard();
 
   [Test]
-  public void GetChildEx_ShouldReturnChildFromFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetChildEx(2).ShouldBe(_realCustomNode);
-  }
+  public override void GetChildEx_ShouldReturnNull_WithInvalidIndex()
+    => base.GetChildEx_ShouldReturnNull_WithInvalidIndex();
 
   [Test]
-  public void GetChildExOfT_ShouldReturnChildFromFakeNodeTree_WithFakeINode()
-    => _node.GetChildEx<INode>(0).ShouldBe(_fakeChildNode.Object);
+  public override void GetChildEx_ShouldReturnNode()
+    => base.GetChildEx_ShouldReturnNode();
 
   [Test]
-  public void GetChildExOfT_ShouldReturnChildFromFakeNodeTree_WithFakeCustomNode()
-  => _node.GetChildEx<ICustomNode>(1).ShouldBe(_fakeChildCustomNode.Object);
+  public override void GetChildExOfT_ShouldReturnNull_WithInvalidIndex()
+    => base.GetChildExOfT_ShouldReturnNull_WithInvalidIndex();
 
   [Test]
-  public void GetChildExOfT_ShouldReturnChildFromFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.GetChildEx<INode>(2).ShouldBe(_realNode);
-  }
+  public override void GetChildExOfT_ShouldThrow_WithIncorrectTypeSpecified()
+    => base.GetChildExOfT_ShouldThrow_WithIncorrectTypeSpecified();
 
   [Test]
-  public void GetChildExOfT_ShouldReturnChildFromFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetChildEx<ICustomNode>(2).ShouldBe(_realCustomNode);
-  }
+  public override void GetChildExOfT_ShouldReturnNode()
+    => base.GetChildExOfT_ShouldReturnNode();
 
   [Test]
-  public void GetChildCountEx_ShouldReturnChildCountFromFakeNodeTree_WithFakeINodes()
-  {
-    _node.GetChildCountEx().ShouldBe(2);
-    (_fakeNodeTreeEnabled.FakeNodes?.GetChildCount() ?? 0).ShouldBe(2);
-  }
+  public override void GetChildCountEx_ShouldReturnCount_WithExistingNodes()
+    => base.GetChildCountEx_ShouldReturnCount_WithExistingNodes();
 
   [Test]
-  public void GetChildCountEx_ShouldReturnChildCountFromFakeNodeTree_WithRealINodes()
-  {
-    _node.AddChildEx(_realNode);
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetChildCountEx().ShouldBe(4);
-    (_fakeNodeTreeEnabled.FakeNodes?.GetChildCount() ?? 0).ShouldBe(4);
-  }
+  public override void GetChildCountEx_ShouldReturnCount_WithRuntimeNodes()
+    => base.GetChildCountEx_ShouldReturnCount_WithRuntimeNodes();
 
   [Test]
-  public void GetChildrenEx_ShouldReturnChildrenFromFakeNodeTree()
-  {
-    _node.AddChildEx(_realNode);
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetChildrenEx().ShouldBeEquivalentTo(new INode[]
-    {
-      _fakeChildNode.Object,
-      _fakeChildCustomNode.Object,
-      _realNode,
-      _realCustomNode
-    });
-  }
+  public override void GetChildrenEx_ShouldReturnAllNodes()
+    => base.GetChildrenEx_ShouldReturnAllNodes();
 
   [Test]
-  public void GetNodeEx_ShouldReturnChildFromFakeNodeTree_WithFakeINode()
-    => _node.GetNodeEx(_fakeChildNodePath).ShouldBe(_fakeChildNode.Object);
+  public override void GetNodeEx_ShouldReturnNull_WithNoMatch()
+    => base.GetNodeEx_ShouldReturnNull_WithNoMatch();
 
   [Test]
-  public void GetNodeEx_ShouldReturnChildFromFakeNodeTree_WithFakeCustomNode()
-  => _node.GetNodeEx(_fakeChildCustomNodePath).ShouldBe(_fakeChildCustomNode.Object);
+  public override void GetNodeEx_ShouldReturnNode_WithRuntimeNode()
+    => base.GetNodeEx_ShouldReturnNode_WithRuntimeNode();
 
   [Test]
-  public void GetNodeEx_ShouldReturnChildFromFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.GetNodeEx(_realNodePath).ShouldBe(_realNode);
-  }
+  public override void GetNodeEx_ShouldReturnNode_WithRuntimeCustomNode()
+    => base.GetNodeEx_ShouldReturnNode_WithRuntimeCustomNode();
 
   [Test]
-  public void GetNodeEx_ShouldReturnChildFromFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetNodeEx(_realCustomNodePath).ShouldBe(_realCustomNode);
-  }
+  public override void GetNodeOrNullEx_ShouldReturnNull_WithNoMatch()
+    => base.GetNodeOrNullEx_ShouldReturnNull_WithNoMatch();
 
   [Test]
-  public void GetNodeOrNullEx_ShouldReturnNull_WithNoMatch()
-    => _node.GetNodeOrNullEx(_realNodePath).ShouldBeNull();
+  public override void GetNodeOrNullEx_ShouldReturnNode_WithExistingNode()
+    => base.GetNodeOrNullEx_ShouldReturnNode_WithExistingNode();
 
   [Test]
-  public void GetNodeOrNullEx_ShouldReturnChildFromFakeNodeTree_WithFakeINode()
-    => _node.GetNodeOrNullEx(_fakeChildNodePath).ShouldBe(_fakeChildNode.Object);
+  public override void GetNodeOrNullEx_ShouldReturnNode_WithExistingCustomNode()
+    => base.GetNodeOrNullEx_ShouldReturnNode_WithExistingCustomNode();
 
   [Test]
-  public void GetNodeOrNullEx_ShouldReturnChildFromFakeNodeTree_WithFakeCustomNode()
-    => _node.GetNodeOrNullEx(_fakeChildCustomNodePath).ShouldBe(_fakeChildCustomNode.Object);
+  public override void GetNodeOrNullEx_ShouldReturnNode_WithRuntimeNode()
+    => base.GetNodeOrNullEx_ShouldReturnNode_WithRuntimeNode();
 
   [Test]
-  public void GetNodeOrNullEx_ShouldReturnChildFromFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.GetNodeOrNullEx(_realNodePath).ShouldBe(_realNode);
-  }
+  public override void GetNodeOrNullEx_ShouldReturnNode_WithRuntimeCustomNode()
+    => base.GetNodeOrNullEx_ShouldReturnNode_WithRuntimeCustomNode();
 
   [Test]
-  public void GetNodeOrNullEx_ShouldReturnChildFromFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetNodeOrNullEx(_realCustomNodePath).ShouldBe(_realCustomNode);
-  }
+  public override void GetNodeOrNullExOfT_ShouldReturnNull_WithNoMatch()
+    => base.GetNodeOrNullExOfT_ShouldReturnNull_WithNoMatch();
 
   [Test]
-  public void GetNodeOrNullExOfT_ShouldReturnNull_WithNoMatch()
-    => _node.GetNodeOrNullEx<INode>(_realNodePath).ShouldBeNull();
+  public override void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingNode()
+    => base.GetNodeOrNullExOfT_ShouldReturnNode_WithExistingNode();
 
   [Test]
-  public void GetNodeOrNullExOfT_ShouldReturnChildFromFakeNodeTree_WithFakeINode()
-    => _node.GetNodeOrNullEx<INode>(_fakeChildNodePath).ShouldBe(_fakeChildNode.Object);
+  public override void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingCustomNode()
+    => base.GetNodeOrNullExOfT_ShouldReturnNode_WithExistingCustomNode();
 
   [Test]
-  public void GetNodeOrNullExOfT_ShouldReturnChildFromFakeNodeTree_WithFakeCustomNode()
-    => _node.GetNodeOrNullEx<ICustomNode>(_fakeChildCustomNodePath).ShouldBe(_fakeChildCustomNode.Object);
+  public override void GetNodeOrNullExOfT_ShouldReturnNode_WithRuntimeNode()
+    => base.GetNodeOrNullExOfT_ShouldReturnNode_WithRuntimeNode();
 
   [Test]
-  public void GetNodeOrNullExOfT_ShouldReturnChildFromFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.GetNodeOrNullEx<INode>(_realNodePath).ShouldBe(_realNode);
-  }
+  public override void GetNodeOrNullExOfT_ShouldReturnNode_WithRuntimeCustomNode()
+    => base.GetNodeOrNullExOfT_ShouldReturnNode_WithRuntimeCustomNode();
 
   [Test]
-  public void GetNodeOrNullExOfT_ShouldReturnChildFromFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetNodeOrNullEx<ICustomNode>(_realCustomNodePath).ShouldBe(_realCustomNode);
-  }
+  public override void HasNodeEx_ShouldReturnFalse_WithNoMatch()
+    => base.HasNodeEx_ShouldReturnFalse_WithNoMatch();
 
   [Test]
-  public void HasNodeEx_ShouldReturnFalse_WithNoMatch()
-    => _node.HasNodeEx(_realNodePath).ShouldBeFalse();
+  public override void HasNodeEx_ShouldReturnTrue_WithExistingNode()
+    => base.HasNodeEx_ShouldReturnTrue_WithExistingNode();
 
   [Test]
-  public void HasNodeEx_ShouldReturnTrueForChildInFakeNodeTree_WithFakeINode()
-    => _node.HasNodeEx(_fakeChildNodePath).ShouldBeTrue();
+  public override void HasNodeEx_ShouldReturnTrue_WithExistingCustomNode()
+    => base.HasNodeEx_ShouldReturnTrue_WithExistingCustomNode();
 
   [Test]
-  public void HasNodeEx_ShouldReturnTrueForChildInFakeNodeTree_WithFakeCustomNode()
-    => _node.HasNodeEx(_fakeChildCustomNodePath).ShouldBeTrue();
+  public override void HasNodeEx_ShouldReturnTrue_WithRuntimeNode()
+    => base.HasNodeEx_ShouldReturnTrue_WithRuntimeNode();
 
   [Test]
-  public void HasNodeEx_ShouldReturnTrueForChildInFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
-
-    _node.HasNodeEx(_realNodePath).ShouldBeTrue();
-  }
+  public override void HasNodeEx_ShouldReturnTrue_WithRuntimeCustomNode()
+    => base.HasNodeEx_ShouldReturnTrue_WithRuntimeCustomNode();
 
   [Test]
-  public void HasNodeEx_ShouldReturnTrueForChildInFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.HasNodeEx(_realCustomNodePath).ShouldBeTrue();
-  }
+  public override void RemoveChildEx_ShouldUpdateSceneTree_WithExistingNode()
+    => base.RemoveChildEx_ShouldUpdateSceneTree_WithExistingNode();
 
   [Test]
-  public void RemoveChildEx_ShouldUpdateFakeNodeTree_WithFakeINode()
-  {
-    _node.GetChildrenEx().ShouldContain(_fakeChildNode.Object);
-
-    _node.RemoveChildEx(_fakeChildNode.Object);
-
-    _node.GetChildrenEx().ShouldNotContain(_fakeChildNode.Object);
-  }
+  public override void RemoveChildEx_ShouldUpdateSceneTree_WithExistingCustomNode()
+    => base.RemoveChildEx_ShouldUpdateSceneTree_WithExistingCustomNode();
 
   [Test]
-  public void RemoveChildEx_ShouldUpdateFakeNodeTree_WithFakeCustomNode()
-  {
-    _node.GetChildrenEx().ShouldContain(_fakeChildCustomNode.Object);
-
-    _node.RemoveChildEx(_fakeChildCustomNode.Object);
-
-    _node.GetChildrenEx().ShouldNotContain(_fakeChildCustomNode.Object);
-  }
+  public override void RemoveChildEx_ShouldUpdateSceneTree_WithRuntimeNode()
+    => base.RemoveChildEx_ShouldUpdateSceneTree_WithRuntimeNode();
 
   [Test]
-  public void RemoveChildEx_ShouldUpdateFakeNodeTree_WithRealINode()
-  {
-    _node.AddChildEx(_realNode);
+  public override void RemoveChildEx_ShouldUpdateSceneTree_WithRuntimeCustomNode()
+    => base.RemoveChildEx_ShouldUpdateSceneTree_WithRuntimeCustomNode();
 
-    _node.GetChildrenEx().ShouldContain(_realNode);
-
-    _node.RemoveChildEx(_realNode);
-
-    _node.GetChildrenEx().ShouldNotContain(_realNode);
-  }
-
-  [Test]
-  public void RemoveChildEx_ShouldUpdateFakeNodeTree_WithRealCustomNode()
-  {
-    _node.AddChildEx(_realCustomNode);
-
-    _node.GetChildrenEx().ShouldContain(_realCustomNode);
-
-    _node.RemoveChildEx(_realCustomNode);
-
-    _node.GetChildrenEx().ShouldNotContain(_realCustomNode);
-  }
+  #endregion Base Class Tests
 }
