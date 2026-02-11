@@ -58,6 +58,9 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
     _actor.QueueFree();
   }
 
+  public virtual void AddChildEx_ShouldThrow_WithNonNodeObject()
+    => Should.Throw<InvalidOperationException>(() => _actor.AddChildEx(new object()));
+
   public virtual void AddChildEx_ShouldUpdateSceneTree_WithNode()
   {
     _actor.AddChildEx(_runtimeNode);
@@ -281,6 +284,10 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
   public virtual void GetNodeOrNullExOfT_ShouldReturnNull_WithNoMatch()
     => _actor.GetNodeOrNullEx<INode>(_runtimeNodePath).ShouldBeNull();
 
+  public virtual void GetNodeOrNullExOfT_ShouldThrow_WithIncorrectTypeSpecified()
+    => Should.Throw<Exception>(() =>
+      _actor.GetNodeOrNullEx<ICustomNode>(_manuallyConnectedNodePath));
+
   public virtual void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingNode()
     => _actor.GetNodeOrNullEx<INode>(_manuallyConnectedNodePath)
       .ShouldMatch(_actor.ManuallyConnectedNode);
@@ -325,6 +332,9 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
 
     _actor.HasNodeEx(_runtimeCustomNodePath).ShouldBeTrue();
   }
+
+  public virtual void RemoveChildEx_ShouldThrow_WithNonNodeObject()
+    => Should.Throw<InvalidOperationException>(() => _actor.RemoveChildEx(new object()));
 
   public virtual void RemoveChildEx_ShouldUpdateSceneTree_WithExistingNode()
   {

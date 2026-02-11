@@ -209,6 +209,10 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
   #region Base Class Tests
 
   [Test]
+  public override void AddChildEx_ShouldThrow_WithNonNodeObject()
+    => base.AddChildEx_ShouldThrow_WithNonNodeObject();
+
+  [Test]
   public override void AddChildEx_ShouldUpdateSceneTree_WithNode()
     => base.AddChildEx_ShouldUpdateSceneTree_WithNode();
 
@@ -353,6 +357,10 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
     => base.GetNodeOrNullExOfT_ShouldReturnNull_WithNoMatch();
 
   [Test]
+  public override void GetNodeOrNullExOfT_ShouldThrow_WithIncorrectTypeSpecified()
+    => base.GetNodeOrNullExOfT_ShouldThrow_WithIncorrectTypeSpecified();
+
+  [Test]
   public override void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingNode()
     => base.GetNodeOrNullExOfT_ShouldReturnNode_WithExistingNode();
 
@@ -387,6 +395,10 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
   [Test]
   public override void HasNodeEx_ShouldReturnTrue_WithRuntimeCustomNode()
     => base.HasNodeEx_ShouldReturnTrue_WithRuntimeCustomNode();
+
+  [Test]
+  public override void RemoveChildEx_ShouldThrow_WithNonNodeObject()
+    => base.RemoveChildEx_ShouldThrow_WithNonNodeObject();
 
   [Test]
   public override void RemoveChildEx_ShouldUpdateSceneTree_WithExistingNode()
