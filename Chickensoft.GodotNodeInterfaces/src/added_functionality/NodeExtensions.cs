@@ -145,11 +145,7 @@ public static class NodeExtensions
       );
       foreach (var child in children)
       {
-        var adaptedChild = GodotInterfaces.AdaptOrNull<INode>(child);
-        if (adaptedChild is not null)
-        {
-          adaptedNodes.Add(adaptedChild);
-        }
+        adaptedNodes.Add(GodotInterfaces.Adapt<INode>(child));
       }
       return adaptedNodes.ToArray();
     }
@@ -282,11 +278,7 @@ public static class NodeExtensions
       );
       foreach (var child in children)
       {
-        var adaptedChild = GodotInterfaces.AdaptOrNull<INode>(child);
-        if (adaptedChild is not null)
-        {
-          adaptedNodes.Add(adaptedChild);
-        }
+        adaptedNodes.Add(GodotInterfaces.Adapt<INode>(child));
       }
       return adaptedNodes.ToArray();
     }
