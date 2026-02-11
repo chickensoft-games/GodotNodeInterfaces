@@ -202,6 +202,45 @@ public void LoadsGame()
 }
 ```
 
+## Migrating
+
+### Upgrading from GodotNodeInterfaces 2.x to 3.x
+
+The following static state was added in GodotNodeInterfaces 3.0:
+
+```csharp
+namespace Chickensoft.GodotNodeInterfaces;
+
+public static class RuntimeContext
+{
+  public static bool IsTesting { get; set; }
+}
+```
+
+This must be set to true by the user in their project boilerplate to use the FakeNodeTree in tests. For example, the following line of code needed to be added to [Main.cs](https://github.com/blewis-web/Chickensoft.GameDemo/blob/main/src/Main.cs) in GameDemo.
+
+```csharp
+  public override void _Ready()
+  {
+#if RUN_TESTS
+    // If this is a debug build, use GoDotTest to examine the
+    // command line arguments and determine if we should run tests.
+    Environment = TestEnvironment.From(OS.GetCmdlineArgs());
+    if (Environment.ShouldRunTests)
+    {
+      // Add this line of boilerplate to use the FakeNodeTree in tests.
+      Chickensoft.GodotNodeInterfaces.RuntimeContext.IsTesting = true;
+
+      CallDeferred(nameof(RunTests));
+      return;
+    }
+#endif
+
+    // If we don't need to run tests, we can just switch to the game scene.
+    CallDeferred(nameof(StartApp));
+  }
+```
+
 ## 💁 Getting Help
 
 *Is this package broken? Encountering obscure C# build problems?* We'll be happy to help you in the [Chickensoft Discord server][discord].
