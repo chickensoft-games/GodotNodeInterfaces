@@ -150,6 +150,8 @@ public partial class MyNode : Node2D
 
 All Godot node adapter implementations have a `FakeNodes` dictionary that is checked first by each of the `Ex` node manipulation methods, like `GetNodeEx`, `GetChildrenEx`, etc. If a mocked node is found in the dictionary for the given path, it will be returned instead of looking for an actual node. This allows Godot nodes to be tested.
 
+> [!IMPORTANT] Starting in GodotNodeInterfaces v3, to use the fake node tree in your tests, you must set the static property `Chickensoft.GodotNodeInterfaces.RuntimeContext.IsTesting` to `true` when running tests. See the "Migrating" section below.
+
 For example, here's a node which grabs a reference to one of its child nodes in `_Ready`.
 
 ```csharp
