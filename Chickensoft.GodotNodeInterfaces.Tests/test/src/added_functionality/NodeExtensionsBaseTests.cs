@@ -58,13 +58,6 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
     _actor.QueueFree();
   }
 
-  protected async Task AddChildToSceneTree(Node node)
-  {
-    var sceneTree = TestScene.GetTree();
-    sceneTree.Root.CallDeferred(Node.MethodName.AddChild, node);
-    await sceneTree.ToSignal(sceneTree, SceneTree.SignalName.ProcessFrame);
-  }
-
   public virtual void AddChildEx_ShouldUpdateSceneTree_WithNode()
   {
     _actor.AddChildEx(_runtimeNode);

@@ -18,7 +18,9 @@ public class NodeExtensionsIntegrationTests(Node testScene) : NodeExtensionsBase
       .Load<PackedScene>(UniqueIds.CUSTOM_ACTOR_SCENE)
       .Instantiate<CustomActor>();
 
-    await AddChildToSceneTree(_actor);
+    var sceneTree = TestScene.GetTree();
+    sceneTree.Root.CallDeferred(Node.MethodName.AddChild, _actor);
+    await sceneTree.ToSignal(sceneTree, SceneTree.SignalName.ProcessFrame);
 
     _builtInNodes = [
       _actor.AutoConnectedNode,

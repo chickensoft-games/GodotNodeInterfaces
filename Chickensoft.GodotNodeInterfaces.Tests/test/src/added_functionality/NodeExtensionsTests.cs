@@ -56,8 +56,9 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
       [nameof(CustomActor.ManuallyConnectedNode)] = _mockManuallyConnectedNode.Object,
       [nameof(CustomActor.ManuallyConnectedCustomNode)] = _mockManuallyConnectedCustomNode.Object
     });
+    _actor._Notification((int)Node.NotificationEnterTree);
 
-    await AddChildToSceneTree(_actor);
+    _actor._Ready();
 
     _builtInNodes = [
       _actor.AutoConnectedNode,
