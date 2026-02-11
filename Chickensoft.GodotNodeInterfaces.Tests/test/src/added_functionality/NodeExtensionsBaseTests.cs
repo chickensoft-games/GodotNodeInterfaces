@@ -58,6 +58,13 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
     _actor.QueueFree();
   }
 
+  protected async Task AddChildToSceneTree(Node node)
+  {
+    var sceneTree = TestScene.GetTree();
+    sceneTree.Root.CallDeferred(Node.MethodName.AddChild, node);
+    await sceneTree.ToSignal(sceneTree, SceneTree.SignalName.ProcessFrame);
+  }
+
   public virtual void AddChildEx_ShouldUpdateSceneTree_WithNode()
   {
     _actor.AddChildEx(_runtimeNode);
@@ -125,7 +132,7 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
       .ShouldContainAllMatchingNodesFrom(existingBuiltInNodes, existingCustomNodes);
   }
 
-  public virtual void FindChildrenEx_ShouldReturnMatchingNodes_WithNodesAddedAtRuntime()
+  public virtual void FindChildrenEx_ShouldReturnMatchingNodes_WithRuntimeNodes()
   {
     var runtimeBuiltInNodes = _builtInNodes
       .Where(x => x.Name.ToString().Contains(RUNTIME_NODES_SUBSTRING))
@@ -144,7 +151,7 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
       _runtimeCustomNode.SetOwner(_actor);
     }
 
-    _actor.FindChildrenEx($"{RUNTIME_NODES_SUBSTRING}*")
+    _actor.FindChildrenEx($"*{RUNTIME_NODES_SUBSTRING}*")
       .ShouldContainAllMatchingNodesFrom(runtimeBuiltInNodes, runtimeCustomNodes);
   }
 
@@ -230,6 +237,14 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
 
   public virtual void GetNodeEx_ShouldReturnNull_WithNoMatch()
     => _actor.GetNodeEx(_runtimeNodePath).ShouldBeNull();
+
+  public virtual void GetNodeEx_ShouldReturnNode_WithExistingNode()
+    => _actor.GetNodeEx(_manuallyConnectedNodePath)
+      .ShouldMatch(_actor.ManuallyConnectedNode);
+
+  public virtual void GetNodeEx_ShouldReturnNode_WithExistingCustomNode()
+    => _actor.GetNodeEx(_manuallyConnectedCustomNodePath)
+      .ShouldMatch(_actor.ManuallyConnectedCustomNode);
 
   public virtual void GetNodeEx_ShouldReturnNode_WithRuntimeNode()
   {
@@ -320,6 +335,8 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
 
   public virtual void RemoveChildEx_ShouldUpdateSceneTree_WithExistingNode()
   {
+    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_actor.ManuallyConnectedNode));
+
     _actor.RemoveChildEx(_actor.ManuallyConnectedNode);
 
     _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_actor.ManuallyConnectedNode));
@@ -327,6 +344,8 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
 
   public virtual void RemoveChildEx_ShouldUpdateSceneTree_WithExistingCustomNode()
   {
+    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_actor.ManuallyConnectedCustomNode));
+
     _actor.RemoveChildEx(_actor.ManuallyConnectedCustomNode);
 
     _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_actor.ManuallyConnectedCustomNode));

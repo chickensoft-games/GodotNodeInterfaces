@@ -15,6 +15,16 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
   private Mock<INode> _mockManuallyConnectedNode = default!;
   private Mock<ICustomNode> _mockManuallyConnectedCustomNode = default!;
 
+  private const string MOCK_RUNTIME_NODE_NAME = "MockRuntimeNode";
+  private static readonly StringName _mockRuntimeNodeStringName = new(MOCK_RUNTIME_NODE_NAME);
+  private static readonly NodePath _mockRuntimeNodePath = new(MOCK_RUNTIME_NODE_NAME);
+  private Mock<INode> _mockRuntimeNode = default!;
+
+  private const string MOCK_RUNTIME_CUSTOM_NODE_NAME = "MockRuntimeCustomNode";
+  private static readonly StringName _mockRuntimeCustomNodeStringName = new(MOCK_RUNTIME_CUSTOM_NODE_NAME);
+  private static readonly NodePath _mockRuntimeCustomNodePath = new(MOCK_RUNTIME_CUSTOM_NODE_NAME);
+  private Mock<ICustomNode> _mockRuntimeCustomNode = default!;
+
   [Setup]
   public override async Task Setup()
   {
@@ -32,6 +42,12 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
     _mockManuallyConnectedCustomNode = new();
     _mockManuallyConnectedCustomNode.Setup(x => x.Name).Returns(_manuallyConnectedCustomNodeStringName);
 
+    _mockRuntimeNode = new();
+    _mockRuntimeNode.Setup(x => x.Name).Returns(_mockRuntimeNodeStringName);
+
+    _mockRuntimeCustomNode = new();
+    _mockRuntimeCustomNode.Setup(x => x.Name).Returns(_mockRuntimeCustomNodeStringName);
+
     _actor = new();
     _actor.FakeNodeTree(new()
     {
@@ -41,20 +57,20 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
       [nameof(CustomActor.ManuallyConnectedCustomNode)] = _mockManuallyConnectedCustomNode.Object
     });
 
-    var sceneTree = TestScene.GetTree();
-    sceneTree.Root.CallDeferred(Node.MethodName.AddChild, _actor);
-    await sceneTree.ToSignal(sceneTree, SceneTree.SignalName.ProcessFrame);
+    await AddChildToSceneTree(_actor);
 
     _builtInNodes = [
       _actor.AutoConnectedNode,
       _actor.ManuallyConnectedNode,
-      _runtimeNode
+      _runtimeNode,
+      _mockRuntimeNode.Object
     ];
 
     _customNodes = [
       _actor.AutoConnectedCustomNode,
       _actor.ManuallyConnectedCustomNode,
-      _runtimeCustomNode
+      _runtimeCustomNode,
+      _mockRuntimeCustomNode.Object
     ];
   }
 
@@ -62,86 +78,132 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
   public override void Cleanup() => base.Cleanup();
 
   [Test]
-  public void AddChildEx_ShouldUpdateSceneTree_WithMockINode()
+  public void AddChildEx_ShouldUpdateSceneTree_WithRuntimeMockNode()
   {
-    var otherFakeChildNode = new Mock<INode>();
+    _actor.AddChildEx(_mockRuntimeNode.Object);
 
-    _actor.AddChildEx(otherFakeChildNode.Object);
-
-    _actor.GetChildrenEx().ShouldContain(otherFakeChildNode.Object);
+    _actor.GetChildrenEx()
+      .ShouldContain(x => x.IsMatch(_mockRuntimeNode.Object));
   }
 
   [Test]
-  public void AddChildEx_ShouldUpdateSceneTree_WithMockCustomNode()
+  public void AddChildEx_ShouldUpdateSceneTree_WithRuntimeMockCustomNode()
   {
-    var otherFakeChildNode = new Mock<ICustomNode>();
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
 
-    _actor.AddChildEx(otherFakeChildNode.Object);
-
-    _actor.GetChildrenEx().ShouldContain(otherFakeChildNode.Object);
+    _actor.GetChildrenEx()
+      .ShouldContain(x => x.IsMatch(_mockRuntimeCustomNode.Object));
   }
 
   [Test]
-  public void FindChildEx_ShouldReturnMatchingNode_WithExistingMockNode()
-    => _actor.FindChildEx(nameof(CustomActor.ManuallyConnectedNode))
-      .ShouldMatch(_mockManuallyConnectedNode.Object);
-
-  [Test]
-  public void FindChildEx_ShouldReturnMatchingNode_WithExistingMockCustomNode()
-    => _actor.FindChildEx(nameof(CustomActor.ManuallyConnectedCustomNode))
-      .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
-
-  [Test]
-  public void GetNodeEx_ShouldReturnNode_WithExistingMockNode()
-    => _actor.GetNodeEx(_manuallyConnectedNodePath)
-      .ShouldMatch(_mockManuallyConnectedNode.Object);
-
-  [Test]
-  public void GetNodeEx_ShouldReturnNode_WithExistingMockCustomNode()
-  => _actor.GetNodeEx(_manuallyConnectedCustomNodePath)
-    .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
-
-  [Test]
-  public void GetNodeOrNullEx_ShouldReturnNode_WithExistingMockNode()
-    => _actor.GetNodeOrNullEx(_manuallyConnectedNodePath)
-      .ShouldMatch(_mockManuallyConnectedNode.Object);
-
-  [Test]
-  public void GetNodeOrNullEx_ShouldReturnNode_WithExistingMockCustomNode()
-    => _actor.GetNodeOrNullEx(_manuallyConnectedCustomNodePath)
-      .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
-
-  [Test]
-  public void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingMockNode()
-    => _actor.GetNodeOrNullEx<INode>(_manuallyConnectedNodePath)
-      .ShouldMatch(_mockManuallyConnectedNode.Object);
-
-  [Test]
-  public void GetNodeOrNullExOfT_ShouldReturnNode_WithExistingMockCustomNode()
-    => _actor.GetNodeOrNullEx<ICustomNode>(_manuallyConnectedCustomNodePath)
-      .ShouldMatch(_mockManuallyConnectedCustomNode.Object);
-
-  [Test]
-  public void RemoveChildEx_ShouldUpdateSceneTree_WithExistingMockNode()
+  public void FindChildEx_ShouldReturnMatchingNode_WithRuntimeMockNode()
   {
-    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_mockManuallyConnectedNode.Object));
+    _actor.AddChildEx(_mockRuntimeNode.Object);
 
-    _actor.RemoveChildEx(_mockManuallyConnectedNode.Object);
-
-    _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_mockManuallyConnectedNode.Object));
+    _actor.FindChildEx(MOCK_RUNTIME_NODE_NAME)
+      .ShouldMatch(_mockRuntimeNode.Object);
   }
 
   [Test]
-  public void RemoveChildEx_ShouldUpdateSceneTree_WithExistingMockCustomNode()
+  public void FindChildEx_ShouldReturnMatchingNode_WithRuntimeMockCustomNode()
   {
-    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_mockManuallyConnectedCustomNode.Object));
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
 
-    _actor.RemoveChildEx(_mockManuallyConnectedCustomNode.Object);
-
-    _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_mockManuallyConnectedCustomNode.Object));
+    _actor.FindChildEx(MOCK_RUNTIME_CUSTOM_NODE_NAME)
+      .ShouldMatch(_mockRuntimeCustomNode.Object);
   }
 
-  // TODO: Add more Mock test cases to the unit tests that mirror the integration tests.
+  [Test]
+  public void GetNodeEx_ShouldReturnNode_WithRuntimeMockNode()
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+
+    _actor.GetNodeEx(_mockRuntimeNodePath)
+      .ShouldMatch(_mockRuntimeNode.Object);
+  }
+
+  [Test]
+  public void GetNodeEx_ShouldReturnNode_WithRuntimeMockCustomNode()
+  {
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    _actor.GetNodeEx(_mockRuntimeCustomNodePath)
+      .ShouldMatch(_mockRuntimeCustomNode.Object);
+  }
+
+  [Test]
+  public void GetNodeOrNullEx_ShouldReturnNode_WithRuntimeMockNode()
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+
+    _actor.GetNodeOrNullEx(_mockRuntimeNodePath)
+      .ShouldMatch(_mockRuntimeNode.Object);
+  }
+
+  [Test]
+  public void GetNodeOrNullEx_ShouldReturnNode_WithRuntimeMockCustomNode()
+  {
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    _actor.GetNodeOrNullEx(_mockRuntimeCustomNodePath)
+      .ShouldMatch(_mockRuntimeCustomNode.Object);
+  }
+
+  [Test]
+  public void GetNodeOrNullExOfT_ShouldReturnNode_WithRuntimeMockNode()
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+
+    _actor.GetNodeOrNullEx<INode>(_mockRuntimeNodePath)
+      .ShouldMatch(_mockRuntimeNode.Object);
+  }
+
+  [Test]
+  public void GetNodeOrNullExOfT_ShouldReturnNode_WithRuntimeMockCustomNode()
+  {
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    _actor.GetNodeOrNullEx<ICustomNode>(_mockRuntimeCustomNodePath)
+      .ShouldMatch(_mockRuntimeCustomNode.Object);
+  }
+
+  [Test]
+  public void HasNodeEx_ShouldReturnTrue_WithRuntimeMockNode()
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+
+    _actor.HasNodeEx(_mockRuntimeNodePath).ShouldBeTrue();
+  }
+
+  [Test]
+  public void HasNodeEx_ShouldReturnTrue_WithRuntimeMockCustomNode()
+  {
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    _actor.HasNodeEx(_mockRuntimeCustomNodePath).ShouldBeTrue();
+  }
+
+  [Test]
+  public void RemoveChildEx_ShouldUpdateSceneTree_WithRuntimeMockNode()
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_mockRuntimeNode.Object));
+
+    _actor.RemoveChildEx(_mockRuntimeNode.Object);
+
+    _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_mockRuntimeNode.Object));
+  }
+
+  [Test]
+  public void RemoveChildEx_ShouldUpdateSceneTree_WithRuntimeMockCustomNode()
+  {
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+    _actor.GetChildrenEx().ShouldContain(x => x.IsMatch(_mockRuntimeCustomNode.Object));
+
+    _actor.RemoveChildEx(_mockRuntimeCustomNode.Object);
+
+    _actor.GetChildrenEx().ShouldNotContain(x => x.IsMatch(_mockRuntimeCustomNode.Object));
+  }
 
   #region Base Class Tests
 
@@ -182,12 +244,22 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
     => base.FindChildrenEx_ShouldReturnMatchingNodes_WithExistingNodes();
 
   [Test]
-  public override void FindChildrenEx_ShouldReturnMatchingNodes_WithNodesAddedAtRuntime()
-    => base.FindChildrenEx_ShouldReturnMatchingNodes_WithNodesAddedAtRuntime();
+  public override void FindChildrenEx_ShouldReturnMatchingNodes_WithRuntimeNodes()
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    base.FindChildrenEx_ShouldReturnMatchingNodes_WithRuntimeNodes();
+  }
 
   [Test]
   public override void FindChildrenEx_ShouldReturnAllNodes_WithWildcard()
-    => base.FindChildrenEx_ShouldReturnAllNodes_WithWildcard();
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    base.FindChildrenEx_ShouldReturnAllNodes_WithWildcard();
+  }
 
   [Test]
   public override void GetChildEx_ShouldReturnNull_WithInvalidIndex()
@@ -195,7 +267,12 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
 
   [Test]
   public override void GetChildEx_ShouldReturnNode()
-    => base.GetChildEx_ShouldReturnNode();
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    base.GetChildEx_ShouldReturnNode();
+  }
 
   [Test]
   public override void GetChildExOfT_ShouldReturnNull_WithInvalidIndex()
@@ -207,7 +284,12 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
 
   [Test]
   public override void GetChildExOfT_ShouldReturnNode()
-    => base.GetChildExOfT_ShouldReturnNode();
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    base.GetChildExOfT_ShouldReturnNode();
+  }
 
   [Test]
   public override void GetChildCountEx_ShouldReturnCount_WithExistingNodes()
@@ -215,11 +297,23 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
 
   [Test]
   public override void GetChildCountEx_ShouldReturnCount_WithRuntimeNodes()
-    => base.GetChildCountEx_ShouldReturnCount_WithRuntimeNodes();
+  {
+    base.GetChildCountEx_ShouldReturnCount_WithRuntimeNodes();
+
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    _actor.GetChildCountEx().ShouldBe(8);
+  }
 
   [Test]
   public override void GetChildrenEx_ShouldReturnAllNodes()
-    => base.GetChildrenEx_ShouldReturnAllNodes();
+  {
+    _actor.AddChildEx(_mockRuntimeNode.Object);
+    _actor.AddChildEx(_mockRuntimeCustomNode.Object);
+
+    base.GetChildrenEx_ShouldReturnAllNodes();
+  }
 
   [Test]
   public override void GetNodeEx_ShouldReturnNull_WithNoMatch()

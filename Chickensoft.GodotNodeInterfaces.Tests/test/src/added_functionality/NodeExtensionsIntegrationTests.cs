@@ -18,9 +18,7 @@ public class NodeExtensionsIntegrationTests(Node testScene) : NodeExtensionsBase
       .Load<PackedScene>(UniqueIds.CUSTOM_ACTOR_SCENE)
       .Instantiate<CustomActor>();
 
-    var sceneTree = TestScene.GetTree();
-    sceneTree.Root.CallDeferred(Node.MethodName.AddChild, _actor);
-    await sceneTree.ToSignal(sceneTree, SceneTree.SignalName.ProcessFrame);
+    await AddChildToSceneTree(_actor);
 
     _builtInNodes = [
       _actor.AutoConnectedNode,
@@ -40,16 +38,6 @@ public class NodeExtensionsIntegrationTests(Node testScene) : NodeExtensionsBase
 
   [CleanupAll]
   public void CleanupAll() => RuntimeContext.IsTesting = true;
-
-  [Test]
-  public void GetNodeEx_ShouldReturnNode_WithExistingINode()
-    => _actor.GetNodeEx(_manuallyConnectedNodePath)
-      .ShouldMatch(_actor.ManuallyConnectedNode);
-
-  [Test]
-  public void GetNodeEx_ShouldReturnNode_WithExistingCustomNode()
-    => _actor.GetNodeEx(_manuallyConnectedCustomNodePath)
-      .ShouldMatch(_actor.ManuallyConnectedCustomNode);
 
   #region Base Class Tests
 
@@ -90,8 +78,8 @@ public class NodeExtensionsIntegrationTests(Node testScene) : NodeExtensionsBase
     => base.FindChildrenEx_ShouldReturnMatchingNodes_WithExistingNodes();
 
   [Test]
-  public override void FindChildrenEx_ShouldReturnMatchingNodes_WithNodesAddedAtRuntime()
-    => base.FindChildrenEx_ShouldReturnMatchingNodes_WithNodesAddedAtRuntime();
+  public override void FindChildrenEx_ShouldReturnMatchingNodes_WithRuntimeNodes()
+    => base.FindChildrenEx_ShouldReturnMatchingNodes_WithRuntimeNodes();
 
   [Test]
   public override void FindChildrenEx_ShouldReturnAllNodes_WithWildcard()
@@ -132,6 +120,14 @@ public class NodeExtensionsIntegrationTests(Node testScene) : NodeExtensionsBase
   [Test]
   public override void GetNodeEx_ShouldReturnNull_WithNoMatch()
     => base.GetNodeEx_ShouldReturnNull_WithNoMatch();
+
+  [Test]
+  public override void GetNodeEx_ShouldReturnNode_WithExistingNode()
+    => base.GetNodeEx_ShouldReturnNode_WithExistingNode();
+
+  [Test]
+  public override void GetNodeEx_ShouldReturnNode_WithExistingCustomNode()
+    => base.GetNodeEx_ShouldReturnNode_WithExistingCustomNode();
 
   [Test]
   public override void GetNodeEx_ShouldReturnNode_WithRuntimeNode()
