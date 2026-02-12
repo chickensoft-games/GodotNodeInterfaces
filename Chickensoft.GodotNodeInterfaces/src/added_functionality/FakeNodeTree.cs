@@ -103,16 +103,23 @@ public class FakeNodeTree
 
   public T? GetChild<T>(int index) where T : class, INode
   {
+    if (index >= _nodes.Count)
+    {
+      return null;
+    }
+
     var actualIndex = index;
     if (actualIndex < 0)
     {
       // Negative indices access the children from the last one.
       actualIndex = _nodes.Count + actualIndex;
     }
-    return _nodes[actualIndex] as T;
+
+    var child = _nodes[actualIndex];
+    return child is null ? null : (T)child;
   }
 
-  public INode GetChild(int index) => GetChild<INode>(index)!;
+  public INode? GetChild(int index) => GetChild<INode>(index);
 
   public int GetChildCount() => _nodes.Count;
 

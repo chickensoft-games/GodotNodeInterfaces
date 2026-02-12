@@ -101,12 +101,7 @@ public static class NodeExtensions
     caller,
     "find child",
     fakeNodeTree => fakeNodeTree.FindChild(pattern),
-    node =>
-    {
-      var child = node.FindChild(pattern, recursive, owned);
-      return child is null ? null : GodotInterfaces.AdaptNode(child);
-    }
-  );
+    node => GodotInterfaces.AdaptOrNull<INode>(node.FindChild(pattern, recursive, owned)));
 
   /// <summary>
   /// <inheritdoc cref="INode.FindChildrenEx(string, string, bool, bool)" />
@@ -144,13 +139,13 @@ public static class NodeExtensions
     (fakeNodeTree) => fakeNodeTree.FindChildren(pattern),
     (node) =>
     {
-      var nodes = node.FindChildren(pattern, type, recursive, owned);
+      var children = node.FindChildren(pattern, type, recursive, owned);
       var adaptedNodes = new System.Collections.Generic.List<INode>(
-        nodes.Count
+        children.Count
       );
-      foreach (var childNode in nodes)
+      foreach (var child in children)
       {
-        adaptedNodes.Add(GodotInterfaces.AdaptNode(childNode));
+        adaptedNodes.Add(GodotInterfaces.Adapt<INode>(child));
       }
       return adaptedNodes.ToArray();
     }
@@ -166,7 +161,7 @@ public static class NodeExtensions
   /// <returns>
   /// <inheritdoc cref="INode.GetChildEx(int, bool)" path="/returns" />
   /// </returns>
-  public static T GetChildEx<T>(
+  public static T? GetChildEx<T>(
     this Node caller, int idx, bool includeInternal = false
   ) where T : class, INode => GetChildEx<T>(
     (object)caller, idx, includeInternal
@@ -182,14 +177,13 @@ public static class NodeExtensions
   /// <returns>
   /// <inheritdoc cref="INode.GetChildEx{T}(int, bool)" path="/returns" />
   /// </returns>
-  public static T GetChildEx<T>(
+  public static T? GetChildEx<T>(
     object caller, int idx, bool includeInternal = false
   ) where T : class, INode => TreeOp(
     caller,
     "get child",
-    fakeNodeTree => fakeNodeTree.GetChild<T>(idx)!,
-    node => GodotInterfaces.Adapt<T>(node.GetChild(idx, includeInternal)!)
-  );
+    fakeNodeTree => fakeNodeTree.GetChild<T>(idx),
+    node => GodotInterfaces.AdaptOrNull<T>(node.GetChild(idx, includeInternal)));
 
   /// <summary>
   /// <inheritdoc cref="INode.GetChildEx(int, bool)" />
@@ -200,7 +194,7 @@ public static class NodeExtensions
   /// <returns>
   /// <inheritdoc cref="INode.GetChildEx(int, bool)" path="/returns" />
   /// </returns>
-  public static INode GetChildEx(
+  public static INode? GetChildEx(
     this Node caller, int idx, bool includeInternal = false
   ) => GetChildEx((object)caller, idx, includeInternal);
 
@@ -213,14 +207,13 @@ public static class NodeExtensions
   /// <returns>
   /// <inheritdoc cref="INode.GetChildEx(int, bool)" path="/returns" />
   /// </returns>
-  public static INode GetChildEx(
+  public static INode? GetChildEx(
     object caller, int idx, bool includeInternal
   ) => TreeOp(
     caller,
     "get child",
     fakeNodeTree => fakeNodeTree.GetChild(idx),
-    node => GodotInterfaces.AdaptNode(node.GetChild(idx, includeInternal))
-  );
+    node => GodotInterfaces.AdaptOrNull<INode>(node.GetChild(idx, includeInternal)));
 
   /// <summary>
   /// <inheritdoc cref="INode.GetChildCountEx(bool)" />
@@ -279,13 +272,13 @@ public static class NodeExtensions
     fakeNodeTree => fakeNodeTree.GetChildren(),
     parent =>
     {
-      var nodes = parent.GetChildren(includeInternal);
+      var children = parent.GetChildren(includeInternal);
       var adaptedNodes = new System.Collections.Generic.List<INode>(
-        nodes.Count
+        children.Count
       );
-      foreach (var childNode in nodes)
+      foreach (var child in children)
       {
-        adaptedNodes.Add(GodotInterfaces.AdaptNode(childNode));
+        adaptedNodes.Add(GodotInterfaces.Adapt<INode>(child));
       }
       return adaptedNodes.ToArray();
     }
@@ -299,7 +292,7 @@ public static class NodeExtensions
   /// <returns>
   /// <inheritdoc cref="INode.GetNodeEx(NodePath)" path="/returns" />
   /// </returns>
-  public static INode GetNodeEx(this Node caller, NodePath path) =>
+  public static INode? GetNodeEx(this Node caller, NodePath path) =>
     GetNodeEx((object)caller, path);
 
   /// <summary>
@@ -310,12 +303,11 @@ public static class NodeExtensions
   /// <returns>
   /// <inheritdoc cref="INode.GetNodeEx(NodePath)" path="/returns" />
   /// </returns>
-  public static INode GetNodeEx(object caller, NodePath path) => TreeOp(
+  public static INode? GetNodeEx(object caller, NodePath path) => TreeOp(
     caller,
     "get node",
-    fakeNodeTree => fakeNodeTree.GetNode(path)!,
-    parent => GodotInterfaces.AdaptNode(parent.GetNode(path))
-  );
+    fakeNodeTree => fakeNodeTree.GetNode(path),
+    parent => GodotInterfaces.AdaptOrNull<INode>(parent.GetNode(path)));
 
   /// <summary>
   /// <inheritdoc cref="INode.GetNodeOrNullEx{T}(NodePath)" />
@@ -347,16 +339,7 @@ public static class NodeExtensions
     caller,
     "get node (or null)",
     fakeNodeTree => fakeNodeTree.GetNode<T>(path),
-    parent =>
-    {
-      var node = parent.GetNodeOrNull(path);
-      if (node is Node godotNode)
-      {
-        return GodotInterfaces.Adapt<T>(godotNode);
-      }
-      return null;
-    }
-  );
+    parent => GodotInterfaces.AdaptOrNull<T>(parent.GetNodeOrNull(path)));
 
   /// <summary>
   /// <inheritdoc cref="INode.GetNodeOrNullEx(NodePath)" />
@@ -381,15 +364,7 @@ public static class NodeExtensions
     caller: caller,
     "get node (or null)",
     fakeNodeTree => fakeNodeTree.GetNode(path),
-    parent =>
-    {
-      var node = parent.GetNodeOrNull(path);
-      if (node is Node godotNode)
-      {
-        return GodotInterfaces.AdaptNode(godotNode);
-      }
-      return null;
-    }
+    parent => GodotInterfaces.AdaptOrNull<INode>(parent.GetNodeOrNull(path))
   );
 
   /// <summary>
@@ -477,6 +452,7 @@ public static class NodeExtensions
   )
   {
     if (
+      RuntimeContext.IsTesting &&
       caller is IFakeNodeTreeEnabled obj &&
       obj.FakeNodes is FakeNodeTree fakeNodeTree
     )

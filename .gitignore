@@ -8,6 +8,7 @@ bin/
 obj/
 .generated/
 .vs/
+.idea/
 .DS_Store
 .output/
 Chickensoft.GodotNodeInterfaces/src/adapters

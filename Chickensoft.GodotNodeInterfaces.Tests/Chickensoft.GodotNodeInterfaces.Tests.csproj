@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk">
+<Project Sdk="Godot.NET.Sdk/4.6.0">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -15,18 +15,26 @@
       .generated
     </CompilerGeneratedFilesOutputPath>
     -->
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Chickensoft.AutoInject" Version="2.9.23" PrivateAssets="all" />
     <PackageReference Include="Chickensoft.GoDotTest" Version="2.0.28" />
+    <PackageReference Include="Chickensoft.Introspection" Version="3.0.2" />
+    <PackageReference Include="Chickensoft.Introspection.Generator" Version="3.0.2" PrivateAssets="all" OutputItemType="analyzer" />
     <!-- Bring your own assertion library for tests! -->
     <PackageReference Include="Shouldly" Version="4.3.0" />
-    <!-- LightMock is a mocking library that can run without reflection. -->
-    <PackageReference Include="LightMock.Generator" Version="1.2.3" />
-    <!-- LightMoq is a Chickensoft package which makes it more like Moq. -->
-    <PackageReference Include="LightMoq" Version="0.1.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <!-- Include the package to test. -->
     <ProjectReference Include="../Chickensoft.GodotNodeInterfaces/Chickensoft.GodotNodeInterfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="**\.gdignore" />
+    <Content Include="**\.gitignore" />
+    <Content Include="**\*.godot" />
+    <Content Include="**\*.json" />
+    <Content Include="**\*.tscn" />
+    <Content Include="**\*.uid" />
   </ItemGroup>
 </Project>

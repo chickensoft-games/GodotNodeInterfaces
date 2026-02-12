@@ -535,6 +535,16 @@ public static class GodotNodeInterfacesGenerator
       }
 
       /// <summary>
+      /// Creates an adapter for the given Godot object or returns null if the object is null.
+      /// This will throw if the incorrect adapter type was specified for the object.
+      /// </summary>
+      /// <typeparam name="T">Adapter type.</typeparam>
+      /// <param name="object">Godot object.</param>
+      /// <exception cref="ArgumentException" />
+      public static T? AdaptOrNull<T>(object? @object) where T : class, IGodotObject
+        => @object is null ? null : Adapt<T>(@object);
+
+      /// <summary>
       /// Creates an adapter for the given Godot object. This will throw if the
       /// incorrect adapter type was specified for the object.
       /// </summary>

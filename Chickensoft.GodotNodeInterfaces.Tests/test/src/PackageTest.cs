@@ -18,5 +18,7 @@ public class PackageTest : TestClass
     var inode = GodotInterfaces.Adapt<INode>(node);
 
     inode.Name.ToString().ShouldBe(name);
+
+    inode.QueueFree();
   }
 }

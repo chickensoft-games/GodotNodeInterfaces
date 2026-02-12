@@ -150,6 +150,9 @@ public partial class MyNode : Node2D
 
 All Godot node adapter implementations have a `FakeNodes` dictionary that is checked first by each of the `Ex` node manipulation methods, like `GetNodeEx`, `GetChildrenEx`, etc. If a mocked node is found in the dictionary for the given path, it will be returned instead of looking for an actual node. This allows Godot nodes to be tested.
 
+> [!IMPORTANT]
+> Starting in GodotNodeInterfaces v3, to use the fake node tree in your tests, you must set the static property `Chickensoft.GodotNodeInterfaces.RuntimeContext.IsTesting` to `true` when running tests. See the "Migrating" section below.
+
 For example, here's a node which grabs a reference to one of its child nodes in `_Ready`.
 
 ```csharp
@@ -200,6 +203,45 @@ public void LoadsGame()
   // Make sure our node did what we expected it to do.
   node.MyChild.ShouldBe(myChild.Object);
 }
+```
+
+## Migrating
+
+### Upgrading from GodotNodeInterfaces 2.x to 3.x
+
+The following static state was added in GodotNodeInterfaces 3.0:
+
+```csharp
+namespace Chickensoft.GodotNodeInterfaces;
+
+public static class RuntimeContext
+{
+  public static bool IsTesting { get; set; }
+}
+```
+
+This must be set to true by the user in their project boilerplate to use the FakeNodeTree in tests. For example, the following line of code needed to be added to [Main.cs](https://github.com/blewis-web/Chickensoft.GameDemo/blob/main/src/Main.cs) in GameDemo.
+
+```csharp
+  public override void _Ready()
+  {
+#if RUN_TESTS
+    // If this is a debug build, use GoDotTest to examine the
+    // command line arguments and determine if we should run tests.
+    Environment = TestEnvironment.From(OS.GetCmdlineArgs());
+    if (Environment.ShouldRunTests)
+    {
+      // Add this line of boilerplate to use the FakeNodeTree in tests.
+      Chickensoft.GodotNodeInterfaces.RuntimeContext.IsTesting = true;
+
+      CallDeferred(nameof(RunTests));
+      return;
+    }
+#endif
+
+    // If we don't need to run tests, we can just switch to the game scene.
+    CallDeferred(nameof(StartApp));
+  }
 ```
 
 ## 💁 Getting Help

@@ -30,5 +30,19 @@
       "cwd": "${workspaceFolder}/Chickensoft.GodotNodeInterfaces.Tests",
       "stopAtEntry": false,
     },
+    {
+      "name": "🔬 Debug Current Test Suite",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build_and_generate",
+      "program": "${env:GODOT}",
+      "args": [
+        // These command line flags are used by GoDotTest to run tests.
+        "--run-tests=${fileBasenameNoExtension}",
+        "--quit-on-finish"
+      ],
+      "cwd": "${workspaceFolder}/Chickensoft.GodotNodeInterfaces.Tests",
+      "stopAtEntry": false,
+    },
   ]
 }
