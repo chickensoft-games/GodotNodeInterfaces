@@ -1,7 +1,7 @@
 namespace Chickensoft.GodotNodeInterfaces.Tests;
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Chickensoft.AutoInject;
 using Chickensoft.GodotNodeInterfaces;
 using Godot;
 using GoDotTest;
@@ -10,8 +10,6 @@ using Shouldly;
 
 public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testScene)
 {
-  private Mock<INode> _mockAutoConnectedNode = default!;
-  private Mock<ICustomNode> _mockAutoConnectedCustomNode = default!;
   private Mock<INode> _mockManuallyConnectedNode = default!;
   private Mock<ICustomNode> _mockManuallyConnectedCustomNode = default!;
 
@@ -30,12 +28,6 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
   {
     await base.Setup();
 
-    _mockAutoConnectedNode = new();
-    _mockAutoConnectedNode.Setup(x => x.Name).Returns(_autoConnectedNodeStringName);
-
-    _mockAutoConnectedCustomNode = new();
-    _mockAutoConnectedCustomNode.Setup(x => x.Name).Returns(_autoConnectedCustomNodeStringName);
-
     _mockManuallyConnectedNode = new();
     _mockManuallyConnectedNode.Setup(x => x.Name).Returns(_manuallyConnectedNodeStringName);
 
@@ -49,26 +41,25 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
     _mockRuntimeCustomNode.Setup(x => x.Name).Returns(_mockRuntimeCustomNodeStringName);
 
     _actor = new();
-    _actor.FakeNodeTree(new()
-    {
-      [$"%{nameof(CustomActor.AutoConnectedNode)}"] = _mockAutoConnectedNode.Object,
-      [$"%{nameof(CustomActor.AutoConnectedCustomNode)}"] = _mockAutoConnectedCustomNode.Object,
-      [nameof(CustomActor.ManuallyConnectedNode)] = _mockManuallyConnectedNode.Object,
-      [nameof(CustomActor.ManuallyConnectedCustomNode)] = _mockManuallyConnectedCustomNode.Object
-    });
+    _actor.FakeNodes = new(
+      _actor,
+      new Dictionary<string, INode>()
+      {
+        [nameof(CustomActor.ManuallyConnectedNode)] = _mockManuallyConnectedNode.Object,
+        [nameof(CustomActor.ManuallyConnectedCustomNode)] = _mockManuallyConnectedCustomNode.Object
+      }
+    );
     _actor._Notification((int)Node.NotificationEnterTree);
 
     _actor._Ready();
 
     _builtInNodes = [
-      _actor.AutoConnectedNode,
       _actor.ManuallyConnectedNode,
       _runtimeNode,
       _mockRuntimeNode.Object
     ];
 
     _customNodes = [
-      _actor.AutoConnectedCustomNode,
       _actor.ManuallyConnectedCustomNode,
       _runtimeCustomNode,
       _mockRuntimeCustomNode.Object
@@ -308,7 +299,7 @@ public class NodeExtensionsTests(Node testScene) : NodeExtensionsBaseTests(testS
     _actor.AddChildEx(_mockRuntimeNode.Object);
     _actor.AddChildEx(_mockRuntimeCustomNode.Object);
 
-    _actor.GetChildCountEx().ShouldBe(8);
+    _actor.GetChildCountEx().ShouldBe(6);
   }
 
   [Test]
