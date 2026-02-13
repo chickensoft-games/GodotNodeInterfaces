@@ -6,13 +6,6 @@
 [node name="IntegrationTestScene" type="Node2D" unique_id=1027269599]
 script = ExtResource("1_ucww2")
 
-[node name="AutoConnectedNode" type="Node" parent="." unique_id=784539553]
-unique_name_in_owner = true
-
-[node name="AutoConnectedCustomNode" type="Node" parent="." unique_id=1417473504]
-unique_name_in_owner = true
-script = ExtResource("2_4ipc3")
-
 [node name="ManuallyConnectedNode" type="Node" parent="." unique_id=917717530]
 
 [node name="ManuallyConnectedCustomNode" type="Node" parent="." unique_id=224539744]

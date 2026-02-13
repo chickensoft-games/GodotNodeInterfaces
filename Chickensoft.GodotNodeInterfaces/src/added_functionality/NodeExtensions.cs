@@ -147,7 +147,7 @@ public static class NodeExtensions
       {
         adaptedNodes.Add(GodotInterfaces.Adapt<INode>(child));
       }
-      return adaptedNodes.ToArray();
+      return [.. adaptedNodes];
     }
   );
 
@@ -280,7 +280,7 @@ public static class NodeExtensions
       {
         adaptedNodes.Add(GodotInterfaces.Adapt<INode>(child));
       }
-      return adaptedNodes.ToArray();
+      return [.. adaptedNodes];
     }
   );
 

@@ -11,12 +11,6 @@ using Shouldly;
 
 public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
 {
-  protected static readonly StringName _autoConnectedNodeStringName = new(nameof(CustomActor.AutoConnectedNode));
-  protected static readonly NodePath _autoConnectedNodePath = new(nameof(CustomActor.AutoConnectedNode));
-
-  protected static readonly StringName _autoConnectedCustomNodeStringName = new(nameof(CustomActor.AutoConnectedCustomNode));
-  protected static readonly NodePath _autoConnectedCustomNodePath = new(nameof(CustomActor.AutoConnectedCustomNode));
-
   protected static readonly StringName _manuallyConnectedNodeStringName = new(nameof(CustomActor.ManuallyConnectedNode));
   protected static readonly NodePath _manuallyConnectedNodePath = new(nameof(CustomActor.ManuallyConnectedNode));
 
@@ -213,14 +207,14 @@ public class NodeExtensionsBaseTests(Node testScene) : TestClass(testScene)
   }
 
   public virtual void GetChildCountEx_ShouldReturnCount_WithExistingNodes()
-    => _actor.GetChildCountEx().ShouldBe(4);
+    => _actor.GetChildCountEx().ShouldBe(2);
 
   public virtual void GetChildCountEx_ShouldReturnCount_WithRuntimeNodes()
   {
     _actor.AddChildEx(_runtimeNode);
     _actor.AddChildEx(_runtimeCustomNode);
 
-    _actor.GetChildCountEx().ShouldBe(6);
+    _actor.GetChildCountEx().ShouldBe(4);
   }
 
   public virtual void GetChildrenEx_ShouldReturnAllNodes()

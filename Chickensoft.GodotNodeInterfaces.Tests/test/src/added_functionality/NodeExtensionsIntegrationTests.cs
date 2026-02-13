@@ -23,13 +23,11 @@ public class NodeExtensionsIntegrationTests(Node testScene) : NodeExtensionsBase
     await sceneTree.ToSignal(sceneTree, SceneTree.SignalName.ProcessFrame);
 
     _builtInNodes = [
-      _actor.AutoConnectedNode,
       _actor.ManuallyConnectedNode,
       _runtimeNode
     ];
 
     _customNodes = [
-      _actor.AutoConnectedCustomNode,
       _actor.ManuallyConnectedCustomNode,
       _runtimeCustomNode
     ];
